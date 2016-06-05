@@ -30,12 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Anjril.Common.Network, Version=0.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Anjril.Common.Network.0.0.2.0\lib\net35\Anjril.Common.Network.dll</HintPath>
+    <Reference Include="Anjril.Common.Network, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Anjril.Common.Network.1.0.0-rc1\lib\net35\Anjril.Common.Network.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Anjril.Common.Network.UdpImpl, Version=0.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Anjril.Common.Network.UdpImpl.0.0.2.0\lib\net35\Anjril.Common.Network.UdpImpl.dll</HintPath>
+    <Reference Include="Anjril.Common.Network.TcpImpl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Anjril.Common.Network.TcpImpl.1.0.0-rc1\lib\net35\Anjril.Common.Network.TcpImpl.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

@@ -1,5 +1,5 @@
 ﻿using Anjril.Common.Network;
-using Anjril.Common.Network.UdpImpl;
+using Anjril.Common.Network.TcpImpl;
 using Anjril.PokemonWorld.Generator;
 using Anjril.PokemonWorld.Server.Core.Command;
 using Anjril.PokemonWorld.Server.Properties;
@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,7 +17,7 @@ namespace Anjril.PokemonWorld.Server
     class Program
     {
         private static string jsonMap;
-        private static Common.Network.Socket socket;
+        private static ISocket socket;
 
         static void Main(string[] args)
         {
@@ -35,7 +34,7 @@ namespace Anjril.PokemonWorld.Server
 
             var fi = new FileInfo(mapLocation);
 
-            if(!fi.Exists)
+            if (!fi.Exists)
             {
                 Console.Write("Generating map");
 
@@ -78,35 +77,32 @@ namespace Anjril.PokemonWorld.Server
 
             #endregion
 
-            #region set network on
-
             var port = Settings.Default.ListeningPort;
 
-            var udpClient = new UdpClient(port);
-            var receiver = new UdpReceiver(udpClient);
-            var sender = new UdpSender(udpClient);
+            using (socket = new TcpSocket(port, "<sep>"))
+            {
+                #region set network on
 
-            socket = new Common.Network.Socket(receiver, sender, MessageReceived);
+                socket.StartListening(ConnectionRequested, MessageReceived, Disconnected);
 
-            socket.StartListening();
+                Console.WriteLine();
+                Console.WriteLine("Server listening on port " + port);
+                Console.WriteLine();
 
-            Console.WriteLine();
-            Console.WriteLine("Server listening on port " + port);
-            Console.WriteLine();
+                #endregion
 
-            #endregion
+                Console.WriteLine("Press any key to stop the server...");
 
-            Console.WriteLine("Press any key to stop the server...");
+                Console.WriteLine();
+                Console.ReadKey();
+                Console.WriteLine();
 
-            Console.WriteLine();
-            Console.ReadKey();
-            Console.WriteLine();
+                #region set network off
 
-            #region set network off
+                socket.StopListening();
 
-            udpClient.Close();
-
-            #endregion
+                #endregion
+            }
 
             Console.WriteLine("----------------------------------");
             Console.WriteLine("----------------------------------");
@@ -121,22 +117,27 @@ namespace Anjril.PokemonWorld.Server
             Console.ReadKey();
         }
 
-        private static void MessageReceived(RemoteConnection sender, string message)
+        private static bool ConnectionRequested(IRemoteConnection sender, string request, out string response)
+        {
+            response = "OK";
+
+            return true;
+        }
+
+        private static void MessageReceived(IRemoteConnection sender, string message)
         {
             Console.WriteLine("Message received from {0}:{1} : {2}.", sender.IPAddress, sender.Port, message);
 
             ICommand command;
-            
-            if(message.ToUpper().StartsWith("LOGIN"))
+
+            if (message.ToUpper().StartsWith("LOGIN"))
             {
-                command = new ConnectionCommand(jsonMap, socket, sender);
+                command = new ConnectionCommand(jsonMap, sender);
             }
             else
             {
                 command = CommandFactory.GetCommand(sender.IPAddress, message);
             }
-
-            // TODO : trace command
 
             try
             {
@@ -145,5 +146,11 @@ namespace Anjril.PokemonWorld.Server
             }
             finally { }
         }
+
+        private static void Disconnected(IRemoteConnection remote, string justification)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
