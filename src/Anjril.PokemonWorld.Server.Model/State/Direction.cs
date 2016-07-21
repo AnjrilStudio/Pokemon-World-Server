@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Anjril.PokemonWorld.Server.Model.State
 {
-    public enum Orientation
+    public enum Direction
     {
+        NONE,
         DOWN,
         UP,
         RIGHT,

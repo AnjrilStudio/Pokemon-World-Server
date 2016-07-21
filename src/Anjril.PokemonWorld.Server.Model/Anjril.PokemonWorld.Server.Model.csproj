@@ -40,12 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entity\Direction.cs" />
     <Compile Include="Entity\Player.cs" />
     <Compile Include="Entity\Pokemon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="State\Orientation.cs" />
+    <Compile Include="State\Direction.cs" />
+    <Compile Include="State\Position.cs" />
+    <Compile Include="State\Utils.cs" />
     <Compile Include="World.cs" />
     <Compile Include="Entity\WorldEntity.cs" />
+    <Compile Include="WorldMap\WorldObject.cs" />
+    <Compile Include="WorldMap\WorldTile.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

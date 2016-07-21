@@ -51,11 +51,18 @@
     <Compile Include="Command\CommandFactory.cs" />
     <Compile Include="Command\ConnectionCommand.cs" />
     <Compile Include="Command\ICommand.cs" />
+    <Compile Include="Command\TurnCommand.cs" />
     <Compile Include="Command\MoveCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Anjril.PokemonWorld.Server.Model\Anjril.PokemonWorld.Server.Model.csproj">
+      <Project>{a853477e-5c6e-470a-b3ac-8dccddbb367e}</Project>
+      <Name>Anjril.PokemonWorld.Server.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

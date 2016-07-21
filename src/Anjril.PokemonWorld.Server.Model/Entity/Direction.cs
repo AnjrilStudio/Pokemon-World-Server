@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Anjril.PokemonWorld.Server.Model.Entity
 {
-    public class Pokemon : WorldEntity
+    public enum EntityType
     {
-        public Pokemon() : base()
-        {
-            Type = EntityType.Pokemon;
-        }
+        Undefined,
+        Player,
+        Pokemon
     }
 }
