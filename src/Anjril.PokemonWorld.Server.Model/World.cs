@@ -1,6 +1,6 @@
 ﻿using Anjril.PokemonWorld.Server.Model.Entity;
-using Anjril.PokemonWorld.Server.Model.State;
 using Anjril.PokemonWorld.Server.Model.WorldMap;
+using Anjril.PokemonWorld.Common.State;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -188,6 +188,19 @@ namespace Anjril.PokemonWorld.Server.Model
                     j++;
                 }
             }
+        }
+
+        public String BattleStartToMessage(List<int> entitiesList)
+        {
+            string message = "battlestart:";
+
+            foreach (WorldEntity entity in EntitiesList)
+            {
+                message += entity.Id;
+                message += ";";
+            }
+
+            return message;
         }
     }
 }

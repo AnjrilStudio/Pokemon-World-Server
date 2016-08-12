@@ -34,15 +34,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Anjril.Common.Network, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Anjril.Common.Network.1.0.0-rc1\lib\net35\Anjril.Common.Network.dll</HintPath>
+      <HintPath>..\packages\Anjril.Common.Network.1.0.0-rc2\lib\net35\Anjril.Common.Network.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Anjril.Common.Network.TcpImpl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Anjril.Common.Network.TcpImpl.1.0.0-rc1\lib\net35\Anjril.Common.Network.TcpImpl.dll</HintPath>
+      <HintPath>..\packages\Anjril.Common.Network.TcpImpl.1.0.0-rc3\lib\net35\Anjril.Common.Network.TcpImpl.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Anjril.PokemonWorld.Generator, Version=0.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Anjril.PokemonWorld.Generator.0.0.2.0\lib\net46\Anjril.PokemonWorld.Generator.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Gif.Components, Version=0.0.0.1, Culture=neutral">
@@ -80,6 +88,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Anjril.PokemonWorld.Common\Anjril.PokemonWorld.Common.csproj">
+      <Project>{d26ee035-9039-44bd-8d48-0b45432715b0}</Project>
+      <Name>Anjril.PokemonWorld.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Anjril.PokemonWorld.Server.Core\Anjril.PokemonWorld.Server.Core.csproj">
       <Project>{2f6217a9-e7cd-4afe-8b0e-87468ae8c4b2}</Project>
       <Name>Anjril.PokemonWorld.Server.Core</Name>

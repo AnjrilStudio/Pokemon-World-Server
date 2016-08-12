@@ -1,4 +1,5 @@
-﻿using Anjril.PokemonWorld.Server.Model.State;
+﻿using Anjril.PokemonWorld.Common;
+using Anjril.PokemonWorld.Common.State;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,15 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
     {
 
         private object movelock = new object();
+        private static int chunksize = 20;
 
         public string Name { get; set; }
 
         public float MoveInputDelay { get; protected set; }
         public long LastMoveTime { get; set; }
         public bool MapToUpdate { get; set; }
+
+        public List<Pokemon> Pokemons;
 
         public Player(string name) : base()
         {
@@ -25,6 +29,8 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
             LastMoveTime = DateTime.Now.Ticks;
             MoveInputDelay = 0.30f;
             MapToUpdate = true;
+            Pokemons = new List<Pokemon>();
+            Pokemons.Add(new Pokemon(1));
         }
 
 
@@ -39,8 +45,8 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
 
                 if (DateTime.Now.Ticks > nextMoveInputTime)
                 {
-                    var oldSegment = Position.GetSegment();
-                    var newSegment = dest.GetSegment();
+                    var oldSegment = Position.GetSegment(chunksize);
+                    var newSegment = dest.GetSegment(chunksize);
 
                     var result = World.Instance.MoveEntity(Id, dest);
                     if (result)
@@ -70,7 +76,7 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
                 string message = "map:";
                 int mapsize = World.Instance.Mapsize;
 
-                Position segment = Position.GetSegment();
+                Position segment = Position.GetSegment(chunksize);
 
                 var startx = (segment.X - 1) * 20;
                 var starty = (segment.Y - 1) * 20;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Anjril.PokemonWorld.Server.Model.State;
+using Anjril.PokemonWorld.Common.State;
 using Anjril.PokemonWorld.Server.Model;
 
 namespace Anjril.PokemonWorld.Server.Core.Command
@@ -24,19 +24,19 @@ namespace Anjril.PokemonWorld.Server.Core.Command
             switch (arg2)
             {
                 case "Left":
-                    dir = Direction.LEFT;
+                    dir = Direction.Left;
                     break;
                 case "Down":
-                    dir = Direction.DOWN;
+                    dir = Direction.Down;
                     break;
                 case "Right":
-                    dir = Direction.RIGHT;
+                    dir = Direction.Right;
                     break;
                 case "Up":
-                    dir = Direction.UP;
+                    dir = Direction.Up;
                     break;
                 default:
-                    dir = Direction.NONE;
+                    dir = Direction.None;
                     break;
 
             }

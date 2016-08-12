@@ -19,8 +19,11 @@ namespace Anjril.PokemonWorld.Server.Core.Command
             {
                 case "mov": return new MoveCommand(arg);
                 case "trn": return new TurnCommand(arg);
-                
-                    // TODO : map to all existing commands
+                case "btl": return new BattleStartCommand(arg);
+                case "act": return new BattleActionCommand(arg);
+                case "tra": return new BattleTrainerActionCommand(arg);
+
+                // TODO : map to all existing commands
                 default: return new MoveCommand(arg);
             }
         }

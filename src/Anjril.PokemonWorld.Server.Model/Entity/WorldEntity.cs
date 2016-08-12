@@ -1,4 +1,4 @@
-﻿using Anjril.PokemonWorld.Server.Model.State;
+﻿using Anjril.PokemonWorld.Common.State;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
         protected WorldEntity()
         {
             Id = sequenceId++;
-            Direction = Direction.DOWN;
+            Direction = Direction.Down;
             MoveTime = 0.6f;
         }
 

@@ -8,9 +8,12 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
 {
     public class Pokemon : WorldEntity
     {
-        public Pokemon() : base()
+        public int PokemonId { get; private set; }
+
+        public Pokemon(int pokemonId) : base()
         {
             Type = EntityType.Pokemon;
+            PokemonId = pokemonId;
         }
     }
 }
