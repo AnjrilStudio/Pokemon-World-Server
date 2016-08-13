@@ -97,7 +97,7 @@ namespace Anjril.PokemonWorld.Server
             World.Instance.AddEntity(player);
             GlobalServer.Instance.AddPlayer(player.Id, sender);
 
-            response = "OK";
+            response = "OK:"+player.Id;
 
             return true;
         }
