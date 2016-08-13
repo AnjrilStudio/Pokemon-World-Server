@@ -62,7 +62,7 @@ namespace Anjril.PokemonWorld.Server.Model
         {
             var entity = entitiesMap[id];
 
-            if (entitiesGrid[pos.X, pos.Y] == null && World.Instance.GetWorldObject(pos) != WorldObject.Rock)
+            if (Position.isInMap(pos.X, pos.Y, Mapsize) && entitiesGrid[pos.X, pos.Y] == null && World.Instance.GetWorldObject(pos) != WorldObject.Rock) //TODO collision
             {
                 entitiesGrid[entity.Position.X, entity.Position.Y] = null;
                 entity.Position = pos;
@@ -117,12 +117,25 @@ namespace Anjril.PokemonWorld.Server.Model
 
         public WorldTile GetWorldTile(Position position)
         {
-            return worldTiles[position.X, position.Y];
+
+            if (Position.isInMap(position.X, position.Y, Mapsize))
+            {
+                return worldTiles[position.X, position.Y];
+            } else
+            {
+                return WorldTile.Undefined;
+            }
         }
 
         public WorldObject GetWorldObject(Position position)
         {
-            return worldObjects[position.X, position.Y];
+            if (Position.isInMap(position.X, position.Y, Mapsize))
+            {
+                return worldObjects[position.X, position.Y];
+            } else
+            {
+                return WorldObject.None;
+            }
         }
 
         public void LoadMap(string jsonMap)
@@ -194,9 +207,9 @@ namespace Anjril.PokemonWorld.Server.Model
         {
             string message = "battlestart:";
 
-            foreach (WorldEntity entity in EntitiesList)
+            foreach (int entity in entitiesList)
             {
-                message += entity.Id;
+                message += entity;
                 message += ";";
             }
 

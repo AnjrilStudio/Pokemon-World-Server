@@ -8,6 +8,7 @@ namespace Anjril.PokemonWorld.Server.Model.WorldMap
 {
     public enum WorldTile
     {
+        Undefined,
         Sea,
         Ground,
         Grass,
