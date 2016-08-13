@@ -51,6 +51,13 @@
     <Compile Include="ArenaTile.cs" />
     <Compile Include="BattleArena.cs" />
     <Compile Include="BattleEntity.cs" />
+    <Compile Include="Parameter\BaseParam.cs" />
+    <Compile Include="Parameter\BattleStartParam.cs" />
+    <Compile Include="CommandType.cs" />
+    <Compile Include="Parameter\BattleActionParam.cs" />
+    <Compile Include="Parameter\BattleTrainerActionParam.cs" />
+    <Compile Include="Parameter\TurnParam.cs" />
+    <Compile Include="Parameter\MoveParam.cs" />
     <Compile Include="Effect\DamageEffect.cs" />
     <Compile Include="Effect\GroundEffect.cs" />
     <Compile Include="Effect\HitEffect.cs" />

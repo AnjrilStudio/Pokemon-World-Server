@@ -6,45 +6,28 @@ using Anjril.PokemonWorld.Common.State;
 using Anjril.PokemonWorld.Server.Model;
 using Anjril.PokemonWorld.Common;
 using Anjril.PokemonWorld.Server.Core.Battle;
+using Anjril.PokemonWorld.Server.Model.Entity;
+using Anjril.PokemonWorld.Common.Parameter;
+using System.ComponentModel;
 
 namespace Anjril.PokemonWorld.Server.Core.Command
 {
-    public class BattleActionCommand : ICommand
+    [Description("act")]
+    class BattleActionCommand : BaseCommand<BattleActionParam>
     {
-        private int playerId;
-        private int turn;
-        private Position target;
-        private Common.Action action;
-        private Direction direction;
-        public bool CanRun { get { return true; } }
-
-        public BattleActionCommand(string arg)
+        public override void RunWithCast(Player player, BattleActionParam param)
         {
-            var playerStr = arg.Split(',')[0];
-            var turnStr = arg.Split(',')[1];
-            var targetStr = arg.Split(',')[2];
-            var actionStr = arg.Split(',')[3];
-            var dirStr = arg.Split(',')[4];
+            BattleState battle = GlobalServer.Instance.GetBattle(player.Id);
 
-            playerId = Int32.Parse(playerStr);
-            turn = Int32.Parse(turnStr);
-            direction = Utils.DirectionFromString(dirStr);
-            target = new Position(targetStr);
-            action = Moves.Get((Move)Int32.Parse(actionStr));
-        }
-
-        public void Run()
-        {
-            BattleState battle = GlobalServer.Instance.GetBattle(playerId);
             bool result = false;
-            if (battle.CurrentPlayer() == playerId)
+            if (battle.CurrentPlayer() == player.Id)
             {
-                result = battle.PlayAction(target, action, direction);
+                result = battle.PlayAction(param.Target, param.Action, param.Direction);
             }
-            
+
             if (!result)
             {
-                GlobalServer.Instance.SendMessage(playerId, battle.ToNoActionMessage());
+                GlobalServer.Instance.SendMessage(player.Id, battle.ToNoActionMessage());
             }
         }
     }

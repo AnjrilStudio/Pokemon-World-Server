@@ -5,33 +5,26 @@ using System.Text;
 using System.Threading.Tasks;
 using Anjril.PokemonWorld.Common.State;
 using Anjril.PokemonWorld.Server.Model;
+using Anjril.PokemonWorld.Server.Model.Entity;
+using System.ComponentModel;
+using Anjril.PokemonWorld.Common.Parameter;
 
 namespace Anjril.PokemonWorld.Server.Core.Command
 {
-    public class BattleStartCommand : ICommand
+    [Description("btl")]
+    class BattleStartCommand : BaseCommand<BattleStartParam>
     {
-        private int entityId;
-        public bool CanRun { get { return true; } }
-
-        public BattleStartCommand(string arg)
+        public override void RunWithCast(Player player, BattleStartParam param)
         {
-            entityId = Int32.Parse(arg);
-        }
-
-        public void Run()
-        {
-            var entity = World.Instance.GetEntity(entityId);
-
-            var dirPos = Utils.GetDirPosition(entity.Direction);
-            var otherPos = new Position(entity.Position.X + dirPos.X, entity.Position.Y - dirPos.Y);
+            var dirPos = Utils.GetDirPosition(player.Direction);
+            var otherPos = new Position(player.Position.X + dirPos.X, player.Position.Y - dirPos.Y);
             if (World.Instance.GetEntity(otherPos) != null)
             {
                 List<int> entitiesList = new List<int>();
-                entitiesList.Add(entity.Id);
+                entitiesList.Add(player.Id);
                 entitiesList.Add(World.Instance.GetEntity(otherPos).Id);
                 var battle = GlobalServer.Instance.NewBattle(entitiesList);
 
-                
                 string startmessage = World.Instance.BattleStartToMessage(entitiesList);
                 string battlemessage = battle.ToNoActionMessage();
                 foreach (int id in entitiesList)

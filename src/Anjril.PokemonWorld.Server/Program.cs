@@ -21,6 +21,8 @@ namespace Anjril.PokemonWorld.Server
 {
     class Program
     {
+        private static Dictionary<IRemoteConnection, Player> PLAYERS;
+
         static void Main(string[] args)
         {
             Console.WriteLine("----------------------------------");
@@ -29,6 +31,8 @@ namespace Anjril.PokemonWorld.Server
             Console.WriteLine("----------------------------------");
             Console.WriteLine("----------------------------------");
             Console.WriteLine("");
+
+            PLAYERS = new Dictionary<IRemoteConnection, Player>();
 
             World.Instance.LoadMap(GetMap());
 
@@ -78,6 +82,122 @@ namespace Anjril.PokemonWorld.Server
             Console.WriteLine();
 
             Console.ReadKey();
+        }
+
+        #region socket management
+
+        private static bool ConnectionRequested(IRemoteConnection sender, string request, out string response)
+        {
+            Player player = new Player(request);
+            //player.Position = new Position(200, 150);
+            player.Position = new Position(30, 175);
+            //player.Position = new Position(35, 35);
+
+            PLAYERS.Add(sender, player);
+            World.Instance.AddEntity(player);
+            GlobalServer.Instance.AddPlayer(player.Id, sender);
+
+            response = "OK";
+
+            return true;
+        }
+
+        private static void MessageReceived(IRemoteConnection sender, string message)
+        {
+            var splitedArgument = message.Split('/');
+
+            var cmd = splitedArgument[0];
+            var args = splitedArgument[1];
+
+            ICommand command = CommandFactory.GetCommand(cmd);
+
+            Object param;
+            if (command.CanRun(args, out param))
+            {
+                Task.Run(() => command.Run(PLAYERS[sender], param));
+            }
+            else
+            {
+                Console.WriteLine("Can't run the command {0} with the arguments {1}", cmd, args);
+            }
+        }
+
+        private static void Disconnected(IRemoteConnection remote, string justification)
+        {
+            var player = PLAYERS[remote];
+
+            World.Instance.RemoveEntity(player.Id);
+            GlobalServer.Instance.RemoveBattle(player.Id);
+            GlobalServer.Instance.RemovePlayer(player.Id);
+            PLAYERS.Remove(remote);
+
+            Console.WriteLine("disconnected ({0} - {1})", player.Id, player.Name);
+        }
+
+        #endregion
+
+        #region private methods
+
+        private static void Tick()
+        {
+            var random = new Random();
+
+            while (true)
+            {
+                List<WorldEntity> entities = World.Instance.Entities;
+                if (entities.Count > 0)
+                {
+                    //test
+                    foreach (WorldEntity entity in entities)
+                    {
+                        if (entity.Type == EntityType.Pokemon && random.NextDouble() < 0.1)
+                        {
+                            var dest = new Position(entity.Position, Utils.RandomDirection());
+
+                            //World.Instance.MoveEntity(entity.Id, dest);
+                        }
+                    }
+
+                    //message
+                    foreach (int id in GlobalServer.Instance.GetPlayers())
+                    {
+                        var conn = GlobalServer.Instance.GetConnection(id);
+                        try
+                        {
+                            string message = World.Instance.EntitiesToMessage;
+                            Console.WriteLine("send(" + id + ") :" + message);
+
+                            GlobalServer.Instance.SendMessage(id, message);
+
+                            var player = World.Instance.GetEntity(id) as Player;
+                            if (player.MapToUpdate)
+                            {
+                                GlobalServer.Instance.SendMessage(id, player.MapMessage);
+                                player.MapToUpdate = false;
+                            }
+                        }
+                        catch (SocketException)
+                        {
+                            Disconnected(conn, id.ToString());
+                        }
+
+                    }
+                    //socket.Broadcast(message);
+                }
+
+                Thread.Sleep(200);
+            }
+        }
+
+        private static void InitWorld()
+        {
+            Pokemon pokemon = new Pokemon(1);
+            pokemon.Position = new Position(200, 180);
+            World.Instance.AddEntity(pokemon);
+
+            Player other = new Player("other");
+            other.Position = new Position(205, 175);
+            World.Instance.AddEntity(other);
         }
 
         private static string GetMap()
@@ -135,110 +255,6 @@ namespace Anjril.PokemonWorld.Server
             return File.ReadAllText(mapLocation);
         }
 
-        #region socket management
-
-        private static bool ConnectionRequested(IRemoteConnection sender, string request, out string response)
-        {
-            Player player = new Player(request);
-            //player.Position = new Position(200, 150);
-            player.Position = new Position(30, 175);
-            //player.Position = new Position(35, 35);
-            World.Instance.AddEntity(player);
-
-            GlobalServer.Instance.AddPlayer(player.Id, sender);
-
-            response = "OK:" + player.Id;
-
-            return true;
-        }
-
-        private static void MessageReceived(IRemoteConnection sender, string message)
-        {
-            Console.WriteLine("Message received from {0}:{1} : {2}.", sender.IPAddress, sender.Port, message);
-
-            ICommand command = CommandFactory.GetCommand(sender.IPAddress, message);
-
-            try
-            {
-                if (command.CanRun)
-                    Task.Run(() => command.Run());
-            }
-            finally { }
-        }
-
-        private static void Disconnected(IRemoteConnection remote, string justification)
-        {
-            var id = Int32.Parse(justification);
-            World.Instance.RemoveEntity(id);
-            GlobalServer.Instance.RemoveBattle(id);
-            GlobalServer.Instance.RemovePlayer(id);
-
-            Console.WriteLine("disconnected (" + justification + ")");
-        }
-
         #endregion
-
-        private static void Tick()
-        {
-            var random = new Random();
-
-            while (true)
-            {
-                List<WorldEntity> entities = World.Instance.Entities;
-                if (entities.Count > 0)
-                {
-                    //test
-                    foreach (WorldEntity entity in entities)
-                    {
-                        if (entity.Type == EntityType.Pokemon && random.NextDouble() < 0.1)
-                        {
-                            var dest = new Position(entity.Position, Utils.RandomDirection());
-
-                            //World.Instance.MoveEntity(entity.Id, dest);
-                        }
-                    }
-
-                    //message
-                    foreach (int id in GlobalServer.Instance.GetPlayers())
-                    {
-                        var conn = GlobalServer.Instance.GetConnection(id);
-                        try
-                        {
-                            string message = World.Instance.EntitiesToMessage;
-                            Console.WriteLine("send(" + id + ") :" + message);
-
-                            GlobalServer.Instance.SendMessage(id, message);
-
-                            var player = World.Instance.GetEntity(id) as Player;
-                            if (player.MapToUpdate)
-                            {
-                                GlobalServer.Instance.SendMessage(id, player.MapMessage);
-                                player.MapToUpdate = false;
-                            }
-                        }
-                        catch (SocketException e)
-                        {
-                            Disconnected(conn, "" + id);
-                        }
-
-                    }
-                    //socket.Broadcast(message);
-                }
-
-                Thread.Sleep(200);
-            }
-        }
-
-        private static void InitWorld()
-        {
-            Pokemon pokemon = new Pokemon(1);
-            pokemon.Position = new Position(200, 180);
-            World.Instance.AddEntity(pokemon);
-
-            Player other = new Player("other");
-            other.Position = new Position(205, 175);
-            World.Instance.AddEntity(other);
-        }
-
     }
 }

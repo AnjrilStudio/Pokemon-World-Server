@@ -31,11 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Anjril.Common.Network, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Anjril.Common.Network.1.0.0-rc1\lib\net35\Anjril.Common.Network.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Anjril.Common.Network.TcpImpl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Anjril.Common.Network.TcpImpl.1.0.0-rc1\lib\net35\Anjril.Common.Network.TcpImpl.dll</HintPath>
+      <HintPath>..\packages\Anjril.Common.Network.1.0.0-rc2\lib\net35\Anjril.Common.Network.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -46,12 +42,17 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnconstrainedMelody, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\UnconstrainedMelody.0.2.1\lib\UnconstrainedMelody.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Battle\BattleState.cs" />
+    <Compile Include="Command\BaseCommand.cs" />
     <Compile Include="Command\BattleTrainerActionCommand.cs" />
     <Compile Include="Command\BattleActionCommand.cs" />
-    <Compile Include="Command\CommandFactory.cs" />
+    <Compile Include="CommandFactory.cs" />
     <Compile Include="Command\ICommand.cs" />
     <Compile Include="Command\BattleStartCommand.cs" />
     <Compile Include="Command\TurnCommand.cs" />
