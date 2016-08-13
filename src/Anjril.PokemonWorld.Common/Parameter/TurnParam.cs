@@ -17,7 +17,7 @@ namespace Anjril.PokemonWorld.Common.Parameter
         #region constructors
 
         public TurnParam()
-            : base("mov")
+            : base("trn")
         { }
 
         public TurnParam(Direction dir)

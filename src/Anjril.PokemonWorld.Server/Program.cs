@@ -104,6 +104,8 @@ namespace Anjril.PokemonWorld.Server
 
         private static void MessageReceived(IRemoteConnection sender, string message)
         {
+            Console.WriteLine("Message received from {0}:{1} : {2}.", sender.IPAddress, sender.Port, message);
+
             var splitedArgument = message.Split('/');
 
             var cmd = splitedArgument[0];
