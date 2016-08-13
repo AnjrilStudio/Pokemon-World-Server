@@ -47,7 +47,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     //TODO
                     var player = entity as Player;
                     players.Add(player.Id);
-                    BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Player).Pokemons[0].PokedexId, player.Id);
+                    BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Player).Team[0].PokedexId, player.Id);
                     battleEntity.CurrentPos = new Position(8, 5);//TODO
                     turns.Add(battleEntity);
                 }

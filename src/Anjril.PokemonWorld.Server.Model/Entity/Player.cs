@@ -1,5 +1,6 @@
 ﻿using Anjril.PokemonWorld.Common;
 using Anjril.PokemonWorld.Common.State;
+using Anjril.PokemonWorld.Server.Model.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,51 +11,65 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
 {
     public class Player : WorldEntity
     {
+        #region private fields
+
         private object movelock = new object();
-        private static int chunksize = 20;
+
+        private float _moveInputDelay;
+        private DateTime _lastMove;
+
+        #endregion
+
+        #region public properties
 
         public string Name { get; set; }
-
-        public float MoveInputDelay { get; protected set; }
-        public long LastMoveTime { get; set; }
         public bool MapToUpdate { get; set; }
+        public List<Pokemon> Team { get; private set; }
 
-        public List<Pokemon> Pokemons;
+        #endregion
+
+        #region constructor
 
         public Player(string name) : base()
         {
             Name = name;
+            Team = new List<Pokemon>();
+            Team.Add(new Pokemon(1));
+
             Type = EntityType.Player;
-            LastMoveTime = DateTime.Now.Ticks;
-            MoveInputDelay = 0.30f;
             MapToUpdate = true;
-            Pokemons = new List<Pokemon>();
-            Pokemons.Add(new Pokemon(1));
+
+            _lastMove = DateTime.Now;
+            _moveInputDelay = 0.30f;
         }
+
+        #endregion
+
+        #region public methods
 
         public void DoMove(Direction dir)
         {
             lock (movelock)
             {
                 var dest = new Position(Position, dir);
-                var nextMoveTime = LastMoveTime + (long)(MoveTime * 1000 * 10000);
-                var nextMoveInputTime = LastMoveTime + (long)((MoveTime - MoveInputDelay) * 1000 * 10000);
+                var nextMoveTime = _lastMove.AddSeconds(MoveDuration);
+                var nextMoveInputTime = _lastMove.AddSeconds(MoveDuration - _moveInputDelay);
 
-                if (DateTime.Now.Ticks > nextMoveInputTime)
+                if (DateTime.Now > nextMoveInputTime)
                 {
-                    var oldSegment = Position.GetSegment(chunksize);
-                    var newSegment = dest.GetSegment(chunksize);
+                    var oldSegment = Position.GetSegment(Settings.Default.ChunkSize);
+                    var newSegment = dest.GetSegment(Settings.Default.ChunkSize);
 
                     var result = World.Instance.MoveEntity(Id, dest);
                     if (result)
                     {
-                        if (DateTime.Now.Ticks > nextMoveTime)
+                        if (DateTime.Now > nextMoveTime)
                         {
-                            LastMoveTime = DateTime.Now.Ticks;
+                            _lastMove = DateTime.Now;
                         }
                         else
                         {
-                            LastMoveTime = nextMoveTime;
+                            _lastMove = nextMoveTime;
                         }
 
                         if (!oldSegment.Equals(newSegment))
@@ -66,6 +81,10 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
             }
         }
 
+        #endregion
+
+        #region serialization
+
         public string MapMessage
         {
             get
@@ -73,7 +92,7 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
                 string message = "map:";
                 int mapsize = World.Instance.Size;
 
-                Position segment = Position.GetSegment(chunksize);
+                Position segment = Position.GetSegment(Settings.Default.ChunkSize);
 
                 var startx = (segment.X - 1) * 20;
                 var starty = (segment.Y - 1) * 20;
@@ -88,7 +107,6 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
 
                 Position endPos = new Position(endx, endy);
 
-
                 for (int y = starty; y < endy - 1; y++)
                 {
                     for (int x = startx; x < endx - 1; x++)
@@ -98,7 +116,6 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
                         message += ".";
                         message += (int)World.Instance.GetObject(pos);
                         message += ",";
-                        
                     }
                 }
 
@@ -107,5 +124,7 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
                 return message;
             }
         }
+
+        #endregion
     }
 }

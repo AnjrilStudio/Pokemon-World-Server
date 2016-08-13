@@ -44,6 +44,11 @@
     <Compile Include="Entity\Player.cs" />
     <Compile Include="Entity\Pokemon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="World.cs" />
     <Compile Include="Entity\WorldEntity.cs" />
     <Compile Include="WorldMap\WorldObject.cs" />
@@ -54,6 +59,13 @@
       <Project>{d26ee035-9039-44bd-8d48-0b45432715b0}</Project>
       <Name>Anjril.PokemonWorld.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
