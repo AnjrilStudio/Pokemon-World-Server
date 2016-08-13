@@ -56,11 +56,11 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
                         {
                             LastMoveTime = nextMoveTime;
                         }
-                    }
 
-                    if (!oldSegment.Equals(newSegment))
-                    {
-                        MapToUpdate = true;
+                        if (!oldSegment.Equals(newSegment))
+                        {
+                            MapToUpdate = true;
+                        }
                     }
                 }
             }
@@ -85,8 +85,6 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
 
                 var endx = (segment.X + 2) * 20;
                 var endy = (segment.Y + 2) * 20;
-                if (endx > mapsize - 1) endx = mapsize - 1;
-                if (endy > mapsize - 1) endy = mapsize - 1;
 
                 Position endPos = new Position(endx, endy);
 
@@ -100,6 +98,7 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
                         message += ".";
                         message += (int)World.Instance.GetObject(pos);
                         message += ",";
+                        
                     }
                 }
 

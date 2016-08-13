@@ -88,11 +88,13 @@ namespace Anjril.PokemonWorld.Server.Core
 
         public void RemoveBattle(int entity)
         {
-            var battle = battles[entity];
-            var entities = battle.Entities;
-            foreach (int id in entities)
-            {
-                battles.Remove(id);
+            if (battles.ContainsKey(entity)){
+                var battle = battles[entity];
+                var entities = battle.Entities;
+                foreach (int id in entities)
+                {
+                    battles.Remove(id);
+                }
             }
         }
 
