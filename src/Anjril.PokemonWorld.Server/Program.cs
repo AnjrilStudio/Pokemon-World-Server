@@ -90,7 +90,7 @@ namespace Anjril.PokemonWorld.Server
         {
             Player player = new Player(request);
             //player.Position = new Position(200, 150);
-            player.Position = new Position(30, 175);
+            player.Position = new Position(200, 175);
             //player.Position = new Position(35, 35);
 
             PLAYERS.Add(sender, player);

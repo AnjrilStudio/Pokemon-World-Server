@@ -40,7 +40,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 if (entity.Type == EntityType.Pokemon)
                 {
                     BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Pokemon).PokedexId, -1);
-                    battleEntity.CurrentPos = new Position(2, 5);//TODO
+                    battleEntity.CurrentPos = GetRandomStartPosition(Direction.Left);//TODO
                     turns.Add(battleEntity);
                 } else if (entity.Type == EntityType.Player)
                 {
@@ -48,7 +48,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     var player = entity as Player;
                     players.Add(player.Id);
                     BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Player).Team[0].PokedexId, player.Id);
-                    battleEntity.CurrentPos = new Position(8, 5);//TODO
+                    battleEntity.CurrentPos = GetRandomStartPosition(Direction.Right);//TODO
                     turns.Add(battleEntity);
                 }
             }
@@ -215,6 +215,54 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             PlayAction(targetPos, actionAI, dir);
         }
 
+        private Position GetRandomStartPosition(Direction dir)
+        {
+            int x;
+            int y;
+            do
+            {
+                x = 0;
+                y = 0;
+                switch (dir)
+                {
+                    case Direction.Down:
+                        x = random.Next(arena.ArenaSize);
+                        y = arena.ArenaSize - 1 - random.Next(arena.ArenaSize) / 2;
+                        break;
+                    case Direction.Up:
+                        x = random.Next(arena.ArenaSize);
+                        y = random.Next(arena.ArenaSize) / 2;
+                        break;
+                    case Direction.Right:
+                        x = arena.ArenaSize - 1 - random.Next(arena.ArenaSize) / 2;
+                        y = random.Next(arena.ArenaSize);
+                        break;
+                    case Direction.Left:
+                        x = random.Next(arena.ArenaSize) / 2;
+                        y = random.Next(arena.ArenaSize);
+                        break;
+                    default:
+                        break;
+                }
+
+            } while (!IsTileFree(x, y));
+
+            return new Position(x, y);
+        }
+
+        private bool IsTileFree(int x, int y)
+        {
+            var result = true;
+            foreach (BattleEntity entity in turns)
+            {
+                if (entity.CurrentPos.X == x && entity.CurrentPos.Y == y)
+                {
+                    result = false;
+                }
+            }
+            return result;
+        }
+
         public List<int> Players
         {
             get
@@ -231,6 +279,35 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             }
         }
 
+        public string CurrentAvailableActionsMessage()
+        {
+            string message = "";
+            message += (int)TrainerAction.End_Battle + ",";
+            if (GetPlayerNbPokemons(CurrentPlayer()) < 6){
+                message += (int)TrainerAction.Pokemon_Go + ",";
+            }
+            if (GetPlayerNbPokemons(CurrentPlayer()) > 0)
+            {
+                message += (int)TrainerAction.Pokemon_Come_Back + ",";
+            }
+            message += (int)TrainerAction.Pokeball;
+
+            return message;
+        }
+
+        public int GetPlayerNbPokemons(int playerId)
+        {
+            int result = 0;
+            foreach(BattleEntity entity in turns)
+            {
+                if (entity.PlayerId == playerId)
+                {
+                    result++;
+                }
+            }
+            return result;
+        }
+
         public string StateMessage()
         {
             string message = currentTurn + "@";
@@ -239,6 +316,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             {
                 message += entity.Id + ",";
                 message += entity.PokemonId + ",";
+                message += entity.PlayerId + ",";
                 message += entity.CurrentPos + ",";
                 message += entity.HP + ",";
                 message += entity.MaxHP + ",";
@@ -268,6 +346,8 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             var message = "battleaction:";
             message += actionId;
             message += "=";
+            message += CurrentAvailableActionsMessage();
+            message += "=";
             message += ActionMessage(target, action, dir);
             message += "=";
             message += StateMessage();
@@ -280,6 +360,8 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             string message = "battleaction:";
             message += actionId;
             message += "=";
+            message += CurrentAvailableActionsMessage();
+            message += "=";
             message += "0";
             message += "=";
             message += StateMessage();
@@ -291,6 +373,8 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         {
             string message = "battleaction:";
             message += actionId;
+            message += "=";
+            message += CurrentAvailableActionsMessage();
             message += "=";
             message += "0";
             message += "=";

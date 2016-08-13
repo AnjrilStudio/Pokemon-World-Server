@@ -83,7 +83,13 @@ namespace Anjril.PokemonWorld.Server.Core
 
         public BattleState GetBattle(int entity)
         {
-            return battles[entity];
+            if (battles.ContainsKey(entity))
+            {
+                return battles[entity];
+            } else
+            {
+                return null;
+            }
         }
 
         public void RemoveBattle(int entity)
