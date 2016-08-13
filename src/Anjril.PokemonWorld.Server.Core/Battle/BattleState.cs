@@ -39,7 +39,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 var entity = World.Instance.GetEntity(entityId);
                 if (entity.Type == EntityType.Pokemon)
                 {
-                    BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Pokemon).PokemonId, -1);
+                    BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Pokemon).PokedexId, -1);
                     battleEntity.CurrentPos = new Position(2, 5);//TODO
                     turns.Add(battleEntity);
                 } else if (entity.Type == EntityType.Player)
@@ -47,7 +47,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     //TODO
                     var player = entity as Player;
                     players.Add(player.Id);
-                    BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Player).Pokemons[0].PokemonId, player.Id);
+                    BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Player).Pokemons[0].PokedexId, player.Id);
                     battleEntity.CurrentPos = new Position(8, 5);//TODO
                     turns.Add(battleEntity);
                 }

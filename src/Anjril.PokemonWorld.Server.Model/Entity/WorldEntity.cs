@@ -17,7 +17,6 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
         public EntityType Type { get; protected set; }
         public float MoveTime { get; protected set; }
 
-
         protected WorldEntity()
         {
             Id = sequenceId++;
@@ -29,7 +28,5 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
         {
             return Type.ToString() + "-" + Id + "=" + Position.ToString() + ":" + Utils.DirectionToString(Direction);
         }
-
-        
     }
 }

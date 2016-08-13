@@ -10,7 +10,6 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
 {
     public class Player : WorldEntity
     {
-
         private object movelock = new object();
         private static int chunksize = 20;
 
@@ -33,7 +32,6 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
             Pokemons.Add(new Pokemon(1));
         }
 
-
         public void DoMove(Direction dir)
         {
             lock (movelock)
@@ -41,7 +39,6 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
                 var dest = new Position(Position, dir);
                 var nextMoveTime = LastMoveTime + (long)(MoveTime * 1000 * 10000);
                 var nextMoveInputTime = LastMoveTime + (long)((MoveTime - MoveInputDelay) * 1000 * 10000);
-
 
                 if (DateTime.Now.Ticks > nextMoveInputTime)
                 {
@@ -74,7 +71,7 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
             get
             {
                 string message = "map:";
-                int mapsize = World.Instance.Mapsize;
+                int mapsize = World.Instance.Size;
 
                 Position segment = Position.GetSegment(chunksize);
 
@@ -93,15 +90,15 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
 
                 Position endPos = new Position(endx, endy);
 
-                
+
                 for (int y = starty; y < endy - 1; y++)
                 {
                     for (int x = startx; x < endx - 1; x++)
                     {
                         Position pos = new Position(x, y);
-                        message += (int)World.Instance.GetWorldTile(pos);
+                        message += (int)World.Instance.GetTile(pos);
                         message += ".";
-                        message += (int)World.Instance.GetWorldObject(pos);
+                        message += (int)World.Instance.GetObject(pos);
                         message += ",";
                     }
                 }
@@ -112,6 +109,4 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
             }
         }
     }
-
-
 }
