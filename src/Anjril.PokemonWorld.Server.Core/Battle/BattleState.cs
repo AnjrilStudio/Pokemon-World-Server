@@ -113,10 +113,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     GlobalServer.Instance.SendMessage(id, message);
                 }
 
-                while (turns[currentTurn].PlayerId < 0)
-                {
-                    PlayIA();
-                }
+                playIATurns();
 
                 return true;
             }
@@ -143,13 +140,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     GlobalServer.Instance.SendMessage(id, message);
                 }
 
-                if (turns.Count > 0)
-                {
-                    while (turns[currentTurn].PlayerId < 0)
-                    {
-                        PlayIA();
-                    }
-                }
+                playIATurns();
 
                 return true;
             }
@@ -181,10 +172,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                         GlobalServer.Instance.SendMessage(id, message);
                     }
 
-                    while (turns[currentTurn].PlayerId < 0)
-                    {
-                        PlayIA();
-                    }
+                    playIATurns();
                 }
 
                 return true;
@@ -202,7 +190,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                         currentTurn--;
                         if (currentTurn < 0)
                         {
-                            currentTurn += turns.Count;
+                            currentTurn = 0;
                         }
                     }
 
@@ -233,7 +221,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                         currentTurn--;
                         if (currentTurn < 0)
                         {
-                            currentTurn += turns.Count;
+                            currentTurn = 0;
                         }
                     }
 
@@ -254,13 +242,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     GlobalServer.Instance.SendMessage(id, message);
                 }
 
-                if (turns.Count > 0)
-                {
-                    while (turns[currentTurn].PlayerId < 0)
-                    {
-                        PlayIA();
-                    }
-                }
+                playIATurns();
             }
             else if (action.Id == (int)TrainerAction.End_Turn)
             {
@@ -274,13 +256,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     GlobalServer.Instance.SendMessage(id, message);
                 }
 
-                if (turns.Count > 0)
-                {
-                    while (turns[currentTurn].PlayerId < 0)
-                    {
-                        PlayIA();
-                    }
-                }
+                playIATurns();
             }
 
            return false;
@@ -305,16 +281,27 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
         public void NextTurn()
         {
-            if (turns.Count > 0)
+            if (turns.Count > 1)
             {
                 currentTurn++;
                 if (currentTurn >= turns.Count)
                 {
-                    currentTurn -= turns.Count;
+                    currentTurn = 0;
                 }
 
                 turns[currentTurn].AP = turns[currentTurn].MaxAP;
                 turns[currentTurn].MP = turns[currentTurn].MaxMP;
+            }
+        }
+
+        private void playIATurns()
+        {
+            if (turns.Count > 1)
+            {
+                while (turns[currentTurn].PlayerId < 0)
+                {
+                    PlayIA();
+                }
             }
         }
 
@@ -436,7 +423,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         {
             string message = "";
             
-            if (GetPlayerNbPokemons(player) < 1)
+            if (GetPlayerNbPokemons(player) < 2) // 2 pokemons max en jeu
             { //TODO 6 pokemons
                 message += (int)TrainerAction.Pokemon_Go + ",";
             }
@@ -444,8 +431,12 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             {
                 message += (int)TrainerAction.Pokemon_Come_Back + ",";
             }
-            message += (int)TrainerAction.Pokeball + ",";
-            message += (int)TrainerAction.End_Turn;
+            message += (int)TrainerAction.Pokeball;
+            if (GetPlayerNbPokemons(player) > 0)
+            {
+                message += ",";
+                message += (int)TrainerAction.End_Turn;
+            }
             if (GetPlayerNbPokemons(player) == 0)
             {
                 message += ",";
