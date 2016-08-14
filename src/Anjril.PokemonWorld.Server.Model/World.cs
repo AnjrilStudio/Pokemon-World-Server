@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Anjril.PokemonWorld.Common.Utils;
 
 namespace Anjril.PokemonWorld.Server.Model
 {
@@ -35,9 +36,12 @@ namespace Anjril.PokemonWorld.Server.Model
 
         private List<Player> _players;
 
+        private WorldEntity[,] _worldEntities;
         private Dictionary<int, WorldEntity> _mapEntities;
 
-        private WorldEntity[,] _worldEntities;
+        private Dictionary<int, Pokemon> _mapPopulation;
+        private List<Pokemon>[,] _populationEntities;
+
         private WorldTile[,] _worldTiles;
         private WorldObject[,] _worldObjects;
 
@@ -46,14 +50,10 @@ namespace Anjril.PokemonWorld.Server.Model
         #region public properties
 
         public int Size { get; private set; }
-        public IReadOnlyList<Player> Players { get; private set; }
-        public IList<WorldEntity> Entities
-        {
-            get
-            {
-                return _mapEntities.Values.ToList<WorldEntity>();
-            }
-        }
+
+        public IReadOnlyCollection<Player> Players { get; private set; }
+        public IReadOnlyCollection<WorldEntity> Entities { get; private set; }
+        public IReadOnlyCollection<Pokemon> Population { get; private set; }
 
         #endregion
 
@@ -63,13 +63,16 @@ namespace Anjril.PokemonWorld.Server.Model
         {
             _players = new List<Player>();
             _mapEntities = new Dictionary<int, WorldEntity>();
+            _mapPopulation = new Dictionary<int, Pokemon>();
 
             Players = _players.AsReadOnly();
+            Entities = _mapEntities.Values;
+            Population = _mapPopulation.Values;
         }
 
         #endregion
 
-        #region entity management
+        #region visible entity management
 
         public WorldEntity GetEntity(int id)
         {
@@ -126,6 +129,24 @@ namespace Anjril.PokemonWorld.Server.Model
             {
                 return false;
             }
+        }
+
+        #endregion
+
+        #region population management
+
+        public void AddIndividual(Pokemon pokemon)
+        {
+            var compartment = this._populationEntities[pokemon.HiddenPosition.X, pokemon.HiddenPosition.Y];
+
+            if (compartment == null)
+            {
+                compartment = new List<Pokemon>();
+                this._populationEntities[pokemon.HiddenPosition.X, pokemon.HiddenPosition.Y] = compartment;
+            }
+
+            compartment.Add(pokemon);
+            _mapPopulation.Add(pokemon.Id, pokemon);
         }
 
         #endregion
@@ -190,6 +211,7 @@ namespace Anjril.PokemonWorld.Server.Model
             _worldEntities = new WorldEntity[Size, Size];
             _worldTiles = new WorldTile[Size, Size];
             _worldObjects = new WorldObject[Size, Size];
+            _populationEntities = new List<Pokemon>[Size, Size];
 
             foreach (string s in mapArray)
             {
@@ -246,11 +268,17 @@ namespace Anjril.PokemonWorld.Server.Model
                     y++;
                 }
             }
+        }
 
-            // DEBUG
-            Pokemon pokemon = new Pokemon(1);
-            pokemon.Position = new Position(200, 180);
-            AddEntity(pokemon);
+        public void LoadPopulation()
+        {
+            for (int i = 0; i < 15000; i++)
+            {
+                var randX = RandomUtils.RandomInt(Size);
+                var randY = RandomUtils.RandomInt(Size);
+
+                AddIndividual(new Pokemon(1, new Position(randX, randY)));
+            }
         }
 
         public void Reset()

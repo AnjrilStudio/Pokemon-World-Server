@@ -38,7 +38,7 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
             RemoteConnection = remote;
 
             // DEBUG
-            Team.Add(new Pokemon(1));
+            Team.Add(new Pokemon(1, null));
         }
 
         #endregion

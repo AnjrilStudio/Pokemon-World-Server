@@ -1,4 +1,5 @@
 ﻿using Anjril.PokemonWorld.Common.State;
+using Anjril.PokemonWorld.Common.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +52,7 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
 
         public override string ToString()
         {
-            return Type.ToString() + "-" + Id + "=" + Position.ToString() + ":" + Utils.DirectionToString(Direction);
+            return Type.ToString() + "-" + Id + "=" + Position.ToString() + ":" + DirectionUtils.ToString(Direction);
         }
 
         #endregion

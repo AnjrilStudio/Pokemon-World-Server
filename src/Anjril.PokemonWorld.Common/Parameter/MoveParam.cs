@@ -1,4 +1,5 @@
 ﻿using Anjril.PokemonWorld.Common.State;
+using Anjril.PokemonWorld.Common.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,31 +33,13 @@ namespace Anjril.PokemonWorld.Common.Parameter
 
         public override void DeserializeArguments(string args)
         {
-            IsValid = true;
-
-            switch (args)
-            {
-                case "Left":
-                    Direction = Direction.Left;
-                    break;
-                case "Down":
-                    Direction = Direction.Down;
-                    break;
-                case "Right":
-                    Direction = Direction.Right;
-                    break;
-                case "Up":
-                    Direction = Direction.Up;
-                    break;
-                default:
-                    IsValid = false;
-                    break;
-            }
+            Direction = DirectionUtils.FromString(args);
+            IsValid = Direction != Direction.None;
         }
 
         public override string ToString()
         {
-            return base.ToString() + Direction;
+            return base.ToString() + DirectionUtils.ToString(Direction);
         }
 
         #endregion
