@@ -10,6 +10,7 @@ using Anjril.PokemonWorld.Common;
 using Anjril.PokemonWorld.Server.Model.Entity;
 using Anjril.PokemonWorld.Server.Model;
 using Anjril.PokemonWorld.Common.Utils;
+using Anjril.PokemonWorld.Server.Core.Module;
 
 namespace Anjril.PokemonWorld.Server.Core.Battle
 {
@@ -138,13 +139,16 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
                 foreach (int id in players)
                 {
-                    var message = ToNoActionMessage(id);
+                    var message = ToNoActionMessage(id);//TODO
                     GlobalServer.Instance.SendMessage(id, message);
                 }
 
-                while (turns[currentTurn].PlayerId < 0)
+                if (turns.Count > 0)
                 {
-                    PlayIA();
+                    while (turns[currentTurn].PlayerId < 0)
+                    {
+                        PlayIA();
+                    }
                 }
 
                 return true;
@@ -173,7 +177,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
                     foreach (int id in players)
                     {
-                        var message = ToNoActionMessage(id);
+                        var message = ToNoActionMessage(id);//TODO
                         GlobalServer.Instance.SendMessage(id, message);
                     }
 
@@ -210,14 +214,51 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
                     foreach (int id in players)
                     {
-                        var message = ToNoActionMessage(id);
+                        var message = ToNoActionMessage(id);//TODO
                         GlobalServer.Instance.SendMessage(id, message);
                     }
 
                     return true;
                 }
+            }
+            else if (action.Id == (int)TrainerAction.Pokeball)
+            {
+                var entity = GetEntity(target);
+                if (entity.PlayerId < 0)
+                {
+                    var indexof = turns.IndexOf(entity);
+                    turns.Remove(entity);
+                    if (indexof <= currentTurn)
+                    {
+                        currentTurn--;
+                        if (currentTurn < 0)
+                        {
+                            currentTurn += turns.Count;
+                        }
+                    }
+                    
+                    player.Team.Add(new BattleEntity(-1, entity.PokedexId, player.Id));
+                    var message = NotificationModule.GetTeamUpdate(player);
+                    player.RemoteConnection.Send(message);
+                }
 
+                actionId++;
+                
+                NextTurn();
 
+                foreach (int id in players)
+                {
+                    var message = ToNoActionMessage(id);//TODO
+                    GlobalServer.Instance.SendMessage(id, message);
+                }
+
+                if (turns.Count > 0)
+                {
+                    while (turns[currentTurn].PlayerId < 0)
+                    {
+                        PlayIA();
+                    }
+                }
             }
 
             return false;
@@ -242,14 +283,17 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
         public void NextTurn()
         {
-            currentTurn++;
-            if (currentTurn == turns.Count)
+            if (turns.Count > 0)
             {
-                currentTurn = 0;
-            }
+                currentTurn++;
+                if (currentTurn >= turns.Count)
+                {
+                    currentTurn -= turns.Count;
+                }
 
-            turns[currentTurn].AP = turns[currentTurn].MaxAP;
-            turns[currentTurn].MP = turns[currentTurn].MaxMP;
+                turns[currentTurn].AP = turns[currentTurn].MaxAP;
+                turns[currentTurn].MP = turns[currentTurn].MaxMP;
+            }
         }
 
         public void EndPlayerBattle(int playerId)
@@ -406,7 +450,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             foreach (BattleEntity entity in turns)
             {
                 message += entity.Id + ",";
-                message += entity.PokemonId + ",";
+                message += entity.PokedexId + ",";
                 message += entity.PlayerId + ",";
                 message += entity.CurrentPos + ",";
                 message += entity.HP + ",";

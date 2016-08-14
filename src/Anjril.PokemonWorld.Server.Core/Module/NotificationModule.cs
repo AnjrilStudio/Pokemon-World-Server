@@ -1,4 +1,5 @@
-﻿using Anjril.PokemonWorld.Common.Message;
+using Anjril.PokemonWorld.Common.Message;
+using Anjril.PokemonWorld.Common;
 using Anjril.PokemonWorld.Common.State;
 using Anjril.PokemonWorld.Server.Core.Properties;
 using Anjril.PokemonWorld.Server.Model;
@@ -31,9 +32,32 @@ namespace Anjril.PokemonWorld.Server.Core.Module
 
                     player.MapToUpdate = false;
                 }
+
+                if (player.TeamToUpdate)
+                {
+                    player.RemoteConnection.Send(GetTeamUpdate(player));
+                    player.TeamToUpdate = false;
+                }
             }
 
             base.Update(elapsed);
+        }
+
+        public static string GetTeamUpdate(Player player)
+        {
+            string message = "team:";
+
+            foreach (BattleEntity pokemon in player.Team)
+            {
+                message += pokemon.PokedexId;
+                message += ".";
+                message += pokemon.Level;
+                message += ",";
+            }
+
+            message = message.Remove(message.Length - 1, 1);
+
+            return message;
         }
 
         #region private methods

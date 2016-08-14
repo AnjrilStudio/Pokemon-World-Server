@@ -14,14 +14,14 @@ namespace Anjril.PokemonWorld.Server.Core.Module
     {
         #region private fields
 
-        private const double SPAWN_RATE = 0.01d;
-        private const double HIDE_RATE = 0.05d;
-        private const double MOVE_RATE = 0.5d;
+        private const double SPAWN_RATE = 0.002d;
+        private const double HIDE_RATE = 0.01d;
+        private const double MOVE_RATE = 0.1d;
 
         #endregion
 
         public WildModule()
-            : base(1000)
+            : base(200)
         { }
 
         public override void Update(TimeSpan elapsed)
@@ -38,7 +38,7 @@ namespace Anjril.PokemonWorld.Server.Core.Module
                     World.Instance.RemoveEntity(pokemon.Id);
                     pokemon.Position = null;
                 }
-                else if (pokemon.IsVisible)
+                else if (pokemon.IsVisible && RandomUtils.RandomDouble() < MOVE_RATE)
                 {
                     var dest = new Position(pokemon.Position, DirectionUtils.RandomDirection());
                     World.Instance.MoveEntity(pokemon.Id, dest);

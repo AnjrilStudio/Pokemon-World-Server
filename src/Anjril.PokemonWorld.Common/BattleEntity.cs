@@ -11,7 +11,7 @@ namespace Anjril.PokemonWorld.Common
         public int Id { get; private set; }
         public List<Action> Actions { get; private set; }
         public int PlayerId{ get; private set; }
-        public int PokemonId { get; private set; }
+        public int PokedexId { get; private set; }
         public Position CurrentPos { get; set; }
 
         public int HP { get; set; }
@@ -30,10 +30,10 @@ namespace Anjril.PokemonWorld.Common
         public int MaxMP { get; set; }
 
 
-        public BattleEntity(int id, int pokemonId, int playerId)
+        public BattleEntity(int id, int pokedexId, int playerId)
         {
             Id = id;
-            PokemonId = pokemonId;
+            PokedexId = pokedexId;
             PlayerId = playerId;
 
             Actions = new List<Action>();
