@@ -14,9 +14,10 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
         #region public properties
 
         public string Name { get; set; }
-        public List<Pokemon> Team { get; private set; }
+        public List<BattleEntity> Team { get; private set; }
 
         public bool MapToUpdate { get; set; }
+        public bool TeamToUpdate { get; set; }
         public DateTime LastMove { get; set; }
         public float MoveInputDelay { get; private set; }
         public IRemoteConnection RemoteConnection { get; private set; }
@@ -29,16 +30,18 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
             : base()
         {
             Name = name;
-            Team = new List<Pokemon>();
+            Team = new List<BattleEntity>();
             Type = EntityType.Player;
 
             MapToUpdate = true;
+            TeamToUpdate = true;
             LastMove = DateTime.Now;
             MoveInputDelay = 0.30f;
             RemoteConnection = remote;
 
             // DEBUG
-            Team.Add(new Pokemon(1, null));
+            Team.Add(new BattleEntity(-1, 1, Id));
+            Team.Add(new BattleEntity(-1, 2, Id));
         }
 
         #endregion
