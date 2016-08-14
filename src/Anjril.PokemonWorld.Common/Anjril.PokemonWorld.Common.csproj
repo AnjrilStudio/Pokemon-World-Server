@@ -51,6 +51,12 @@
     <Compile Include="ArenaTile.cs" />
     <Compile Include="BattleArena.cs" />
     <Compile Include="BattleEntity.cs" />
+    <Compile Include="Message\BattleActionMessage.cs" />
+    <Compile Include="Message\BattleStartMessage.cs" />
+    <Compile Include="Message\BattleStateEntity.cs" />
+    <Compile Include="Message\BattleStateMessage.cs" />
+    <Compile Include="Message\MapMessage.cs" />
+    <Compile Include="Message\MoveMessage.cs" />
     <Compile Include="Parameter\BaseParam.cs" />
     <Compile Include="Parameter\BattleStartParam.cs" />
     <Compile Include="CommandType.cs" />
