@@ -129,7 +129,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             {
                 actionId++;
 
-                EndPlayerBattle(turns[currentTurn].PlayerId);
+                EndPlayerBattle(player.Id);
 
                 if (action.NextTurn)
                 {
