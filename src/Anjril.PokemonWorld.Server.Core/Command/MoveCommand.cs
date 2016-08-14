@@ -29,7 +29,10 @@ namespace Anjril.PokemonWorld.Server.Core.Command
 
         public override void RunWithCast(Player player, MoveParam param)
         {
+            var oldSegment = player.Position.GetSegment(Settings.Default.ChunkSize);
+
             var dest = new Position(player.Position, (param as MoveParam).Direction);
+            var newSegment = dest.GetSegment(Settings.Default.ChunkSize);
 
             var result = World.Instance.MoveEntity(player.Id, dest);
 
@@ -45,9 +48,6 @@ namespace Anjril.PokemonWorld.Server.Core.Command
                 {
                     player.LastMove = nextMoveTime;
                 }
-
-                var oldSegment = player.Position.GetSegment(Settings.Default.ChunkSize);
-                var newSegment = dest.GetSegment(Settings.Default.ChunkSize);
 
                 if (!oldSegment.Equals(newSegment))
                 {

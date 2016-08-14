@@ -28,7 +28,7 @@ namespace Anjril.PokemonWorld.Server.Core.Module
 
                 if (player.MapToUpdate)
                 {
-                    message = GetMapUpdate(player);
+                    message = "map:" + GetMapUpdate(player);
 
                     player.RemoteConnection.Send(message);
                     player.MapToUpdate = false;
@@ -63,9 +63,6 @@ namespace Anjril.PokemonWorld.Server.Core.Module
 
         private string GetMapUpdate(Player player)
         {
-            string message = "map:";
-            int mapsize = World.Instance.Size;
-
             Position segment = player.Position.GetSegment(Settings.Default.ChunkSize);
 
             var startx = (segment.X - 1) * 20;
@@ -74,12 +71,10 @@ namespace Anjril.PokemonWorld.Server.Core.Module
             if (starty < 0) starty = 0;
 
             Position startPos = new Position(startx, starty);
-            message += startPos.ToString() + "+";
+            string message = startPos.ToString() + "+";
 
             var endx = (segment.X + 2) * 20;
             var endy = (segment.Y + 2) * 20;
-
-            Position endPos = new Position(endx, endy);
 
             for (int y = starty; y < endy - 1; y++)
             {
