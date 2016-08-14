@@ -1,4 +1,5 @@
 ﻿using Anjril.PokemonWorld.Common.State;
+using Anjril.PokemonWorld.Common.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +52,7 @@ namespace Anjril.PokemonWorld.Common.Parameter
                     Turn = Int32.Parse(splitedArg[0]);
                     Target = new Position(splitedArg[1]);
                     Action = Moves.Get((Move)Int32.Parse(splitedArg[2]));
-                    Direction = Utils.DirectionFromString(splitedArg[3]);
+                    Direction = DirectionUtils.FromString(splitedArg[3]);
 
                     this.IsValid = true;
                 }
@@ -64,7 +65,7 @@ namespace Anjril.PokemonWorld.Common.Parameter
 
         public override string ToString()
         {
-            return base.ToString() + String.Format("{0},{1},{2},{3}", Turn, Target, Action.Id, Direction);
+            return base.ToString() + String.Format("{0},{1},{2},{3}", Turn, Target, Action.Id, DirectionUtils.ToString(Direction));
         }
 
         #endregion

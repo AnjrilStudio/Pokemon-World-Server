@@ -8,6 +8,7 @@ using Anjril.PokemonWorld.Server.Model;
 using Anjril.PokemonWorld.Server.Model.Entity;
 using System.ComponentModel;
 using Anjril.PokemonWorld.Common.Parameter;
+using Anjril.PokemonWorld.Common.Utils;
 
 namespace Anjril.PokemonWorld.Server.Core.Command
 {
@@ -16,7 +17,7 @@ namespace Anjril.PokemonWorld.Server.Core.Command
     {
         public override void RunWithCast(Player player, BattleStartParam param)
         {
-            var dirPos = Utils.GetDirPosition(player.Direction);
+            var dirPos = PositionUtils.GetDirPosition(player.Direction);
             var otherPos = new Position(player.Position.X + dirPos.X, player.Position.Y - dirPos.Y);
             if (World.Instance.GetEntity(otherPos) != null)
             {

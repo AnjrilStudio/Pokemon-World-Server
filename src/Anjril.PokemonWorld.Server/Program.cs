@@ -35,6 +35,7 @@ namespace Anjril.PokemonWorld.Server
             Console.WriteLine("");
 
             World.Instance.LoadMap(GetMap());
+            World.Instance.LoadPopulation();
 
             using (var socket = new TcpSocket())
             {
@@ -156,6 +157,7 @@ namespace Anjril.PokemonWorld.Server
             var modules = new List<IModule>();
 
             modules.Add(new NotificationModule());
+            modules.Add(new WildModule());
 
             while (!STOP)
             {

@@ -1,18 +1,24 @@
-﻿using System;
+﻿using Anjril.PokemonWorld.Common.State;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Anjril.PokemonWorld.Common.State
+namespace Anjril.PokemonWorld.Common.Utils
 {
-
-    public class Utils
+    public static class DirectionUtils
     {
-        private static Random random = new Random();
+        #region private fields
+
+        private static readonly Random RAND = new Random();
+
+        #endregion
+
+        #region random methods
 
         public static Direction RandomDirection()
         {
-            switch (random.Next(4))
+            switch (RAND.Next(4))
             {
                 case 0:
                     return Direction.Down;
@@ -27,7 +33,11 @@ namespace Anjril.PokemonWorld.Common.State
             }
         }
 
-        public static string DirectionToString(Direction dir)
+        #endregion
+
+        #region serialization methods
+
+        public static string ToString(Direction dir)
         {
             switch (dir)
             {
@@ -44,38 +54,23 @@ namespace Anjril.PokemonWorld.Common.State
             }
         }
 
-        public static Direction DirectionFromString(string dir)
+        public static Direction FromString(string dir)
         {
             switch (dir)
             {
-                case "Down":
+                case "D":
                     return Direction.Down;
-                case "Up":
+                case "U":
                     return Direction.Up;
-                case "Right":
+                case "R":
                     return Direction.Right;
-                case "Left":
+                case "L":
                     return Direction.Left;
                 default:
                     return Direction.None;
             }
         }
 
-        public static Position GetDirPosition(Direction dir)
-        {
-            switch (dir)
-            {
-                case Direction.Up:
-                    return new Position(0, 1);
-                case Direction.Right:
-                    return new Position(1, 0);
-                case Direction.Down:
-                    return new Position(0, -1);
-                case Direction.Left:
-                    return new Position(-1, 0);
-                default:
-                    return new Position(0, 0);
-            }
-        }
+        #endregion
     }
 }

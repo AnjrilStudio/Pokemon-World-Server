@@ -64,7 +64,11 @@
     <Compile Include="Effect\MoveEffect.cs" />
     <Compile Include="Effect\PushEffect.cs" />
     <Compile Include="Effect\StatusEffect.cs" />
+    <Compile Include="Utils\PositionUtils.cs" />
+    <Compile Include="Utils\RandomUtils.cs" />
     <Compile Include="Range\ArenaRange.cs" />
+    <Compile Include="State\Gender.cs" />
+    <Compile Include="Utils\DirectionUtils.cs" />
     <Compile Include="TrainerActions.cs" />
     <Compile Include="TrainerAction.cs" />
     <Compile Include="Move.cs" />
@@ -78,7 +82,6 @@
     <Compile Include="Range\AbstractRange.cs" />
     <Compile Include="State\Direction.cs" />
     <Compile Include="State\Position.cs" />
-    <Compile Include="State\Utils.cs" />
     <Compile Include="Status.cs" />
     <Compile Include="TargetType.cs" />
   </ItemGroup>

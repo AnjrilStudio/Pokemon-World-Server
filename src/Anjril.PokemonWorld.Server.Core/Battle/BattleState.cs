@@ -9,6 +9,7 @@ using Anjril.PokemonWorld.Common.ActionCost;
 using Anjril.PokemonWorld.Common;
 using Anjril.PokemonWorld.Server.Model.Entity;
 using Anjril.PokemonWorld.Server.Model;
+using Anjril.PokemonWorld.Common.Utils;
 
 namespace Anjril.PokemonWorld.Server.Core.Battle
 {
@@ -37,14 +38,16 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             currentTurn = 0;
             WaitingPokemonGo = true;
 
-            foreach (int entityId in entitiesList){
+            foreach (int entityId in entitiesList)
+            {
                 var entity = World.Instance.GetEntity(entityId);
                 if (entity.Type == EntityType.Pokemon)
                 {
                     BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Pokemon).PokedexId, -1);
                     battleEntity.CurrentPos = GetRandomStartPosition(Direction.Left);//TODO
                     turns.Add(battleEntity);
-                } else if (entity.Type == EntityType.Player)
+                }
+                else if (entity.Type == EntityType.Player)
                 {
                     //TODO
                     var player = entity as Player;
@@ -127,7 +130,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 actionId++;
 
                 EndPlayerBattle(turns[currentTurn].PlayerId);
-                
+
                 if (action.NextTurn)
                 {
                     NextTurn();
@@ -145,14 +148,15 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 }
 
                 return true;
-            } else if (action.Id == (int)TrainerAction.Pokemon_Go)
+            }
+            else if (action.Id == (int)TrainerAction.Pokemon_Go)
             {
                 BattleEntity battleEntity = new BattleEntity(entityIdSequence++, player.Team[0].PokedexId, player.Id);
                 battleEntity.CurrentPos = target;
                 turns.Add(battleEntity);
 
                 bool ok = true;
-                foreach(int id in players)
+                foreach (int id in players)
                 {
                     if (GetPlayerNbPokemons(id) == 0)
                     {
@@ -203,16 +207,17 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         public void EndPlayerBattle(int playerId)
         {
             //TODO vérifier que les pokemon sont rappelés
-            
+
             players.Remove(playerId);
             if (players.Count == 0)
             {
                 GlobalServer.Instance.RemoveBattle(playerId);
-            } else
+            }
+            else
             {
                 GlobalServer.Instance.RemoveBattleEntity(playerId);
             }
-            
+
             GlobalServer.Instance.SendMessage(playerId, ToEndMessage(playerId));
             var player = World.Instance.GetEntity(playerId) as Player;
             player.MapToUpdate = true;
@@ -317,7 +322,8 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         {
             string message = "";
             message += (int)TrainerAction.End_Battle + ",";
-            if (GetPlayerNbPokemons(player) < 1){ //TODO 6 pokemons
+            if (GetPlayerNbPokemons(player) < 1)
+            { //TODO 6 pokemons
                 message += (int)TrainerAction.Pokemon_Go + ",";
             }
             if (GetPlayerNbPokemons(player) > 0)
@@ -332,7 +338,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         public int GetPlayerNbPokemons(int playerId)
         {
             int result = 0;
-            foreach(BattleEntity entity in turns)
+            foreach (BattleEntity entity in turns)
             {
                 if (entity.PlayerId == playerId)
                 {
@@ -358,7 +364,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 message += entity.MaxAP + ",";
                 message += entity.MP + ",";
                 message += entity.MaxMP;
-                message += ";" ;
+                message += ";";
             }
 
             return message;
@@ -366,11 +372,11 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
         public string ActionMessage(Position target, Action action, Direction dir)
         {
-            string message = "" ;
+            string message = "";
 
             message += target.ToString() + ",";
             message += action.Id + ",";
-            message += dir.ToString();
+            message += DirectionUtils.ToString(dir);
 
             return message;
         }
