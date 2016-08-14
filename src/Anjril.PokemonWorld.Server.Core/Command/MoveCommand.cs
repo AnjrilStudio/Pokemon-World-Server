@@ -32,7 +32,6 @@ namespace Anjril.PokemonWorld.Server.Core.Command
 
                     if (result)
                     {
-                        Console.WriteLine("moveOK");
                         var nextMoveTime = player.LastMove.AddSeconds(player.MoveDuration);
 
                         if (DateTime.Now > nextMoveTime)

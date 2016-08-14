@@ -102,14 +102,17 @@ namespace Anjril.PokemonWorld.Server.Model
 
         public void RemoveEntity(int id)
         {
-            var entity = _mapEntities[id];
-
-            _worldEntities[entity.Position.X, entity.Position.Y] = null;
-            _mapEntities.Remove(id);
-
-            if (entity is Player)
+            if (_mapEntities.ContainsKey(id))
             {
-                _players.Remove(entity as Player);
+                var entity = _mapEntities[id];
+
+                _worldEntities[entity.Position.X, entity.Position.Y] = null;
+                _mapEntities.Remove(id);
+
+                if (entity is Player)
+                {
+                    _players.Remove(entity as Player);
+                }
             }
         }
 

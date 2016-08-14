@@ -21,7 +21,7 @@ namespace Anjril.PokemonWorld.Server.Core.Command
             BattleState battle = GlobalServer.Instance.GetBattle(player.Id);
             if (battle.WaitingPokemonGo || battle.CurrentPlayer() == player.Id)
             {
-                battle.PlayTrainerAction(player, param.Target, param.Action);
+                battle.PlayTrainerAction(player, param.Target, param.Action, param.Index);
             }
         }
     }

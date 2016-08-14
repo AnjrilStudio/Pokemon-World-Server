@@ -124,7 +124,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             return false;
         }
 
-        public bool PlayTrainerAction(Player player, Position target, Action action)
+        public bool PlayTrainerAction(Player player, Position target, Action action, int index)
         {
             if (action.Id == (int)TrainerAction.End_Battle && GetPlayerNbPokemons(player.Id) == 0)
             {
@@ -155,7 +155,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             }
             else if (action.Id == (int)TrainerAction.Pokemon_Go)
             {
-                BattleEntity battleEntity = new BattleEntity(entityIdSequence++, player.Team[0].PokedexId, player.Id);
+                BattleEntity battleEntity = new BattleEntity(entityIdSequence++, player.Team[index].PokedexId, player.Id);
                 battleEntity.CurrentPos = target;
                 turns.Add(battleEntity);
 
@@ -224,7 +224,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             else if (action.Id == (int)TrainerAction.Pokeball)
             {
                 var entity = GetEntity(target);
-                if (entity.PlayerId < 0)
+                if (entity != null && entity.PlayerId < 0)
                 {
                     var indexof = turns.IndexOf(entity);
                     turns.Remove(entity);
@@ -236,16 +236,16 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                             currentTurn += turns.Count;
                         }
                     }
-                    
+
                     player.Team.Add(new BattleEntity(-1, entity.PokedexId, player.Id));
                     player.TeamToUpdate = true;
-                    
+
                     World.Instance.RemoveEntity(entity.WorldId);
                     World.Instance.RemovePopulation(entity.WorldId);
                 }
 
                 actionId++;
-                
+
                 NextTurn();
 
                 foreach (int id in players)
@@ -262,8 +262,28 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     }
                 }
             }
+            else if (action.Id == (int)TrainerAction.End_Turn)
+            {
+                actionId++;
 
-            return false;
+                NextTurn();
+
+                foreach (int id in players)
+                {
+                    var message = ToNoActionMessage(id);
+                    GlobalServer.Instance.SendMessage(id, message);
+                }
+
+                if (turns.Count > 0)
+                {
+                    while (turns[currentTurn].PlayerId < 0)
+                    {
+                        PlayIA();
+                    }
+                }
+            }
+
+           return false;
         }
 
         private BattleEntity GetEntity(Position pos)
@@ -415,10 +435,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         public string CurrentAvailableActionsMessage(int player)
         {
             string message = "";
-            if (GetPlayerNbPokemons(player) == 0) //TODO condition aucun ennemi ?
-            {
-                message += (int)TrainerAction.End_Battle + ",";
-            }
+            
             if (GetPlayerNbPokemons(player) < 1)
             { //TODO 6 pokemons
                 message += (int)TrainerAction.Pokemon_Go + ",";
@@ -427,7 +444,13 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             {
                 message += (int)TrainerAction.Pokemon_Come_Back + ",";
             }
-            message += (int)TrainerAction.Pokeball;
+            message += (int)TrainerAction.Pokeball + ",";
+            message += (int)TrainerAction.End_Turn;
+            if (GetPlayerNbPokemons(player) == 0)
+            {
+                message += ",";
+                message += (int)TrainerAction.End_Battle;
+            }
 
             return message;
         }

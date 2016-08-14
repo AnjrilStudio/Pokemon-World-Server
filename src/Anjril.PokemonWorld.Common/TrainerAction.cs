@@ -7,9 +7,10 @@ namespace Anjril.PokemonWorld.Common
 {
     public enum TrainerAction
     {
-        End_Battle,
+        End_Turn,
         Pokeball,
         Pokemon_Come_Back,
-        Pokemon_Go
+        Pokemon_Go,
+        End_Battle
     }
 }

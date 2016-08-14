@@ -28,6 +28,7 @@ namespace Anjril.PokemonWorld.Common
 
             switch (trainerAction)
             {
+                case TrainerAction.End_Turn:
                 case TrainerAction.End_Battle:
                     break;
                 case TrainerAction.Pokeball:
