@@ -24,6 +24,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         private BattleArena arena;
         private int actionId;
         private int entityIdSequence;
+        public bool WaitingPokemonGo { get; private set; }
 
         public BattleState(List<int> entitiesList)
         {
@@ -34,8 +35,9 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             entities = entitiesList;
             arena = new BattleArena(defaultsize);
             currentTurn = 0;
+            WaitingPokemonGo = true;
 
-            foreach(int entityId in entitiesList){
+            foreach (int entityId in entitiesList){
                 var entity = World.Instance.GetEntity(entityId);
                 if (entity.Type == EntityType.Pokemon)
                 {
@@ -47,9 +49,10 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     //TODO
                     var player = entity as Player;
                     players.Add(player.Id);
-                    BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Player).Team[0].PokedexId, player.Id);
-                    battleEntity.CurrentPos = GetRandomStartPosition(Direction.Right);//TODO
-                    turns.Add(battleEntity);
+
+                    //BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Player).Team[0].PokedexId, player.Id);
+                    //battleEntity.CurrentPos = GetRandomStartPosition(Direction.Right);//TODO
+                    //turns.Add(battleEntity);
                 }
             }
         }
@@ -99,7 +102,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     NextTurn();
                 }
 
-                var message = ToActionMessage(target, action, dir);
+                var message = ToActionMessage(turns[currentTurn].PlayerId, target, action, dir);
 
                 foreach (int id in players)
                 {
@@ -117,30 +120,62 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             return false;
         }
 
-        public bool PlayTrainerAction(Position target, Action action)
+        public bool PlayTrainerAction(Player player, Position target, Action action)
         {
             if (action.Id == (int)TrainerAction.End_Battle) //TODO
             {
                 actionId++;
 
                 EndPlayerBattle(turns[currentTurn].PlayerId);
-
-                //Todo mutualiser
+                
                 if (action.NextTurn)
                 {
                     NextTurn();
                 }
 
-                var message = ToNoActionMessage();
-
                 foreach (int id in players)
                 {
+                    var message = ToNoActionMessage(id);
                     GlobalServer.Instance.SendMessage(id, message);
                 }
 
-                while (turns[currentTurn].PlayerId < 0 && players.Count > 0)
+                while (turns[currentTurn].PlayerId < 0)
                 {
                     PlayIA();
+                }
+
+                return true;
+            } else if (action.Id == (int)TrainerAction.Pokemon_Go)
+            {
+                actionId++;
+
+                BattleEntity battleEntity = new BattleEntity(entityIdSequence++, player.Team[0].PokedexId, player.Id);
+                battleEntity.CurrentPos = target;
+                turns.Add(battleEntity);
+
+                bool ok = true;
+                foreach(int id in players)
+                {
+                    if (GetPlayerNbPokemons(id) == 0)
+                    {
+                        ok = false;
+                    }
+                }
+
+                if (ok)
+                {
+                    WaitingPokemonGo = false;
+
+                    if (action.NextTurn)
+                    {
+                        NextTurn();
+                    }
+
+                    foreach (int id in players)
+                    {
+                        var message = ToNoActionMessage(id);
+                        GlobalServer.Instance.SendMessage(id, message);
+                    }
                 }
 
                 return true;
@@ -179,7 +214,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 GlobalServer.Instance.RemoveBattleEntity(playerId);
             }
             
-            GlobalServer.Instance.SendMessage(playerId, ToEndMessage());
+            GlobalServer.Instance.SendMessage(playerId, ToEndMessage(playerId));
             var player = World.Instance.GetEntity(playerId) as Player;
             player.MapToUpdate = true;
         }
@@ -279,14 +314,14 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             }
         }
 
-        public string CurrentAvailableActionsMessage()
+        public string CurrentAvailableActionsMessage(int player)
         {
             string message = "";
             message += (int)TrainerAction.End_Battle + ",";
-            if (GetPlayerNbPokemons(CurrentPlayer()) < 6){
+            if (GetPlayerNbPokemons(player) < 1){ //TODO 6 pokemons
                 message += (int)TrainerAction.Pokemon_Go + ",";
             }
-            if (GetPlayerNbPokemons(CurrentPlayer()) > 0)
+            if (GetPlayerNbPokemons(player) > 0)
             {
                 message += (int)TrainerAction.Pokemon_Come_Back + ",";
             }
@@ -341,12 +376,12 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             return message;
         }
 
-        public string ToActionMessage(Position target, Action action, Direction dir)
+        public string ToActionMessage(int player, Position target, Action action, Direction dir)
         {
             var message = "battleaction:";
             message += actionId;
             message += "=";
-            message += CurrentAvailableActionsMessage();
+            message += CurrentAvailableActionsMessage(player);
             message += "=";
             message += ActionMessage(target, action, dir);
             message += "=";
@@ -355,12 +390,12 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             return message;
         }
 
-        public string ToNoActionMessage()
+        public string ToNoActionMessage(int player)
         {
             string message = "battleaction:";
             message += actionId;
             message += "=";
-            message += CurrentAvailableActionsMessage();
+            message += CurrentAvailableActionsMessage(player);
             message += "=";
             message += "0";
             message += "=";
@@ -369,12 +404,12 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             return message;
         }
 
-        public string ToEndMessage()
+        public string ToEndMessage(int player)
         {
             string message = "battleaction:";
             message += actionId;
             message += "=";
-            message += CurrentAvailableActionsMessage();
+            message += CurrentAvailableActionsMessage(player);
             message += "=";
             message += "0";
             message += "=";

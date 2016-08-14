@@ -26,9 +26,9 @@ namespace Anjril.PokemonWorld.Server.Core.Command
                 var battle = GlobalServer.Instance.NewBattle(entitiesList);
 
                 string startmessage = World.Instance.BattleStartToMessage(entitiesList);
-                string battlemessage = battle.ToNoActionMessage();
                 foreach (int id in entitiesList)
                 {
+                    string battlemessage = battle.ToNoActionMessage(id);
                     GlobalServer.Instance.SendMessage(id, startmessage);
                     GlobalServer.Instance.SendMessage(id, battlemessage);
                 }
