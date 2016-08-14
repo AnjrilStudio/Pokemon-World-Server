@@ -43,23 +43,6 @@ namespace Anjril.PokemonWorld.Server.Core.Module
             base.Update(elapsed);
         }
 
-        private string GetTeamUpdate(Player player)
-        {
-            string message = "team:";
-
-            foreach (BattleEntity pokemon in player.Team)
-            {
-                message += pokemon.PokedexId;
-                message += ".";
-                message += pokemon.Level;
-                message += ",";
-            }
-
-            message = message.Remove(message.Length - 1, 1);
-
-            return message;
-        }
-
         #region private methods
 
         private List<PositionEntity> GetVisibleEntities(Player player)
@@ -113,6 +96,23 @@ namespace Anjril.PokemonWorld.Server.Core.Module
             message = message.Remove(message.Length - 1, 1);
 
             return new MapMessage(startPos, message);
+        }
+
+        private string GetTeamUpdate(Player player)
+        {
+            string message = "team:";
+
+            foreach (BattleEntity pokemon in player.Team)
+            {
+                message += pokemon.PokedexId;
+                message += ".";
+                message += pokemon.Level;
+                message += ",";
+            }
+
+            message = message.Remove(message.Length - 1, 1);
+
+            return message;
         }
 
         #endregion

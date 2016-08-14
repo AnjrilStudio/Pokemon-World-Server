@@ -237,7 +237,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                         }
                     }
 
-                    player.Team.Add(new BattleEntity(-1, entity.PokedexId, player.Id));
+                    player.Team.AddPokemon(new BattleEntity(-1, entity.PokedexId, player.Id));
                     player.TeamToUpdate = true;
 
                     World.Instance.RemoveEntity(entity.WorldId);
@@ -283,7 +283,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 }
             }
 
-           return false;
+            return false;
         }
 
         private BattleEntity GetEntity(Position pos)
@@ -435,7 +435,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         public string CurrentAvailableActionsMessage(int player)
         {
             string message = "";
-            
+
             if (GetPlayerNbPokemons(player) < 1)
             { //TODO 6 pokemons
                 message += (int)TrainerAction.Pokemon_Go + ",";

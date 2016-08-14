@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace Anjril.PokemonWorld.Server.Model.Utils
 {
-    public class Team
+    public class Team : IEnumerable<BattleEntity>
     {
         #region private fields
 
@@ -19,7 +20,18 @@ namespace Anjril.PokemonWorld.Server.Model.Utils
 
         public int NbPokemon { get { return _pokemons.Count(poke => poke != null); } }
         public bool IsFull { get { return NbPokemon == 6; } }
-        public IReadOnlyList<BattleEntity> Pokemons { get { return _pokemons.ToList().AsReadOnly(); } }
+        public BattleEntity this[int idx]
+        {
+            get
+            {
+                if (idx >= _pokemons.Length)
+                {
+                    return null;
+                }
+
+                return _pokemons[idx];
+            }
+        }
 
         #endregion
 
@@ -32,7 +44,7 @@ namespace Anjril.PokemonWorld.Server.Model.Utils
 
         #endregion
 
-        #region public methods
+        #region team management methods
 
         public bool AddPokemon(BattleEntity pokemon)
         {
@@ -81,6 +93,20 @@ namespace Anjril.PokemonWorld.Server.Model.Utils
             _pokemons[idxB] = tmp;
 
             return true;
+        }
+
+        #endregion
+
+        #region iterator methods
+
+        public IEnumerator<BattleEntity> GetEnumerator()
+        {
+            return _pokemons.Where(poke => poke != null).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _pokemons.Where(poke => poke != null).GetEnumerator();
         }
 
         #endregion
