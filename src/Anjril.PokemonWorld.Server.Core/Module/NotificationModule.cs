@@ -1,4 +1,5 @@
-﻿using Anjril.PokemonWorld.Common.State;
+﻿using Anjril.PokemonWorld.Common.Message;
+using Anjril.PokemonWorld.Common.State;
 using Anjril.PokemonWorld.Server.Core.Properties;
 using Anjril.PokemonWorld.Server.Model;
 using Anjril.PokemonWorld.Server.Model.Entity;
@@ -20,17 +21,14 @@ namespace Anjril.PokemonWorld.Server.Core.Module
         {
             foreach (var player in World.Instance.Players)
             {
-                var visibleEntites = GetVisibleEntities(player);
-
-                string message = String.Format("entities:{0}", String.Join(";", visibleEntites));
-
-                player.RemoteConnection.Send(message);
+                BaseMessage message = new PositionMessage(GetVisibleEntities(player));
+                SendMessage(player, message);
 
                 if (player.MapToUpdate)
                 {
-                    message = "map:" + GetMapUpdate(player);
+                    message = GetMapUpdate(player);
+                    SendMessage(player, message);
 
-                    player.RemoteConnection.Send(message);
                     player.MapToUpdate = false;
                 }
             }
@@ -40,11 +38,11 @@ namespace Anjril.PokemonWorld.Server.Core.Module
 
         #region private methods
 
-        private List<WorldEntity> GetVisibleEntities(Player player)
+        private List<PositionEntity> GetVisibleEntities(Player player)
         {
             var lineOfSight = Settings.Default.LineOfSight;
 
-            var visibleEntites = new List<WorldEntity>();
+            var visibleEntites = new List<PositionEntity>();
 
             for (int x = Math.Max(player.Position.X - lineOfSight, 0); x < Math.Min(player.Position.X + lineOfSight, World.Instance.Size); x++)
             {
@@ -53,7 +51,7 @@ namespace Anjril.PokemonWorld.Server.Core.Module
                     var entity = World.Instance.GetEntity(x, y);
                     if (entity != null)
                     {
-                        visibleEntites.Add(entity);
+                        visibleEntites.Add(new PositionEntity(entity.Id, entity.Position, entity.Type, entity.Direction));
                     }
                 }
             }
@@ -61,7 +59,7 @@ namespace Anjril.PokemonWorld.Server.Core.Module
             return visibleEntites;
         }
 
-        private string GetMapUpdate(Player player)
+        private MapMessage GetMapUpdate(Player player)
         {
             Position segment = player.Position.GetSegment(Settings.Default.ChunkSize);
 
@@ -71,7 +69,7 @@ namespace Anjril.PokemonWorld.Server.Core.Module
             if (starty < 0) starty = 0;
 
             Position startPos = new Position(startx, starty);
-            string message = startPos.ToString() + "+";
+            string message = String.Empty;
 
             var endx = (segment.X + 2) * 20;
             var endy = (segment.Y + 2) * 20;
@@ -90,7 +88,7 @@ namespace Anjril.PokemonWorld.Server.Core.Module
 
             message = message.Remove(message.Length - 1, 1);
 
-            return message;
+            return new MapMessage(startPos, message);
         }
 
         #endregion

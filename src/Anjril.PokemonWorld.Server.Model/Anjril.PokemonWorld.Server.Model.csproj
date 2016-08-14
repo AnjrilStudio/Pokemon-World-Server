@@ -44,7 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entity\EntityType.cs" />
     <Compile Include="Entity\Player.cs" />
     <Compile Include="Entity\Pokemon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

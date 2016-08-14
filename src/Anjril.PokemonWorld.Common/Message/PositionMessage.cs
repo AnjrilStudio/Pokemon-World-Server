@@ -1,31 +1,31 @@
 ﻿using Anjril.PokemonWorld.Common.State;
+using Anjril.PokemonWorld.Common.Utils;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
 namespace Anjril.PokemonWorld.Common.Message
 {
-    public class MapMessage : BaseMessage
+    public class PositionMessage : BaseMessage
     {
         #region public properties
 
-        public Position Origin { get; private set; }
-        public string Segments { get; private set; }
+        public IList<PositionEntity> Entities { get; private set; }
 
         #endregion
 
-        #region constructors
+        #region constructor
 
-        public MapMessage(Position origin, string segments)
+        public PositionMessage(IList<PositionEntity> entities)
             : this()
         {
-            Origin = origin;
-            Segments = segments;
+            Entities = entities;
         }
 
-        public MapMessage()
-            : base("map")
+        public PositionMessage()
+            : base("entities")
         { }
 
         #endregion
@@ -36,10 +36,7 @@ namespace Anjril.PokemonWorld.Common.Message
         {
             try
             {
-                var splitArgs = args.Split('+');
-
-                Origin = new Position(splitArgs[0]);
-                Segments = splitArgs[1];
+                Entities = args.Split(';').Select(e => new PositionEntity(e)).ToList();
 
                 IsValid = true;
             }
@@ -51,7 +48,7 @@ namespace Anjril.PokemonWorld.Common.Message
 
         public override string ToString()
         {
-            return base.ToString() + String.Format("{0}+{1}", Origin, Segments);
+            return base.ToString() + String.Join(";", Entities.Select(e => e.ToString()).ToArray());
         }
 
         #endregion

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Anjril.PokemonWorld.Common.Message;
+using Anjril.PokemonWorld.Server.Model.Entity;
+using System;
 
 namespace Anjril.PokemonWorld.Server.Core.Module
 {
@@ -26,6 +28,15 @@ namespace Anjril.PokemonWorld.Server.Core.Module
         public virtual void Update(TimeSpan elapsed)
         {
             this.LastUpdate = DateTime.Now;
+        }
+
+        #endregion
+
+        #region protected methods
+
+        protected void SendMessage(Player player, BaseMessage message)
+        {
+            player.RemoteConnection.Send(message.ToString());
         }
 
         #endregion

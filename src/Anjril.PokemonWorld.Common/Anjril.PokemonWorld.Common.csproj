@@ -51,12 +51,14 @@
     <Compile Include="ArenaTile.cs" />
     <Compile Include="BattleArena.cs" />
     <Compile Include="BattleEntity.cs" />
+    <Compile Include="Message\BaseMessage.cs" />
     <Compile Include="Message\BattleActionMessage.cs" />
     <Compile Include="Message\BattleStartMessage.cs" />
     <Compile Include="Message\BattleStateEntity.cs" />
     <Compile Include="Message\BattleStateMessage.cs" />
     <Compile Include="Message\MapMessage.cs" />
-    <Compile Include="Message\MoveMessage.cs" />
+    <Compile Include="Message\PositionEntity.cs" />
+    <Compile Include="Message\PositionMessage.cs" />
     <Compile Include="Parameter\BaseParam.cs" />
     <Compile Include="Parameter\BattleStartParam.cs" />
     <Compile Include="CommandType.cs" />
@@ -70,6 +72,8 @@
     <Compile Include="Effect\MoveEffect.cs" />
     <Compile Include="Effect\PushEffect.cs" />
     <Compile Include="Effect\StatusEffect.cs" />
+    <Compile Include="State\EntityType.cs" />
+    <Compile Include="Utils\EntityTypeUtils.cs" />
     <Compile Include="Utils\PositionUtils.cs" />
     <Compile Include="Utils\RandomUtils.cs" />
     <Compile Include="Range\ArenaRange.cs" />
