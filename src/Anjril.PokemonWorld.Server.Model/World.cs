@@ -61,15 +61,8 @@ namespace Anjril.PokemonWorld.Server.Model
 
         private World()
         {
-            Size = 400;
-
             _players = new List<Player>();
-
             _mapEntities = new Dictionary<int, WorldEntity>();
-
-            _worldEntities = new WorldEntity[Size, Size];
-            _worldTiles = new WorldTile[Size, Size];
-            _worldObjects = new WorldObject[Size, Size];
 
             Players = _players.AsReadOnly();
         }
@@ -191,6 +184,12 @@ namespace Anjril.PokemonWorld.Server.Model
 
             var mapArray = jsonMap.Split(',');
             int x = 0, y = 0;
+
+            Size = (int)Math.Sqrt(mapArray.Length);
+
+            _worldEntities = new WorldEntity[Size, Size];
+            _worldTiles = new WorldTile[Size, Size];
+            _worldObjects = new WorldObject[Size, Size];
 
             foreach (string s in mapArray)
             {
