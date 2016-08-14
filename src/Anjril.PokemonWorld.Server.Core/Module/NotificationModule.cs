@@ -24,15 +24,11 @@ namespace Anjril.PokemonWorld.Server.Core.Module
 
                 string message = String.Format("entities:{0}", String.Join(";", visibleEntites));
 
-                Console.WriteLine("send(" + player.Id + ") :" + message);
-
                 player.RemoteConnection.Send(message);
 
                 if (player.MapToUpdate)
                 {
                     message = GetMapUpdate(player);
-
-                    Console.WriteLine("send(" + player.Id + ") :" + message);
 
                     player.RemoteConnection.Send(message);
                     player.MapToUpdate = false;
