@@ -238,8 +238,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     }
                     
                     player.Team.Add(new BattleEntity(-1, entity.PokedexId, player.Id));
-                    var message = NotificationModule.GetTeamUpdate(player);
-                    player.RemoteConnection.Send(message);
+                    player.TeamToUpdate = true;
                     
                     World.Instance.RemoveEntity(entity.WorldId);
                     World.Instance.RemovePopulation(entity.WorldId);

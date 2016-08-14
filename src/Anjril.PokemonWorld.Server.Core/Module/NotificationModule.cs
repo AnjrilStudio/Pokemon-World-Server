@@ -43,7 +43,7 @@ namespace Anjril.PokemonWorld.Server.Core.Module
             base.Update(elapsed);
         }
 
-        public static string GetTeamUpdate(Player player)
+        private string GetTeamUpdate(Player player)
         {
             string message = "team:";
 
