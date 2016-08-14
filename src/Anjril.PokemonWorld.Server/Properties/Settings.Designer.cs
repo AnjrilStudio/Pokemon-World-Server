@@ -34,5 +34,17 @@ namespace Anjril.PokemonWorld.Server.Properties {
                 this["MapLocation"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int UpdateTick {
+            get {
+                return ((int)(this["UpdateTick"]));
+            }
+            set {
+                this["UpdateTick"] = value;
+            }
+        }
     }
 }

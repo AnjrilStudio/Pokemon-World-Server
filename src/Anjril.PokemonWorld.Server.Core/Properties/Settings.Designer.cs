@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Anjril.PokemonWorld.Server.Model.Properties {
+namespace Anjril.PokemonWorld.Server.Core.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -20,6 +20,18 @@ namespace Anjril.PokemonWorld.Server.Model.Properties {
         public static Settings Default {
             get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int LineOfSight {
+            get {
+                return ((int)(this["LineOfSight"]));
+            }
+            set {
+                this["LineOfSight"] = value;
             }
         }
         

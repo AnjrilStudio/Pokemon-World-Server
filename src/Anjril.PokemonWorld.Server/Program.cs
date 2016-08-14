@@ -16,12 +16,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using Anjril.PokemonWorld.Server.Core.Module;
 
 namespace Anjril.PokemonWorld.Server
 {
     class Program
     {
-        private static Dictionary<IRemoteConnection, Player> PLAYERS;
+        private static bool STOP = false;
+        private static Dictionary<IRemoteConnection, Player> PLAYERS = new Dictionary<IRemoteConnection, Player>();
 
         static void Main(string[] args)
         {
@@ -32,12 +34,18 @@ namespace Anjril.PokemonWorld.Server
             Console.WriteLine("----------------------------------");
             Console.WriteLine("");
 
-            PLAYERS = new Dictionary<IRemoteConnection, Player>();
-
             World.Instance.LoadMap(GetMap());
 
             using (var socket = new TcpSocket())
             {
+                #region start module loop
+
+                var updateLoop = new Thread(new ThreadStart(UpadateModules));
+                updateLoop.Name = "UpdateLoop";
+                updateLoop.Start();
+
+                #endregion
+
                 #region set network on
 
                 socket.StartListening(ConnectionRequested, MessageReceived, Disconnected);
@@ -48,21 +56,22 @@ namespace Anjril.PokemonWorld.Server
 
                 #endregion
 
-                InitWorld();
-
-                Task.Run(() => Tick());
-
                 Console.WriteLine("Press any key to stop the server...");
 
                 Console.WriteLine();
                 var key = Console.ReadKey();
                 Console.WriteLine();
 
-                while (key.Key == ConsoleKey.Spacebar)
+                #region stop module loop
+
+                STOP = true;
+
+                while (updateLoop.IsAlive)
                 {
-                    socket.Broadcast("test");
-                    key = Console.ReadKey();
+                    Thread.Sleep(10);
                 }
+
+                #endregion
 
                 #region set network off
 
@@ -97,7 +106,7 @@ namespace Anjril.PokemonWorld.Server
             World.Instance.AddEntity(player);
             GlobalServer.Instance.AddPlayer(player.Id, sender);
 
-            response = "OK:"+player.Id;
+            response = "OK:" + player.Id;
 
             return true;
         }
@@ -105,6 +114,8 @@ namespace Anjril.PokemonWorld.Server
         private static void MessageReceived(IRemoteConnection sender, string message)
         {
             Console.WriteLine("Message received from {0}:{1} : {2}.", sender.IPAddress, sender.Port, message);
+
+            var player = PLAYERS[sender];
 
             var splitedArgument = message.Split('/');
 
@@ -114,9 +125,9 @@ namespace Anjril.PokemonWorld.Server
             ICommand command = CommandFactory.GetCommand(cmd);
 
             Object param;
-            if (command.CanRun(args, out param))
+            if (command.CanRun(player, args, out param))
             {
-                Task.Run(() => command.Run(PLAYERS[sender], param));
+                Task.Run(() => command.Run(player, param));
             }
             else
             {
@@ -140,66 +151,28 @@ namespace Anjril.PokemonWorld.Server
 
         #region private methods
 
-        private static void Tick()
+        private static void UpadateModules()
         {
-            var random = new Random();
+            var modules = new List<IModule>();
 
-            while (true)
+            modules.Add(new NotificationModule());
+
+            while (!STOP)
             {
-                List<WorldEntity> entities = World.Instance.Entities;
-                if (entities.Count > 0)
+                var now = DateTime.Now;
+
+                foreach (IModule mod in modules)
                 {
-                    //test
-                    foreach (WorldEntity entity in entities)
+                    var elapsed = now - mod.LastUpdate;
+
+                    if (elapsed.TotalMilliseconds >= mod.Interval)
                     {
-                        if (entity.Type == EntityType.Pokemon && random.NextDouble() < 0.1)
-                        {
-                            var dest = new Position(entity.Position, Utils.RandomDirection());
-
-                            //World.Instance.MoveEntity(entity.Id, dest);
-                        }
+                        mod.Update(elapsed);
                     }
-
-                    //message
-                    foreach (int id in GlobalServer.Instance.GetPlayers())
-                    {
-                        var conn = GlobalServer.Instance.GetConnection(id);
-                        try
-                        {
-                            string message = World.Instance.EntitiesToMessage;
-                            Console.WriteLine("send(" + id + ") :" + message);
-
-                            GlobalServer.Instance.SendMessage(id, message);
-
-                            var player = World.Instance.GetEntity(id) as Player;
-                            if (player.MapToUpdate)
-                            {
-                                GlobalServer.Instance.SendMessage(id, player.MapMessage);
-                                player.MapToUpdate = false;
-                            }
-                        }
-                        catch (SocketException)
-                        {
-                            Disconnected(conn, id.ToString());
-                        }
-
-                    }
-                    //socket.Broadcast(message);
                 }
 
-                Thread.Sleep(200);
+                Thread.Sleep(Settings.Default.UpdateTick);
             }
-        }
-
-        private static void InitWorld()
-        {
-            Pokemon pokemon = new Pokemon(1);
-            pokemon.Position = new Position(200, 180);
-            World.Instance.AddEntity(pokemon);
-
-            Player other = new Player("other");
-            other.Position = new Position(205, 175);
-            World.Instance.AddEntity(other);
         }
 
         private static string GetMap()

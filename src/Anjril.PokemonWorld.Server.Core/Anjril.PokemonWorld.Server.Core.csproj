@@ -57,11 +57,24 @@
     <Compile Include="Command\BattleStartCommand.cs" />
     <Compile Include="Command\TurnCommand.cs" />
     <Compile Include="Command\MoveCommand.cs" />
+    <Compile Include="Module\BaseModule.cs" />
+    <Compile Include="Module\IModule.cs" />
+    <Compile Include="Module\NotificationModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalServer.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Anjril.PokemonWorld.Common\Anjril.PokemonWorld.Common.csproj">

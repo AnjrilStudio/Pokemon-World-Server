@@ -11,7 +11,7 @@ namespace Anjril.PokemonWorld.Server.Core.Command
     abstract class BaseCommand<T> : ICommand
         where T : BaseParam, new()
     {
-        public bool CanRun(string args, out object param)
+        public virtual bool CanRun(Player player, string args, out object param)
         {
             var parameter = new T();
             parameter.DeserializeArguments(args);

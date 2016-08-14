@@ -12,7 +12,7 @@ namespace Anjril.PokemonWorld.Server.Core.Command
     {
         #region methods
 
-        bool CanRun(string args, out Object param);
+        bool CanRun(Player player, string args, out Object param);
         void Run(Player player, Object param);
 
         #endregion

@@ -33,7 +33,7 @@ namespace Anjril.PokemonWorld.Server.Model
 
         #region private fields
 
-        private Dictionary<int, WorldEntity> entities;
+        private Dictionary<int, WorldEntity> mapEntities;
 
         private WorldEntity[,] worldEntities;
         private WorldTile[,] worldTiles;
@@ -44,12 +44,11 @@ namespace Anjril.PokemonWorld.Server.Model
         #region public properties
 
         public int Size { get; private set; }
-
         public List<WorldEntity> Entities
         {
             get
             {
-                return entities.Values.ToList<WorldEntity>();
+                return mapEntities.Values.ToList<WorldEntity>();
             }
         }
 
@@ -61,7 +60,7 @@ namespace Anjril.PokemonWorld.Server.Model
         {
             Size = 400;
             worldEntities = new WorldEntity[Size, Size];
-            entities = new Dictionary<int, WorldEntity>();
+            mapEntities = new Dictionary<int, WorldEntity>();
 
             worldTiles = new WorldTile[Size, Size];
             worldObjects = new WorldObject[Size, Size];
@@ -73,30 +72,35 @@ namespace Anjril.PokemonWorld.Server.Model
 
         public WorldEntity GetEntity(int id)
         {
-            return entities[id];
+            return mapEntities[id];
         }
 
         public WorldEntity GetEntity(Position position)
         {
-            return worldEntities[position.X, position.Y];
+            return GetEntity(position.X, position.Y);
+        }
+
+        public WorldEntity GetEntity(int x, int y)
+        {
+            return worldEntities[x, y];
         }
 
         public void AddEntity(WorldEntity entity)
         {
             worldEntities[entity.Position.X, entity.Position.Y] = entity;
-            entities.Add(entity.Id, entity);
+            mapEntities.Add(entity.Id, entity);
         }
 
         public void RemoveEntity(int id)
         {
-            var entity = entities[id];
+            var entity = mapEntities[id];
             worldEntities[entity.Position.X, entity.Position.Y] = null;
-            entities.Remove(id);
+            mapEntities.Remove(id);
         }
 
         public bool MoveEntity(int id, Position pos)
         {
-            var entity = entities[id];
+            var entity = mapEntities[id];
 
             if (Position.isInMap(pos.X, pos.Y, Size) && worldEntities[pos.X, pos.Y] == null && World.Instance.GetObject(pos) != WorldObject.Rock) //TODO collision
             {
@@ -143,22 +147,6 @@ namespace Anjril.PokemonWorld.Server.Model
         #endregion
 
         #region serialization
-
-        public string EntitiesToMessage
-        {
-            get
-            {
-                string message = "entities:";
-
-                foreach (WorldEntity entity in Entities)
-                {
-                    message += entity.ToString();
-                    message += ";";
-                }
-
-                return message;
-            }
-        }
 
         public string BattleStartToMessage(List<int> entitiesList)
         {
@@ -240,12 +228,21 @@ namespace Anjril.PokemonWorld.Server.Model
                     y++;
                 }
             }
+
+            // DEBUG
+            Pokemon pokemon = new Pokemon(1);
+            pokemon.Position = new Position(200, 180);
+            AddEntity(pokemon);
+
+            Player other = new Player("other");
+            other.Position = new Position(205, 175);
+            AddEntity(other);
         }
 
         public void Reset()
         {
             worldEntities = new WorldEntity[Size, Size];
-            entities = new Dictionary<int, WorldEntity>();
+            mapEntities = new Dictionary<int, WorldEntity>();
         }
 
         #endregion
