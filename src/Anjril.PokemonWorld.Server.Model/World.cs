@@ -287,7 +287,7 @@ namespace Anjril.PokemonWorld.Server.Model
                 var randX = RandomUtils.RandomInt(Size);
                 var randY = RandomUtils.RandomInt(Size);
 
-                AddIndividual(new Pokemon(RandomUtils.CoinToss() ? 1 : 2, new Position(randX, randY)));
+                AddIndividual(new Pokemon(RandomUtils.RandomInt(3) + 1, new Position(randX, randY)));
             }
         }
 
