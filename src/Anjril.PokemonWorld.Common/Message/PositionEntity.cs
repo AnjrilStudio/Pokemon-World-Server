@@ -36,8 +36,8 @@ namespace Anjril.PokemonWorld.Common.Message
 
             var id = entityInfos[1];
             var type = entityInfos[0];
-            var position = entityValues[0];
-            var dir = entityValues[1];
+            var position = String.Format("{0}:{1}", entityValues[0], entityValues[1]);
+            var dir = entityValues[2];
 
             Id = Int32.Parse(id);
             Position = new Position(position);
