@@ -1,6 +1,7 @@
 ﻿using Anjril.Common.Network;
 using Anjril.PokemonWorld.Common;
 using Anjril.PokemonWorld.Common.State;
+using Anjril.PokemonWorld.Server.Model.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,8 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
     {
         #region public properties
 
-        public string Name { get; set; }
-        public List<BattleEntity> Team { get; private set; }
+        public string Name { get; private set; }
+        public Team Team { get; private set; }
 
         public bool MapToUpdate { get; set; }
         public bool TeamToUpdate { get; set; }
@@ -30,7 +31,7 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
             : base()
         {
             Name = name;
-            Team = new List<BattleEntity>();
+            Team = new Team();
             Type = EntityType.Player;
 
             MapToUpdate = true;
@@ -40,8 +41,8 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
             RemoteConnection = remote;
 
             // DEBUG
-            Team.Add(new BattleEntity(-1, 1, Id));
-            Team.Add(new BattleEntity(-1, 2, Id));
+            Team.AddPokemon(new BattleEntity(-1, 1, Id));
+            Team.AddPokemon(new BattleEntity(-1, 2, Id));
         }
 
         #endregion

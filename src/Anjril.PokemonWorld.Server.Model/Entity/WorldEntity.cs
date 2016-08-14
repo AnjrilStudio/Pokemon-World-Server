@@ -50,11 +50,6 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
             return this.Id.GetHashCode();
         }
 
-        public override string ToString()
-        {
-            return Type.ToString() + "-" + Id + "=" + Position.ToString() + ":" + DirectionUtils.ToString(Direction);
-        }
-
         #endregion
     }
 }
