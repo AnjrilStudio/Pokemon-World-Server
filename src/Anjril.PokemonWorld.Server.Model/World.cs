@@ -33,22 +33,25 @@ namespace Anjril.PokemonWorld.Server.Model
 
         #region private fields
 
-        private Dictionary<int, WorldEntity> mapEntities;
+        private List<Player> _players;
 
-        private WorldEntity[,] worldEntities;
-        private WorldTile[,] worldTiles;
-        private WorldObject[,] worldObjects;
+        private Dictionary<int, WorldEntity> _mapEntities;
+
+        private WorldEntity[,] _worldEntities;
+        private WorldTile[,] _worldTiles;
+        private WorldObject[,] _worldObjects;
 
         #endregion
 
         #region public properties
 
         public int Size { get; private set; }
-        public List<WorldEntity> Entities
+        public IReadOnlyList<Player> Players { get; private set; }
+        public IList<WorldEntity> Entities
         {
             get
             {
-                return mapEntities.Values.ToList<WorldEntity>();
+                return _mapEntities.Values.ToList<WorldEntity>();
             }
         }
 
@@ -59,11 +62,16 @@ namespace Anjril.PokemonWorld.Server.Model
         private World()
         {
             Size = 400;
-            worldEntities = new WorldEntity[Size, Size];
-            mapEntities = new Dictionary<int, WorldEntity>();
 
-            worldTiles = new WorldTile[Size, Size];
-            worldObjects = new WorldObject[Size, Size];
+            _players = new List<Player>();
+
+            _mapEntities = new Dictionary<int, WorldEntity>();
+
+            _worldEntities = new WorldEntity[Size, Size];
+            _worldTiles = new WorldTile[Size, Size];
+            _worldObjects = new WorldObject[Size, Size];
+
+            Players = _players.AsReadOnly();
         }
 
         #endregion
@@ -72,7 +80,7 @@ namespace Anjril.PokemonWorld.Server.Model
 
         public WorldEntity GetEntity(int id)
         {
-            return mapEntities[id];
+            return _mapEntities[id];
         }
 
         public WorldEntity GetEntity(Position position)
@@ -82,31 +90,42 @@ namespace Anjril.PokemonWorld.Server.Model
 
         public WorldEntity GetEntity(int x, int y)
         {
-            return worldEntities[x, y];
+            return _worldEntities[x, y];
         }
 
         public void AddEntity(WorldEntity entity)
         {
-            worldEntities[entity.Position.X, entity.Position.Y] = entity;
-            mapEntities.Add(entity.Id, entity);
+            _worldEntities[entity.Position.X, entity.Position.Y] = entity;
+            _mapEntities.Add(entity.Id, entity);
+
+            if (entity is Player)
+            {
+                _players.Add(entity as Player);
+            }
         }
 
         public void RemoveEntity(int id)
         {
-            var entity = mapEntities[id];
-            worldEntities[entity.Position.X, entity.Position.Y] = null;
-            mapEntities.Remove(id);
+            var entity = _mapEntities[id];
+
+            _worldEntities[entity.Position.X, entity.Position.Y] = null;
+            _mapEntities.Remove(id);
+
+            if (entity is Player)
+            {
+                _players.Remove(entity as Player);
+            }
         }
 
         public bool MoveEntity(int id, Position pos)
         {
-            var entity = mapEntities[id];
+            var entity = _mapEntities[id];
 
-            if (Position.isInMap(pos.X, pos.Y, Size) && worldEntities[pos.X, pos.Y] == null && World.Instance.GetObject(pos) != WorldObject.Rock) //TODO collision
+            if (Position.isInMap(pos.X, pos.Y, Size) && _worldEntities[pos.X, pos.Y] == null && World.Instance.GetObject(pos) != WorldObject.Rock) //TODO collision
             {
-                worldEntities[entity.Position.X, entity.Position.Y] = null;
+                _worldEntities[entity.Position.X, entity.Position.Y] = null;
                 entity.Position = pos;
-                worldEntities[entity.Position.X, entity.Position.Y] = entity;
+                _worldEntities[entity.Position.X, entity.Position.Y] = entity;
 
                 return true;
             }
@@ -124,7 +143,7 @@ namespace Anjril.PokemonWorld.Server.Model
         {
             if (Position.isInMap(position.X, position.Y, Size))
             {
-                return worldTiles[position.X, position.Y];
+                return _worldTiles[position.X, position.Y];
             }
             else
             {
@@ -136,7 +155,7 @@ namespace Anjril.PokemonWorld.Server.Model
         {
             if (Position.isInMap(position.X, position.Y, Size))
             {
-                return worldObjects[position.X, position.Y];
+                return _worldObjects[position.X, position.Y];
             }
             else
             {
@@ -168,7 +187,7 @@ namespace Anjril.PokemonWorld.Server.Model
         public void LoadMap(string jsonMap)
         {
             jsonMap = jsonMap.Substring(1);
-            jsonMap = jsonMap.Remove(jsonMap.Length - 3); //charactères en trop ?
+            jsonMap = jsonMap.Remove(jsonMap.Length - 3); //caractères en trop ?
 
             var mapArray = jsonMap.Split(',');
             int x = 0, y = 0;
@@ -182,22 +201,22 @@ namespace Anjril.PokemonWorld.Server.Model
                 {
                     case 1:
                     case 2:
-                        worldTiles[x, y] = WorldTile.Sea;
+                        _worldTiles[x, y] = WorldTile.Sea;
                         break;
                     case 3:
                     case 4:
                     default:
-                        worldTiles[x, y] = WorldTile.Ground;
+                        _worldTiles[x, y] = WorldTile.Ground;
                         break;
                     case 5:
-                        worldTiles[x, y] = WorldTile.Grass;
+                        _worldTiles[x, y] = WorldTile.Grass;
                         break;
                     case 6:
-                        worldTiles[x, y] = WorldTile.Sand;
+                        _worldTiles[x, y] = WorldTile.Sand;
                         break;
                     case 7:
                     case 8:
-                        worldTiles[x, y] = WorldTile.Road;
+                        _worldTiles[x, y] = WorldTile.Road;
                         break;
                 }
 
@@ -205,19 +224,19 @@ namespace Anjril.PokemonWorld.Server.Model
                 switch (mapObj)
                 {
                     case 1:
-                        worldObjects[x, y] = WorldObject.Tree;
+                        _worldObjects[x, y] = WorldObject.Tree;
                         break;
                     case 2:
-                        worldObjects[x, y] = WorldObject.Rock;
+                        _worldObjects[x, y] = WorldObject.Rock;
                         break;
                     case 3:
-                        worldObjects[x, y] = WorldObject.HighGrass;
+                        _worldObjects[x, y] = WorldObject.HighGrass;
                         break;
                     case 4:
-                        worldObjects[x, y] = WorldObject.Bush;
+                        _worldObjects[x, y] = WorldObject.Bush;
                         break;
                     default:
-                        worldObjects[x, y] = WorldObject.None;
+                        _worldObjects[x, y] = WorldObject.None;
                         break;
                 }
 
@@ -233,16 +252,12 @@ namespace Anjril.PokemonWorld.Server.Model
             Pokemon pokemon = new Pokemon(1);
             pokemon.Position = new Position(200, 180);
             AddEntity(pokemon);
-
-            Player other = new Player("other");
-            other.Position = new Position(205, 175);
-            AddEntity(other);
         }
 
         public void Reset()
         {
-            worldEntities = new WorldEntity[Size, Size];
-            mapEntities = new Dictionary<int, WorldEntity>();
+            _worldEntities = new WorldEntity[Size, Size];
+            _mapEntities = new Dictionary<int, WorldEntity>();
         }
 
         #endregion

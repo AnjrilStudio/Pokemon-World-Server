@@ -1,4 +1,5 @@
-﻿using Anjril.PokemonWorld.Common;
+﻿using Anjril.Common.Network;
+using Anjril.PokemonWorld.Common;
 using Anjril.PokemonWorld.Common.State;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,14 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
         public bool MapToUpdate { get; set; }
         public DateTime LastMove { get; set; }
         public float MoveInputDelay { get; private set; }
+        public IRemoteConnection RemoteConnection { get; private set; }
 
         #endregion
 
         #region constructor
 
-        public Player(string name) : base()
+        public Player(string name, IRemoteConnection remote)
+            : base()
         {
             Name = name;
             Team = new List<Pokemon>();
@@ -32,6 +35,7 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
             MapToUpdate = true;
             LastMove = DateTime.Now;
             MoveInputDelay = 0.30f;
+            RemoteConnection = remote;
 
             // DEBUG
             Team.Add(new Pokemon(1));

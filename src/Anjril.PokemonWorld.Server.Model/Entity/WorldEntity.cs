@@ -32,7 +32,22 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
 
         #endregion
 
-        #region serialization
+        #region overriden methods
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is WorldEntity))
+                return false;
+
+            WorldEntity other = (WorldEntity)obj;
+
+            return other.Id == this.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
 
         public override string ToString()
         {

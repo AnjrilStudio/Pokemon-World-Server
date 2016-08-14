@@ -10,19 +10,9 @@ namespace Anjril.PokemonWorld.Server.Core
 {
     public class GlobalServer
     {
+        #region singleton
+
         private static GlobalServer instance;
-
-        private Dictionary<int, IRemoteConnection> playerConnectionMap = new Dictionary<int, IRemoteConnection>();
-
-        private Dictionary<int, BattleState> battles;
-
-        private GlobalServer()
-        {
-            playerConnectionMap = new Dictionary<int, IRemoteConnection>();
-
-            battles = new Dictionary<int, BattleState>();
-        }
-
         public static GlobalServer Instance
         {
             get
@@ -36,6 +26,28 @@ namespace Anjril.PokemonWorld.Server.Core
             }
         }
 
+        #endregion
+
+        #region private fields
+
+        private Dictionary<int, IRemoteConnection> playerConnectionMap = new Dictionary<int, IRemoteConnection>();
+        private Dictionary<int, BattleState> battles;
+
+        #endregion
+
+        #region constructor
+
+        private GlobalServer()
+        {
+            playerConnectionMap = new Dictionary<int, IRemoteConnection>();
+
+            battles = new Dictionary<int, BattleState>();
+        }
+
+        #endregion
+
+        #region player management
+
         public void AddPlayer(int playerId, IRemoteConnection remote)
         {
             playerConnectionMap.Add(playerId, remote);
@@ -46,20 +58,25 @@ namespace Anjril.PokemonWorld.Server.Core
             playerConnectionMap.Remove(playerId);
         }
 
+        public List<int> GetPlayers()
+        {
+            return playerConnectionMap.Keys.ToList();
+        }
+
+        #endregion
+
+        #region network management
+
         public IRemoteConnection GetConnection(int playerId)
         {
             if (playerConnectionMap.ContainsKey(playerId))
             {
                 return playerConnectionMap[playerId];
-            } else
+            }
+            else
             {
                 return null;
             }
-        }
-
-        public List<int> GetPlayers()
-        {
-            return playerConnectionMap.Keys.ToList();
         }
 
         public void SendMessage(int playerId, string message)
@@ -71,6 +88,10 @@ namespace Anjril.PokemonWorld.Server.Core
             }
         }
 
+        #endregion
+
+        #region battle management
+
         public BattleState NewBattle(List<int> entities)
         {
             BattleState battle = new BattleState(entities);
@@ -81,20 +102,10 @@ namespace Anjril.PokemonWorld.Server.Core
             return battle;
         }
 
-        public BattleState GetBattle(int entity)
+        public void RemoveBattle(int entity)
         {
             if (battles.ContainsKey(entity))
             {
-                return battles[entity];
-            } else
-            {
-                return null;
-            }
-        }
-
-        public void RemoveBattle(int entity)
-        {
-            if (battles.ContainsKey(entity)){
                 var battle = battles[entity];
                 var entities = battle.Entities;
                 foreach (int id in entities)
@@ -104,10 +115,24 @@ namespace Anjril.PokemonWorld.Server.Core
             }
         }
 
+        public BattleState GetBattle(int entity)
+        {
+            if (battles.ContainsKey(entity))
+            {
+                return battles[entity];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public void RemoveBattleEntity(int entity)
         {
             var battle = battles[entity];
             battles.Remove(entity);
         }
+
+        #endregion
     }
 }

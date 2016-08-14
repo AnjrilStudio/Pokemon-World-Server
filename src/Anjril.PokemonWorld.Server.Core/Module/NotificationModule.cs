@@ -18,26 +18,23 @@ namespace Anjril.PokemonWorld.Server.Core.Module
 
         public override void Update(TimeSpan elapsed)
         {
-            foreach (int id in GlobalServer.Instance.GetPlayers())
+            foreach (var player in World.Instance.Players)
             {
-                var player = World.Instance.GetEntity(id) as Player;
-                var conn = GlobalServer.Instance.GetConnection(id);
-
                 var visibleEntites = GetVisibleEntities(player);
 
-                string message = String.Format("entities:{0}", String.Join("; ", visibleEntites));
+                string message = String.Format("entities:{0}", String.Join(";", visibleEntites));
 
-                Console.WriteLine("send(" + id + ") :" + message);
+                Console.WriteLine("send(" + player.Id + ") :" + message);
 
-                conn.Send(message);
+                player.RemoteConnection.Send(message);
 
                 if (player.MapToUpdate)
                 {
                     message = GetMapUpdate(player);
 
-                    Console.WriteLine("send(" + id + ") :" + message);
+                    Console.WriteLine("send(" + player.Id + ") :" + message);
 
-                    conn.Send(message);
+                    player.RemoteConnection.Send(message);
                     player.MapToUpdate = false;
                 }
             }

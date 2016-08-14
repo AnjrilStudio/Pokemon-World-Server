@@ -97,7 +97,7 @@ namespace Anjril.PokemonWorld.Server
 
         private static bool ConnectionRequested(IRemoteConnection sender, string request, out string response)
         {
-            Player player = new Player(request);
+            Player player = new Player(request, sender);
             //player.Position = new Position(200, 150);
             player.Position = new Position(200, 175);
             //player.Position = new Position(35, 35);
