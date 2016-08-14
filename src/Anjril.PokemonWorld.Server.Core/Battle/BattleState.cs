@@ -122,12 +122,12 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
         public bool PlayTrainerAction(Player player, Position target, Action action)
         {
-            if (action.Id == (int)TrainerAction.End_Battle) //TODO
+            if (action.Id == (int)TrainerAction.End_Battle && GetPlayerNbPokemons(player.Id) == 0)
             {
                 actionId++;
 
                 EndPlayerBattle(turns[currentTurn].PlayerId);
-                
+
                 if (action.NextTurn)
                 {
                     NextTurn();
@@ -145,14 +145,15 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 }
 
                 return true;
-            } else if (action.Id == (int)TrainerAction.Pokemon_Go)
+            }
+            else if (action.Id == (int)TrainerAction.Pokemon_Go)
             {
                 BattleEntity battleEntity = new BattleEntity(entityIdSequence++, player.Team[0].PokedexId, player.Id);
                 battleEntity.CurrentPos = target;
                 turns.Add(battleEntity);
 
                 bool ok = true;
-                foreach(int id in players)
+                foreach (int id in players)
                 {
                     if (GetPlayerNbPokemons(id) == 0)
                     {
@@ -164,10 +165,44 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 {
                     actionId++;
                     WaitingPokemonGo = false;
+                    
+                    NextTurn();
 
-                    if (action.NextTurn)
+                    foreach (int id in players)
                     {
-                        NextTurn();
+                        var message = ToNoActionMessage(id);
+                        GlobalServer.Instance.SendMessage(id, message);
+                    }
+
+                    while (turns[currentTurn].PlayerId < 0)
+                    {
+                        PlayIA();
+                    }
+                }
+
+                return true;
+            }
+            else if (action.Id == (int)TrainerAction.Pokemon_Come_Back)
+            {
+
+                var entity = GetEntity(target);
+                if (entity != null && entity.PlayerId == player.Id)
+                {
+                    var indexof = turns.IndexOf(entity);
+                    turns.Remove(entity);
+                    if (indexof <= currentTurn)
+                    {
+                        currentTurn--;
+                        if (currentTurn < 0)
+                        {
+                            currentTurn += turns.Count;
+                        }
+                    }
+
+                    actionId++;
+                    if (GetPlayerNbPokemons(player.Id) == 0)
+                    {
+                        WaitingPokemonGo = true;
                     }
 
                     foreach (int id in players)
@@ -175,12 +210,26 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                         var message = ToNoActionMessage(id);
                         GlobalServer.Instance.SendMessage(id, message);
                     }
+
+                    return true;
                 }
 
-                return true;
+                
             }
 
             return false;
+        }
+
+        private BattleEntity GetEntity(Position pos)
+        {
+            foreach(BattleEntity entity in turns)
+            {
+                if (entity.CurrentPos.Equals(pos))
+                {
+                    return entity;
+                }
+            }
+            return null;
         }
 
         public int CurrentPlayer()
@@ -316,7 +365,10 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         public string CurrentAvailableActionsMessage(int player)
         {
             string message = "";
-            message += (int)TrainerAction.End_Battle + ",";
+            if (GetPlayerNbPokemons(player) == 0) //TODO condition aucun ennemi ?
+            {
+                message += (int)TrainerAction.End_Battle + ",";
+            }
             if (GetPlayerNbPokemons(player) < 1){ //TODO 6 pokemons
                 message += (int)TrainerAction.Pokemon_Go + ",";
             }

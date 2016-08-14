@@ -11,7 +11,6 @@ namespace Anjril.PokemonWorld.Common.Parameter
         #region public properties
 
         public Direction Direction { get; private set; }
-        public int Turn { get; private set; }
         public Position Target { get; private set; }
         public Action Action { get; private set; }
 
@@ -23,11 +22,10 @@ namespace Anjril.PokemonWorld.Common.Parameter
             : base("act")
         { }
 
-        public BattleActionParam(Direction dir, int turn, Position target, Action action)
+        public BattleActionParam(Direction dir, Position target, Action action)
             : this()
         {
             this.Direction = dir;
-            this.Turn = turn;
             this.Target = target;
             this.Action = action;
         }
@@ -40,7 +38,7 @@ namespace Anjril.PokemonWorld.Common.Parameter
         {
             var splitedArg = args.Split(',');
 
-            if (splitedArg.Length < 4)
+            if (splitedArg.Length < 3)
             {
                 this.IsValid = false;
             }
@@ -48,10 +46,9 @@ namespace Anjril.PokemonWorld.Common.Parameter
             {
                 try
                 {
-                    Turn = Int32.Parse(splitedArg[0]);
-                    Target = new Position(splitedArg[1]);
-                    Action = Moves.Get((Move)Int32.Parse(splitedArg[2]));
-                    Direction = Utils.DirectionFromString(splitedArg[3]);
+                    Target = new Position(splitedArg[0]);
+                    Action = Moves.Get((Move)Int32.Parse(splitedArg[1]));
+                    Direction = Utils.DirectionFromString(splitedArg[2]);
 
                     this.IsValid = true;
                 }
@@ -64,7 +61,7 @@ namespace Anjril.PokemonWorld.Common.Parameter
 
         public override string ToString()
         {
-            return base.ToString() + String.Format("{0},{1},{2},{3}", Turn, Target, Action.Id, Direction);
+            return base.ToString() + String.Format("{0},{1},{2}", Target, Action.Id, Direction);
         }
 
         #endregion

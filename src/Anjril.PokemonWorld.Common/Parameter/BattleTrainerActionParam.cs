@@ -10,9 +10,9 @@ namespace Anjril.PokemonWorld.Common.Parameter
     {
         #region public properties
 
-        public int Turn { get; set; }
         public Position Target { get; set; }
         public Action Action { get; set; }
+        public int Index { get; set; }
 
         #endregion
 
@@ -22,10 +22,10 @@ namespace Anjril.PokemonWorld.Common.Parameter
             : base("tra")
         { }
 
-        public BattleTrainerActionParam(int turn, Position target, Action action)
+        public BattleTrainerActionParam(Position target, Action action, int index)
             : this()
         {
-            this.Turn = turn;
+            this.Index = index;
             this.Target = target;
             this.Action = action;
         }
@@ -46,9 +46,9 @@ namespace Anjril.PokemonWorld.Common.Parameter
             {
                 try
                 {
-                    Turn = Int32.Parse(splitedArgs[0]);
-                    Target = new Position(splitedArgs[1]);
-                    Action = TrainerActions.Get((TrainerAction)Int32.Parse(splitedArgs[2]));
+                    Target = new Position(splitedArgs[0]);
+                    Action = TrainerActions.Get((TrainerAction)Int32.Parse(splitedArgs[1]));
+                    Index = Int32.Parse(splitedArgs[2]);
 
                     IsValid = true;
                 }
@@ -61,7 +61,7 @@ namespace Anjril.PokemonWorld.Common.Parameter
 
         public override string ToString()
         {
-            return base.ToString() + String.Format("{0},{1},{2}", Turn, Target, Action.Id);
+            return base.ToString() + String.Format("{0},{1},{2}", Target, Action.Id, Index);
         }
 
         #endregion
