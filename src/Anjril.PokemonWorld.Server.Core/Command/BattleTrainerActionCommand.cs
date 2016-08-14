@@ -23,10 +23,6 @@ namespace Anjril.PokemonWorld.Server.Core.Command
             {
                 battle.PlayTrainerAction(param.Target, param.Action);
             }
-            else
-            {
-                GlobalServer.Instance.SendMessage(player.Id, battle.ToNoActionMessage());
-            }
         }
     }
 }

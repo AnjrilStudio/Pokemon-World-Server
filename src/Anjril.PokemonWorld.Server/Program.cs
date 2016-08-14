@@ -167,7 +167,7 @@ namespace Anjril.PokemonWorld.Server
                         try
                         {
                             string message = World.Instance.EntitiesToMessage;
-                            Console.WriteLine("send(" + id + ") :" + message);
+                            //Console.WriteLine("send(" + id + ") :" + message);
 
                             GlobalServer.Instance.SendMessage(id, message);
 

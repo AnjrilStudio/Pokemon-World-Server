@@ -18,16 +18,10 @@ namespace Anjril.PokemonWorld.Server.Core.Command
         public override void RunWithCast(Player player, BattleActionParam param)
         {
             BattleState battle = GlobalServer.Instance.GetBattle(player.Id);
-
-            bool result = false;
+            
             if (battle.CurrentPlayer() == player.Id)
             {
-                result = battle.PlayAction(param.Target, param.Action, param.Direction);
-            }
-
-            if (!result)
-            {
-                GlobalServer.Instance.SendMessage(player.Id, battle.ToNoActionMessage());
+                battle.PlayAction(param.Target, param.Action, param.Direction);
             }
         }
     }
