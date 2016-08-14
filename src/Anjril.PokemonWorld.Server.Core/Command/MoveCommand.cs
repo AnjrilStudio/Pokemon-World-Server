@@ -15,45 +15,41 @@ namespace Anjril.PokemonWorld.Server.Core.Command
     [Description("mov")]
     class MoveCommand : BaseCommand<MoveParam>
     {
-        public override bool CanRun(Player player, string args, out object param)
+        public override void RunWithCast(Player player, MoveParam param)
         {
-            if (base.CanRun(player, args, out param))
+            lock (player)
             {
                 var nextMoveInputTime = player.LastMove.AddSeconds(player.MoveDuration - player.MoveInputDelay);
 
-                return DateTime.Now >= nextMoveInputTime;
-            }
-
-            return false;
-        }
-
-        public override void RunWithCast(Player player, MoveParam param)
-        {
-            var oldSegment = player.Position.GetSegment(Settings.Default.ChunkSize);
-
-            var dest = new Position(player.Position, (param as MoveParam).Direction);
-            var newSegment = dest.GetSegment(Settings.Default.ChunkSize);
-
-            var result = World.Instance.MoveEntity(player.Id, dest);
-
-            if (result)
-            {
-                var nextMoveTime = player.LastMove.AddSeconds(player.MoveDuration);
-
-                if (DateTime.Now > nextMoveTime)
+                if (DateTime.Now >= nextMoveInputTime)
                 {
-                    player.LastMove = DateTime.Now;
-                }
-                else
-                {
-                    player.LastMove = nextMoveTime;
-                }
+                    var oldSegment = player.Position.GetSegment(Settings.Default.ChunkSize);
 
-                if (!oldSegment.Equals(newSegment))
-                {
-                    player.MapToUpdate = true;
-                }
+                    var dest = new Position(player.Position, (param as MoveParam).Direction);
+                    var newSegment = dest.GetSegment(Settings.Default.ChunkSize);
 
+                    var result = World.Instance.MoveEntity(player.Id, dest);
+
+                    if (result)
+                    {
+                        Console.WriteLine("moveOK");
+                        var nextMoveTime = player.LastMove.AddSeconds(player.MoveDuration);
+
+                        if (DateTime.Now > nextMoveTime)
+                        {
+                            player.LastMove = DateTime.Now;
+                        }
+                        else
+                        {
+                            player.LastMove = nextMoveTime;
+                        }
+
+                        if (!oldSegment.Equals(newSegment))
+                        {
+                            player.MapToUpdate = true;
+                        }
+                    }
+                }
             }
         }
     }
