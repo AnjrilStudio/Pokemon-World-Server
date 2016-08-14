@@ -149,6 +149,13 @@ namespace Anjril.PokemonWorld.Server.Model
             _mapPopulation.Add(pokemon.Id, pokemon);
         }
 
+        public void RemovePopulation(int id)
+        {
+            var pokemon = _mapPopulation[id];
+            _populationEntities[pokemon.HiddenPosition.X, pokemon.HiddenPosition.Y].Remove(pokemon);
+            _mapPopulation.Remove(id);
+        }
+
         #endregion
 
         #region world management

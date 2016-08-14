@@ -44,7 +44,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 var entity = World.Instance.GetEntity(entityId);
                 if (entity.Type == EntityType.Pokemon)
                 {
-                    BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Pokemon).PokedexId, -1);
+                    BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Pokemon).PokedexId, -1, entityId);
                     battleEntity.CurrentPos = GetRandomStartPosition(Direction.Left);//TODO
                     turns.Add(battleEntity);
                 }
@@ -240,6 +240,9 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     player.Team.Add(new BattleEntity(-1, entity.PokedexId, player.Id));
                     var message = NotificationModule.GetTeamUpdate(player);
                     player.RemoteConnection.Send(message);
+                    
+                    World.Instance.RemoveEntity(entity.WorldId);
+                    World.Instance.RemovePopulation(entity.WorldId);
                 }
 
                 actionId++;

@@ -10,7 +10,8 @@ namespace Anjril.PokemonWorld.Common
     {
         public int Id { get; private set; }
         public List<Action> Actions { get; private set; }
-        public int PlayerId{ get; private set; }
+        public int PlayerId { get; private set; }
+        public int WorldId { get; private set; }
         public int PokedexId { get; private set; }
         public Position CurrentPos { get; set; }
 
@@ -30,11 +31,12 @@ namespace Anjril.PokemonWorld.Common
         public int MaxMP { get; set; }
 
 
-        public BattleEntity(int id, int pokedexId, int playerId)
+        public BattleEntity(int id, int pokedexId)
         {
             Id = id;
             PokedexId = pokedexId;
-            PlayerId = playerId;
+            PlayerId = -1;
+            WorldId = -1;
 
             Actions = new List<Action>();
             CurrentPos = new Position(0, 0);
@@ -59,6 +61,16 @@ namespace Anjril.PokemonWorld.Common
             Actions.Add(Moves.Get(Move.Bubble));
             Actions.Add(Moves.Get(Move.Water_Gun));
             Actions.Add(Moves.Get(Move.Thunder_Shock));
+        }
+
+        public BattleEntity(int id, int pokedexId, int playerId) : this (id, pokedexId)
+        {
+            PlayerId = playerId;
+        }
+
+        public BattleEntity(int id, int pokedexId, int playerId, int worldId) : this(id, pokedexId, playerId)
+        {
+            WorldId = worldId;
         }
     }
 }
