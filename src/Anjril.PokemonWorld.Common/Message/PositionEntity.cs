@@ -15,17 +15,19 @@ namespace Anjril.PokemonWorld.Common.Message
         public Position Position { get; private set; }
         public Direction Orientation { get; private set; }
         public EntityType Type { get; private set; }
+        public int PokedexId { get; private set; }
 
         #endregion
 
         #region constructor
 
-        public PositionEntity(int id, Position position, EntityType type, Direction orientation)
+        public PositionEntity(int id, Position position, EntityType type, Direction orientation, int pokedexId)
         {
             Id = id;
             Position = position;
             Type = type;
             Orientation = orientation;
+            PokedexId = pokedexId;
         }
 
         public PositionEntity(string args)
@@ -36,6 +38,7 @@ namespace Anjril.PokemonWorld.Common.Message
 
             var id = entityInfos[1];
             var type = entityInfos[0];
+            var pokedexId = entityInfos[2];
             var position = String.Format("{0}:{1}", entityValues[0], entityValues[1]);
             var dir = entityValues[2];
 
@@ -43,6 +46,7 @@ namespace Anjril.PokemonWorld.Common.Message
             Position = new Position(position);
             Type = EntityTypeUtils.FromString(type);
             Orientation = DirectionUtils.FromString(dir);
+            PokedexId = Int32.Parse(pokedexId);
         }
 
         #endregion
@@ -51,7 +55,7 @@ namespace Anjril.PokemonWorld.Common.Message
 
         public override string ToString()
         {
-            return String.Format("{0}-{1}={2}:{3}", EntityTypeUtils.ToString(Type), Id, Position, DirectionUtils.ToString(Orientation));
+            return String.Format("{0}-{1}-{4}={2}:{3}", EntityTypeUtils.ToString(Type), Id, Position, DirectionUtils.ToString(Orientation), PokedexId);
         }
 
         #endregion

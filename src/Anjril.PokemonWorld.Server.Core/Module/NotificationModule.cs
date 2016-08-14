@@ -58,7 +58,14 @@ namespace Anjril.PokemonWorld.Server.Core.Module
                     var entity = World.Instance.GetEntity(x, y);
                     if (entity != null)
                     {
-                        visibleEntites.Add(new PositionEntity(entity.Id, entity.Position, entity.Type, entity.Direction));
+                        if (entity.Type == EntityType.Player)
+                        {
+                            visibleEntites.Add(new PositionEntity(entity.Id, entity.Position, entity.Type, entity.Direction, 0));
+                        } else if (entity.Type == EntityType.Pokemon)
+                        {
+                            var pokedexId = (entity as Pokemon).PokedexId;
+                            visibleEntites.Add(new PositionEntity(entity.Id, entity.Position, entity.Type, entity.Direction, pokedexId));
+                        }
                     }
                 }
             }
