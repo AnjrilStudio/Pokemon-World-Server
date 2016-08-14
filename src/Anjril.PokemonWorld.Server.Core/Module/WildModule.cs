@@ -38,7 +38,7 @@ namespace Anjril.PokemonWorld.Server.Core.Module
                     World.Instance.RemoveEntity(pokemon.Id);
                     pokemon.Position = null;
                 }
-                else if (pokemon.IsVisible && RandomUtils.RandomDouble() < MOVE_RATE)
+                else if (pokemon.IsVisible && GlobalServer.Instance.GetBattle(pokemon.Id) == null && RandomUtils.RandomDouble() < MOVE_RATE )
                 {
                     var dest = new Position(pokemon.Position, DirectionUtils.RandomDirection());
                     World.Instance.MoveEntity(pokemon.Id, dest);
