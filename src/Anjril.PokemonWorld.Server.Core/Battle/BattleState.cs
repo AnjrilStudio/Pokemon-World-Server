@@ -147,8 +147,6 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 return true;
             } else if (action.Id == (int)TrainerAction.Pokemon_Go)
             {
-                actionId++;
-
                 BattleEntity battleEntity = new BattleEntity(entityIdSequence++, player.Team[0].PokedexId, player.Id);
                 battleEntity.CurrentPos = target;
                 turns.Add(battleEntity);
@@ -164,6 +162,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
                 if (ok)
                 {
+                    actionId++;
                     WaitingPokemonGo = false;
 
                     if (action.NextTurn)
