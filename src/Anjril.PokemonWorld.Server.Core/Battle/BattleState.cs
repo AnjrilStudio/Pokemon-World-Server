@@ -282,13 +282,16 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
         public void NextTurn()
         {
-            if (turns.Count > 1)
+            if (turns.Count > 1 && GetTotalInBattleHp() > 0)
             {
-                currentTurn++;
-                if (currentTurn >= turns.Count)
+                do
                 {
-                    currentTurn = 0;
-                }
+                    currentTurn++;
+                    if (currentTurn >= turns.Count)
+                    {
+                        currentTurn = 0;
+                    }
+                } while (turns[currentTurn].HP == 0);
 
                 turns[currentTurn].AP = turns[currentTurn].MaxAP;
                 turns[currentTurn].MP = turns[currentTurn].MaxMP;
@@ -352,6 +355,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                         targetPos = targets[random.Next(0, targets.Count)];
                     }
                 }
+                if (targetPos == null) System.Console.WriteLine("loop");
             }
             PlayAction(targetPos, actionAI, dir);
         }
@@ -456,6 +460,16 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 {
                     result++;
                 }
+            }
+            return result;
+        }
+
+        private int GetTotalInBattleHp()
+        {
+            int result = 0;
+            foreach (BattleEntity entity in turns)
+            {
+                result += entity.HP;
             }
             return result;
         }
