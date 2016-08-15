@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anjril.PokemonWorld.Server", "Anjril.PokemonWorld.Server\Anjril.PokemonWorld.Server.csproj", "{7DFC074B-565B-48EB-B30C-C99C2E039427}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anjril.PokemonWorld.Server.Model", "Anjril.PokemonWorld.Server.Model\Anjril.PokemonWorld.Server.Model.csproj", "{A853477E-5C6E-470A-B3AC-8DCCDDBB367E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anjril.PokemonWorld.Server.Core", "Anjril.PokemonWorld.Server.Core\Anjril.PokemonWorld.Server.Core.csproj", "{2F6217A9-E7CD-4AFE-8B0E-87468AE8C4B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anjril.PokemonWorld.Common", "Anjril.PokemonWorld.Common\Anjril.PokemonWorld.Common.csproj", "{D26EE035-9039-44BD-8D48-0B45432715B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{790DEE5D-0D01-429B-936C-2CB31F2EF5CC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{77C739D4-B2A0-4414-95CA-8579F42C2AA4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7DFC074B-565B-48EB-B30C-C99C2E039427}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DFC074B-565B-48EB-B30C-C99C2E039427}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DFC074B-565B-48EB-B30C-C99C2E039427}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DFC074B-565B-48EB-B30C-C99C2E039427}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A853477E-5C6E-470A-B3AC-8DCCDDBB367E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A853477E-5C6E-470A-B3AC-8DCCDDBB367E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A853477E-5C6E-470A-B3AC-8DCCDDBB367E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A853477E-5C6E-470A-B3AC-8DCCDDBB367E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F6217A9-E7CD-4AFE-8B0E-87468AE8C4B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F6217A9-E7CD-4AFE-8B0E-87468AE8C4B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F6217A9-E7CD-4AFE-8B0E-87468AE8C4B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F6217A9-E7CD-4AFE-8B0E-87468AE8C4B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D26EE035-9039-44BD-8D48-0B45432715B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D26EE035-9039-44BD-8D48-0B45432715B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D26EE035-9039-44BD-8D48-0B45432715B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D26EE035-9039-44BD-8D48-0B45432715B0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A853477E-5C6E-470A-B3AC-8DCCDDBB367E} = {790DEE5D-0D01-429B-936C-2CB31F2EF5CC}
+		{2F6217A9-E7CD-4AFE-8B0E-87468AE8C4B2} = {790DEE5D-0D01-429B-936C-2CB31F2EF5CC}
+		{D26EE035-9039-44BD-8D48-0B45432715B0} = {77C739D4-B2A0-4414-95CA-8579F42C2AA4}
+	EndGlobalSection
+EndGlobal
