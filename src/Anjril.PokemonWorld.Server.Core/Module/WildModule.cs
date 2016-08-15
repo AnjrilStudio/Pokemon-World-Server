@@ -32,7 +32,7 @@ namespace Anjril.PokemonWorld.Server.Core.Module
                 {
                     World.Instance.VisibleEntities.Add(pokemon, pokemon.HiddenPosition);
                 }
-                else if (pokemon.IsVisible && RandomUtils.RandomDouble() < HIDE_RATE)
+                else if (pokemon.IsVisible && GlobalServer.Instance.GetBattle(pokemon.Id) == null && RandomUtils.RandomDouble() < HIDE_RATE)
                 {
                     World.Instance.VisibleEntities.Remove(pokemon.Id);
                 }

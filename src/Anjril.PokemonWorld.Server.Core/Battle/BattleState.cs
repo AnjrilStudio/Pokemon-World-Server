@@ -20,6 +20,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         private System.Random random = new System.Random();
 
         private List<int> players;
+        private List<int> spectators;
         private List<int> entities;
         private List<BattleEntity> turns;
         private int currentTurn;
@@ -34,6 +35,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             actionId = 0;
             turns = new List<BattleEntity>();
             players = new List<int>();
+            spectators = new List<int>();
             entities = entitiesList;
             arena = new BattleArena(defaultsize);
             currentTurn = 0;
@@ -158,9 +160,12 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     bool ok = true;
                     foreach (int id in players)
                     {
-                        if (GetPlayerNbPokemons(id) == 0)
+                        if (!spectators.Contains(id))
                         {
-                            ok = false;
+                            if (GetPlayerNbPokemons(id) == 0)
+                            {
+                                ok = false;
+                            }
                         }
                     }
 
@@ -302,7 +307,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                             turn.ComingBack = false;
                         }
                     }
-                } while (!turns[currentTurn].Ready && turns[currentTurn].ComingBack);
+                } while (turns.Count > 1 && !turns[currentTurn].Ready && turns[currentTurn].ComingBack);
 
                 turns[currentTurn].AP = turns[currentTurn].MaxAP;
                 turns[currentTurn].MP = turns[currentTurn].MaxMP;
@@ -331,6 +336,12 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     }
                 }
             }
+        }
+
+        public void AddSpectator(int playerId)
+        {
+            players.Add(playerId);
+            spectators.Add(playerId);
         }
 
         public void EndPlayerBattle(int playerId)

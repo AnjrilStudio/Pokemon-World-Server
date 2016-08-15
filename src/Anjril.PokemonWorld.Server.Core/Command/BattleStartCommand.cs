@@ -39,6 +39,10 @@ namespace Anjril.PokemonWorld.Server.Core.Command
                 {
                     battle = GlobalServer.Instance.NewBattle(entitiesList);
                 }
+                else
+                {
+                    battle.AddSpectator(player.Id);
+                }
 
                 string startmessage = "battlestart:";
 
