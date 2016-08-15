@@ -59,7 +59,7 @@ namespace Anjril.PokemonWorld.Common.Message
 
         public override string ToString()
         {
-            return String.Format("{0}-{1}-{4}={2}:{3}:{4}", EntityTypeUtils.ToString(Type), Id, Position, DirectionUtils.ToString(Orientation), PokedexId, StateUtils.ToString(State));
+            return String.Format("{0}-{1}-{4}={2}:{3}:{5}", EntityTypeUtils.ToString(Type), Id, Position, DirectionUtils.ToString(Orientation), PokedexId, StateUtils.ToString(State));
         }
 
         #endregion
