@@ -28,20 +28,24 @@ namespace Anjril.PokemonWorld.Server.Core.Module
         {
             foreach (var pokemon in World.Instance.Population)
             {
-                if (!pokemon.IsVisible && RandomUtils.RandomDouble() < SPAWN_RATE && World.Instance.GetEntity(pokemon.HiddenPosition.X, pokemon.HiddenPosition.Y) == null)
+                if (!pokemon.IsVisible && RandomUtils.RandomDouble() < SPAWN_RATE)
                 {
-                    pokemon.Position = new Position(pokemon.HiddenPosition);
-                    World.Instance.AddEntity(pokemon);
+                    World.Instance.VisibleEntities.Add(pokemon, pokemon.HiddenPosition);
                 }
                 else if (pokemon.IsVisible && RandomUtils.RandomDouble() < HIDE_RATE)
                 {
-                    World.Instance.RemoveEntity(pokemon.Id);
-                    pokemon.Position = null;
+                    World.Instance.VisibleEntities.Remove(pokemon.Id);
                 }
-                else if (pokemon.IsVisible && GlobalServer.Instance.GetBattle(pokemon.Id) == null && RandomUtils.RandomDouble() < MOVE_RATE )
+                else if (pokemon.IsVisible && GlobalServer.Instance.GetBattle(pokemon.Id) == null && RandomUtils.RandomDouble() < MOVE_RATE)
                 {
                     var dest = new Position(pokemon.Position, DirectionUtils.RandomDirection());
-                    World.Instance.MoveEntity(pokemon.Id, dest);
+
+                    EntityState newState;
+                    if (World.Instance.Map.CanGo(pokemon, dest, out newState))
+                    {
+                        World.Instance.VisibleEntities.Move(pokemon.Id, dest);
+                        pokemon.State = newState;
+                    }
                 }
             }
 

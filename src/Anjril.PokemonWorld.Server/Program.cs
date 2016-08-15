@@ -34,7 +34,7 @@ namespace Anjril.PokemonWorld.Server
             Console.WriteLine("----------------------------------");
             Console.WriteLine("");
 
-            World.Instance.LoadMap(GetMap());
+            World.Instance.Init(GetMap());
             World.Instance.LoadPopulation();
 
             using (var socket = new TcpSocket())
@@ -104,7 +104,7 @@ namespace Anjril.PokemonWorld.Server
             //player.Position = new Position(35, 35);
 
             PLAYERS.Add(sender, player);
-            World.Instance.AddEntity(player);
+            World.Instance.AddPlayer(player);
             GlobalServer.Instance.AddPlayer(player.Id, sender);
 
             response = "OK:" + player.Id;
@@ -140,7 +140,7 @@ namespace Anjril.PokemonWorld.Server
         {
             var player = PLAYERS[remote];
 
-            World.Instance.RemoveEntity(player.Id);
+            World.Instance.RemovePlayer(player.Id);
             GlobalServer.Instance.RemoveBattle(player.Id);
             GlobalServer.Instance.RemovePlayer(player.Id);
             PLAYERS.Remove(remote);

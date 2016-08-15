@@ -72,7 +72,9 @@
     <Compile Include="Effect\MoveEffect.cs" />
     <Compile Include="Effect\PushEffect.cs" />
     <Compile Include="Effect\StatusEffect.cs" />
+    <Compile Include="State\EntityState.cs" />
     <Compile Include="State\EntityType.cs" />
+    <Compile Include="Utils\StateUtils.cs" />
     <Compile Include="Utils\EntityTypeUtils.cs" />
     <Compile Include="Utils\PositionUtils.cs" />
     <Compile Include="Utils\RandomUtils.cs" />

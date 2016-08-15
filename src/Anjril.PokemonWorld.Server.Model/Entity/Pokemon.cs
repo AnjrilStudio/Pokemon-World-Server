@@ -28,10 +28,10 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
         #region constructor
 
         public Pokemon(int pokemonId, Position hiddenPosition)
-            : base()
+            : base(EntityType.Pokemon, pokemonId == 3, true, pokemonId == 2)
         {
             PokedexId = pokemonId;
-            Type = EntityType.Pokemon;
+
             Level = 1;
             Xp = 0;
             Age = 1;

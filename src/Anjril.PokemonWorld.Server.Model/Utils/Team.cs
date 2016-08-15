@@ -32,6 +32,7 @@ namespace Anjril.PokemonWorld.Server.Model.Utils
                 return _pokemons[idx];
             }
         }
+        public IReadOnlyCollection<BattleEntity> Pokemons { get { return _pokemons.Where(poke => poke != null).ToList().AsReadOnly(); } }
 
         #endregion
 

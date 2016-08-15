@@ -41,7 +41,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
             foreach (int entityId in entitiesList)
             {
-                var entity = World.Instance.GetEntity(entityId);
+                var entity = World.Instance.VisibleEntities[entityId];
                 if (entity.Type == EntityType.Pokemon)
                 {
                     BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Pokemon).PokedexId, -1, entityId);
@@ -228,8 +228,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     player.Team.AddPokemon(new BattleEntity(-1, entity.PokedexId, player.Id));
                     player.TeamToUpdate = true;
 
-                    World.Instance.RemoveEntity(entity.WorldId);
-                    World.Instance.RemovePopulation(entity.WorldId);
+                    World.Instance.Population.Remove(entity.WorldId);
                 }
 
                 actionId++;
@@ -320,7 +319,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             }
 
             GlobalServer.Instance.SendMessage(playerId, ToEndMessage(playerId));
-            var player = World.Instance.GetEntity(playerId) as Player;
+            var player = World.Instance.VisibleEntities[playerId] as Player;
             player.MapToUpdate = true;
         }
 

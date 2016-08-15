@@ -28,11 +28,10 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
         #region constructor
 
         public Player(string name, IRemoteConnection remote)
-            : base()
+            : base(EntityType.Player, false, true, false)
         {
             Name = name;
             Team = new Team();
-            Type = EntityType.Player;
 
             MapToUpdate = true;
             TeamToUpdate = true;

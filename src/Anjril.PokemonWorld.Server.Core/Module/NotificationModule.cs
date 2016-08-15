@@ -51,20 +51,22 @@ namespace Anjril.PokemonWorld.Server.Core.Module
 
             var visibleEntites = new List<PositionEntity>();
 
-            for (int x = Math.Max(player.Position.X - lineOfSight, 0); x < Math.Min(player.Position.X + lineOfSight, World.Instance.Size); x++)
+            for (int x = Math.Max(player.Position.X - lineOfSight, 0); x < Math.Min(player.Position.X + lineOfSight, World.Instance.Map.Size); x++)
             {
-                for (int y = Math.Max(player.Position.Y - lineOfSight, 0); y < Math.Min(player.Position.Y + lineOfSight, World.Instance.Size); y++)
+                for (int y = Math.Max(player.Position.Y - lineOfSight, 0); y < Math.Min(player.Position.Y + lineOfSight, World.Instance.Map.Size); y++)
                 {
-                    var entity = World.Instance.GetEntity(x, y);
+                    var entity = World.Instance.VisibleEntities[x, y];
+
                     if (entity != null)
                     {
                         if (entity.Type == EntityType.Player)
                         {
-                            visibleEntites.Add(new PositionEntity(entity.Id, entity.Position, entity.Type, entity.Direction, 0));
-                        } else if (entity.Type == EntityType.Pokemon)
+                            visibleEntites.Add(new PositionEntity(entity.Id, entity.Position, entity.Type, entity.Direction, 0, entity.State));
+                        }
+                        else if (entity.Type == EntityType.Pokemon)
                         {
                             var pokedexId = (entity as Pokemon).PokedexId;
-                            visibleEntites.Add(new PositionEntity(entity.Id, entity.Position, entity.Type, entity.Direction, pokedexId));
+                            visibleEntites.Add(new PositionEntity(entity.Id, entity.Position, entity.Type, entity.Direction, pokedexId, entity.State));
                         }
                     }
                 }
@@ -93,9 +95,9 @@ namespace Anjril.PokemonWorld.Server.Core.Module
                 for (int x = startx; x < endx - 1; x++)
                 {
                     Position pos = new Position(x, y);
-                    message += (int)World.Instance.GetTile(pos);
+                    message += (int)World.Instance.Map.GetTile(pos);
                     message += ".";
-                    message += (int)World.Instance.GetObject(pos);
+                    message += (int)World.Instance.Map.GetObject(pos);
                     message += ",";
                 }
             }

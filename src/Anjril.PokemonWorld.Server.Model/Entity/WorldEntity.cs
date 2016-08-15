@@ -15,20 +15,36 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
         #region public properties
 
         public int Id { get; private set; }
-        public Direction Direction { get; set; }
-        public Position Position { get; set; }
         public EntityType Type { get; protected set; }
+
+        public Position Position { get; set; }
+        public Direction Direction { get; set; }
+
+        public bool CanSwim { get; private set; }
+        public bool CanWalk { get; private set; }
+        public bool CanFly { get; private set; }
+
+        public EntityState State { get; set; }
+
         public float MoveDuration { get; protected set; }
 
         #endregion
 
         #region constructor
 
-        protected WorldEntity()
+        protected WorldEntity(EntityType type, bool canSwim, bool canWalk, bool canFly)
         {
             Id = sequenceId++;
+            Type = type;
+
+            CanSwim = canSwim;
+            CanWalk = canWalk;
+            CanFly = canFly;
+
             Direction = Direction.Down;
             MoveDuration = 0.6f;
+
+            State = EntityState.Undefined;
         }
 
         #endregion

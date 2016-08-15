@@ -21,7 +21,7 @@ namespace Anjril.PokemonWorld.Common.State
             X = pos.X;
             Y = pos.Y;
         }
-        
+
         public Position(Position pos, Direction dir)
         {
             X = pos.X;
@@ -115,6 +115,11 @@ namespace Anjril.PokemonWorld.Common.State
         public static bool isInMap(int x, int y, int mapsize)
         {
             return x >= 0 && y >= 0 && x < mapsize && y < mapsize;
+        }
+
+        public bool IsInMap(int mapsize)
+        {
+            return Position.isInMap(X, Y, mapsize);
         }
 
         public static int Distance(Position p1, Position p2)

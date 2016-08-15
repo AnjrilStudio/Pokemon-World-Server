@@ -28,9 +28,15 @@ namespace Anjril.PokemonWorld.Server.Core.Command
                     var dest = new Position(player.Position, (param as MoveParam).Direction);
                     var newSegment = dest.GetSegment(Settings.Default.ChunkSize);
 
-                    var result = World.Instance.MoveEntity(player.Id, dest);
+                    var moveResult = false;
+                    EntityState newState;
+                    if (World.Instance.Map.CanGo(player, dest, out newState))
+                    {
+                        moveResult = World.Instance.VisibleEntities.Move(player.Id, dest);
+                        player.State = newState;
+                    }
 
-                    if (result)
+                    if (moveResult)
                     {
                         var nextMoveTime = player.LastMove.AddSeconds(player.MoveDuration);
 
