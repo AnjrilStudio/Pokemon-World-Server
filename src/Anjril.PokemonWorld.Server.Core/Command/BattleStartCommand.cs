@@ -9,6 +9,7 @@ using Anjril.PokemonWorld.Server.Model.Entity;
 using System.ComponentModel;
 using Anjril.PokemonWorld.Common.Parameter;
 using Anjril.PokemonWorld.Common.Utils;
+using Anjril.PokemonWorld.Server.Core.Battle;
 
 namespace Anjril.PokemonWorld.Server.Core.Command
 {
@@ -24,7 +25,20 @@ namespace Anjril.PokemonWorld.Server.Core.Command
                 List<int> entitiesList = new List<int>();
                 entitiesList.Add(player.Id);
                 entitiesList.Add(World.Instance.GetEntity(otherPos).Id);
-                var battle = GlobalServer.Instance.NewBattle(entitiesList);
+
+                BattleState battle = null;
+                foreach (int entityId in entitiesList)
+                {
+                    if (GlobalServer.Instance.GetBattle(entityId) != null)
+                    {
+                        battle = GlobalServer.Instance.GetBattle(entityId);
+                        break;
+                    }
+                }
+                if (battle == null)
+                {
+                    battle = GlobalServer.Instance.NewBattle(entitiesList);
+                }
 
                 string startmessage = World.Instance.BattleStartToMessage(entitiesList);
                 foreach (int id in entitiesList)

@@ -336,8 +336,6 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
         public void EndPlayerBattle(int playerId)
         {
-            //TODO vérifier que les pokemon sont rappelés
-
             players.Remove(playerId);
             if (players.Count == 0)
             {
