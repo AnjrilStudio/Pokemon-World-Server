@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Anjril.PokemonWorld.Common.Message
 {
-    class BattleStartMessage
+    public class BattleStartMessage
     {
         public List<int> entitiesId { get; private set; }
 

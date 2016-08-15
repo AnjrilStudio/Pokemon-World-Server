@@ -8,12 +8,15 @@ namespace Anjril.PokemonWorld.Common
 {
     public class BattleEntity
     {
-        public int Id { get; private set; }
+        public int BattleId { get; set; }
         public List<Action> Actions { get; private set; }
         public int PlayerId { get; private set; }
         public int WorldId { get; private set; }
         public int PokedexId { get; private set; }
         public Position CurrentPos { get; set; }
+        public bool InBattle { get { return CurrentPos != null; } }
+        public bool Ready { get; set; }
+        public bool ComingBack { get; set; }
 
         public int HP { get; set; }
         public int MaxHP { get; set; }
@@ -33,13 +36,15 @@ namespace Anjril.PokemonWorld.Common
 
         public BattleEntity(int id, int pokedexId)
         {
-            Id = id;
+            BattleId = id;
             PokedexId = pokedexId;
             PlayerId = -1;
             WorldId = -1;
+            Ready = false;
+            ComingBack = false;
 
             Actions = new List<Action>();
-            CurrentPos = new Position(0, 0);
+            CurrentPos = null;
 
             HP = 20;
             MaxHP = HP;

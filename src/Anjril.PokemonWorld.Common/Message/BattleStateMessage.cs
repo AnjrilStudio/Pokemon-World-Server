@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Anjril.PokemonWorld.Common.Message
 {
-    class BattleStateMessage
+    public class BattleStateMessage
     {
         public int CurrentTurn { get; private set; }
         public List<BattleStateEntity> Entities { get; private set; }
