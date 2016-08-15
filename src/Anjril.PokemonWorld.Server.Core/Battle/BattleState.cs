@@ -342,6 +342,13 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         {
             players.Add(playerId);
             spectators.Add(playerId);
+            actionId++; //todo
+            GlobalServer.Instance.AddBattlePlayer(playerId, this);
+        }
+
+        public bool IsSpectator(int playerId)
+        {
+            return spectators.Contains(playerId);
         }
 
         public void EndPlayerBattle(int playerId)

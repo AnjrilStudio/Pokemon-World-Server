@@ -19,7 +19,7 @@ namespace Anjril.PokemonWorld.Server.Core.Command
         public override void RunWithCast(Player player, BattleTrainerActionParam param)
         {
             BattleState battle = GlobalServer.Instance.GetBattle(player.Id);
-            if (battle.WaitingPokemonGo || battle.CurrentPlayer() == player.Id)
+            if (battle.WaitingPokemonGo || battle.CurrentPlayer() == player.Id || battle.IsSpectator(player.Id))
             {
                 battle.PlayTrainerAction(player, param.Target, param.Action, param.Index);
             }

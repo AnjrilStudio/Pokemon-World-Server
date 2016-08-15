@@ -102,6 +102,11 @@ namespace Anjril.PokemonWorld.Server.Core
             return battle;
         }
 
+        public void AddBattlePlayer(int playerId, BattleState battle)
+        {
+            battles.Add(playerId, battle);
+        }
+
         public void RemoveBattle(int entity)
         {
             if (battles.ContainsKey(entity))
