@@ -61,57 +61,58 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         public bool PlayAction(Position target, Action action, Direction dir)
         {
             var entity = turns[currentTurn];
-
-            bool inRange = action.Range.InRange(arena, entity, target);
-            if (action.Range2 != null && action.Range2.InRange(arena, entity, target))
+            if (entity.HP > 0)
             {
-                inRange = true;
-            }
-
-            if (inRange)
-            {
-                if (action.ActionCost != null)
+                bool inRange = action.Range.InRange(arena, entity, target);
+                if (action.Range2 != null && action.Range2.InRange(arena, entity, target))
                 {
-                    action.ActionCost.ApplyCost(entity, target);
+                    inRange = true;
                 }
 
-                foreach (GroundEffect effect in action.GroundEffects)
+                if (inRange)
                 {
-                    effect.apply(entity, target, dir, arena);
-                }
-
-                foreach (Position aoe in action.AoeTiles(entity, target, dir, arena))
-                {
-                    foreach (BattleEntity pokemon in turns)
+                    if (action.ActionCost != null)
                     {
-                        //todo ne pas toucher soi-même
-                        if (aoe.Equals(pokemon.CurrentPos))
+                        action.ActionCost.ApplyCost(entity, target);
+                    }
+
+                    foreach (GroundEffect effect in action.GroundEffects)
+                    {
+                        effect.apply(entity, target, dir, arena);
+                    }
+
+                    foreach (Position aoe in action.AoeTiles(entity, target, dir, arena))
+                    {
+                        foreach (BattleEntity pokemon in turns)
                         {
-                            foreach (HitEffect effect in action.HitEffects)
+                            //todo ne pas toucher soi-même
+                            if (aoe.Equals(pokemon.CurrentPos))
                             {
-                                effect.apply(entity, pokemon, dir, arena);
+                                foreach (HitEffect effect in action.HitEffects)
+                                {
+                                    effect.apply(entity, pokemon, dir, arena);
+                                }
                             }
                         }
                     }
+
+                    actionId++;
+
+                    if (action.NextTurn)
+                    {
+                        NextTurn();
+                    }
+                    
+                    foreach (int id in players)
+                    {
+                        var message = ToActionMessage(id, target, action, dir);
+                        GlobalServer.Instance.SendMessage(id, message);
+                    }
+
+                    playIATurns();
+
+                    return true;
                 }
-
-                actionId++;
-
-                if (action.NextTurn)
-                {
-                    NextTurn();
-                }
-
-                var message = ToActionMessage(turns[currentTurn].PlayerId, target, action, dir);
-
-                foreach (int id in players)
-                {
-                    GlobalServer.Instance.SendMessage(id, message);
-                }
-
-                playIATurns();
-
-                return true;
             }
 
             return false;
@@ -226,7 +227,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                         }
                     }
 
-                    player.Team.AddPokemon(new BattleEntity(-1, entity.PokedexId, player.Id));
+                    player.Team.AddPokemon(new BattleEntity(-1, entity.PokedexId, player.Id)); //TODO boîte
                     player.TeamToUpdate = true;
 
                     World.Instance.RemoveEntity(entity.WorldId);
@@ -282,16 +283,13 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
         public void NextTurn()
         {
-            if (turns.Count > 1 && GetTotalInBattleHp() > 0)
+            if (turns.Count > 1)
             {
-                do
+                currentTurn++;
+                if (currentTurn >= turns.Count)
                 {
-                    currentTurn++;
-                    if (currentTurn >= turns.Count)
-                    {
-                        currentTurn = 0;
-                    }
-                } while (turns[currentTurn].HP == 0);
+                    currentTurn = 0;
+                }
 
                 turns[currentTurn].AP = turns[currentTurn].MaxAP;
                 turns[currentTurn].MP = turns[currentTurn].MaxMP;
@@ -304,7 +302,20 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             {
                 while (turns[currentTurn].PlayerId < 0)
                 {
-                    PlayIA();
+                    var result = PlayIA();
+
+                    if (!result)
+                    {
+                        actionId++;
+
+                        NextTurn();
+
+                        foreach (int id in players)
+                        {
+                            var message = ToNoActionMessage(id);
+                            GlobalServer.Instance.SendMessage(id, message);
+                        }
+                    }
                 }
             }
         }
@@ -328,7 +339,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             player.MapToUpdate = true;
         }
 
-        private void PlayIA()
+        private bool PlayIA()
         {
             var turn = turns[currentTurn];
             Action actionAI = turn.Actions[random.Next(0, turn.Actions.Count)];
@@ -336,12 +347,20 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             var dir = Direction.None;
             while (targetPos == null)
             { // attention boucle infinie potentielle, mais ne devrait jamais arriver
+                bool invalidAction = false;
                 if (actionAI.TargetType == TargetType.Position)
                 {
                     List<Position> targets = actionAI.InRangeTiles(turn, arena);
+                    if (actionAI.Range2 != null)
+                    {
+                        targets.AddRange(actionAI.InRange2Tiles(turn, arena));
+                    }
                     if (targets.Count != 0)
                     {
                         targetPos = targets[random.Next(0, targets.Count)];
+                    } else
+                    {
+                        invalidAction = true;
                     }
 
                 }
@@ -350,14 +369,24 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 {
                     dir = (Direction)random.Next(1, 5);
                     List<Position> targets = actionAI.InRangeTiles(turn, dir, arena);
+                    if (actionAI.Range2 != null)
+                    {
+                        targets.AddRange(actionAI.InRange2Tiles(turn, dir, arena));
+                    }
                     if (targets.Count != 0)
                     {
                         targetPos = targets[random.Next(0, targets.Count)];
+                    } else
+                    {
+                        invalidAction = true;
                     }
                 }
-                if (targetPos == null) System.Console.WriteLine("loop");
+                if (invalidAction)
+                {
+                    actionAI = turn.Actions[random.Next(0, turn.Actions.Count)];
+                }
             }
-            PlayAction(targetPos, actionAI, dir);
+            return PlayAction(targetPos, actionAI, dir);
         }
 
         private Position GetRandomStartPosition(Direction dir)
@@ -460,16 +489,6 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 {
                     result++;
                 }
-            }
-            return result;
-        }
-
-        private int GetTotalInBattleHp()
-        {
-            int result = 0;
-            foreach (BattleEntity entity in turns)
-            {
-                result += entity.HP;
             }
             return result;
         }
