@@ -53,6 +53,10 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     //TODO bord
                     var player = entity as Player;
                     players.Add(player.Id);
+                    foreach(BattleEntity pokemon in player.Team)
+                    {
+                        pokemon.CurrentPos = null;
+                    }
                 }
             }
         }
@@ -61,7 +65,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         public bool PlayAction(Position target, Action action, Direction dir)
         {
             var entity = turns[currentTurn];
-            if (entity.HP > 0)
+            if (entity.HP > 0 && !entity.ComingBack)
             {
                 bool inRange = action.Range.InRange(arena, entity, target);
                 if (action.Range2 != null && action.Range2.InRange(arena, entity, target))
@@ -148,6 +152,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     BattleEntity battleEntity = player.Team[index];
                     battleEntity.BattleId = entityIdSequence++;
                     battleEntity.CurrentPos = target;
+                    battleEntity.Ready = false;
                     turns.Add(battleEntity);
 
                     bool ok = true;
@@ -184,17 +189,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 var entity = GetEntity(target);
                 if (entity != null && entity.PlayerId == player.Id)
                 {
-                    var indexof = turns.IndexOf(entity);
-                    turns.Remove(entity);
-                    entity.CurrentPos = null;
-                    if (indexof <= currentTurn)
-                    {
-                        currentTurn--;
-                        if (currentTurn < 0)
-                        {
-                            currentTurn = 0;
-                        }
-                    }
+                    entity.ComingBack = true;
 
                     actionId++;
                     if (GetPlayerNbPokemons(player.Id) == 0)
@@ -285,11 +280,30 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         {
             if (turns.Count > 1)
             {
-                currentTurn++;
-                if (currentTurn >= turns.Count)
+                do
                 {
-                    currentTurn = 0;
-                }
+                    currentTurn++;
+                    if (currentTurn >= turns.Count)
+                    {
+                        currentTurn = 0;
+                        var turnsToRemove = new List<BattleEntity>();
+                        foreach (BattleEntity turn in turns)
+                        {
+                            turn.Ready = true;
+                            
+                            if (turn.ComingBack)
+                            {
+                                turnsToRemove.Add(turn);
+                            }
+                        }
+                        foreach(BattleEntity turn in turnsToRemove)
+                        {
+                            turns.Remove(turn);
+                            turn.CurrentPos = null;
+                            turn.ComingBack = false;
+                        }
+                    }
+                } while (!turns[currentTurn].Ready && turns[currentTurn].ComingBack);
 
                 turns[currentTurn].AP = turns[currentTurn].MaxAP;
                 turns[currentTurn].MP = turns[currentTurn].MaxMP;
@@ -485,7 +499,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             int result = 0;
             foreach (BattleEntity entity in turns)
             {
-                if (entity.PlayerId == playerId)
+                if (entity.PlayerId == playerId && !entity.ComingBack)
                 {
                     result++;
                 }
@@ -503,6 +517,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 message += entity.PokedexId + ",";
                 message += entity.PlayerId + ",";
                 message += entity.CurrentPos + ",";
+                message += (entity.ComingBack?"1":"0") + ",";
                 message += entity.HP + ",";
                 message += entity.MaxHP + ",";
                 message += entity.AP + ",";

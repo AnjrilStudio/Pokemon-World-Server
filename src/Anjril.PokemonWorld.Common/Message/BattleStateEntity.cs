@@ -12,6 +12,7 @@ namespace Anjril.PokemonWorld.Common.Message
         public int PokemonId { get; private set; }
         public int PlayerId { get; private set; }
         public Position CurrentPos { get; private set; }
+        public bool ComingBack { get; private set; }
         public int HP { get; private set; }
         public int MaxHP { get; private set; }
         public int AP { get; private set; }
@@ -25,12 +26,13 @@ namespace Anjril.PokemonWorld.Common.Message
             PokemonId = Int32.Parse(entityStr.Split(',')[1]);
             PlayerId = Int32.Parse(entityStr.Split(',')[2]);
             CurrentPos = new Position(entityStr.Split(',')[3]);
-            HP = Int32.Parse(entityStr.Split(',')[4]);
-            MaxHP = Int32.Parse(entityStr.Split(',')[5]);
-            AP = Int32.Parse(entityStr.Split(',')[6]);
-            MaxAP = Int32.Parse(entityStr.Split(',')[7]);
-            MP = Int32.Parse(entityStr.Split(',')[8]);
-            MaxMP = Int32.Parse(entityStr.Split(',')[9]);
+            ComingBack = "1" == entityStr.Split(',')[4];
+            HP = Int32.Parse(entityStr.Split(',')[5]);
+            MaxHP = Int32.Parse(entityStr.Split(',')[6]);
+            AP = Int32.Parse(entityStr.Split(',')[7]);
+            MaxAP = Int32.Parse(entityStr.Split(',')[8]);
+            MP = Int32.Parse(entityStr.Split(',')[9]);
+            MaxMP = Int32.Parse(entityStr.Split(',')[10]);
         }
     }
 }

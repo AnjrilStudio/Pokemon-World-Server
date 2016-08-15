@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Anjril.PokemonWorld.Common.Message
 {
-    class BattleActionMessage
+    public class BattleActionMessage
     {
         public int ActionId { get; private set; }
         public List<TrainerAction> ActionsAvailable { get; private set; }

@@ -15,6 +15,8 @@ namespace Anjril.PokemonWorld.Common
         public int PokedexId { get; private set; }
         public Position CurrentPos { get; set; }
         public bool InBattle { get { return CurrentPos != null; } }
+        public bool Ready { get; set; }
+        public bool ComingBack { get; set; }
 
         public int HP { get; set; }
         public int MaxHP { get; set; }
@@ -38,6 +40,8 @@ namespace Anjril.PokemonWorld.Common
             PokedexId = pokedexId;
             PlayerId = -1;
             WorldId = -1;
+            Ready = false;
+            ComingBack = false;
 
             Actions = new List<Action>();
             CurrentPos = null;
