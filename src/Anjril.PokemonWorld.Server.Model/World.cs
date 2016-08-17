@@ -120,7 +120,11 @@ namespace Anjril.PokemonWorld.Server.Model
 
                 var dest = new Position(randX, randY);
 
-                var pokemon = new Pokemon(RandomUtils.RandomInt(3) + 1, dest);
+                // DEBUG
+                var id = RandomUtils.RandomInt(3);
+                id = id == 0 ? 19 : id == 1 ? 16 : 60;
+
+                var pokemon = new Pokemon(id, dest);
                 EntityState state;
 
                 while (!Map.CanGo(pokemon, dest, out state))

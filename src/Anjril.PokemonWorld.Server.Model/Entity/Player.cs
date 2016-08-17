@@ -1,6 +1,7 @@
 ﻿using Anjril.Common.Network;
 using Anjril.PokemonWorld.Common;
 using Anjril.PokemonWorld.Common.State;
+using Anjril.PokemonWorld.Server.Model.Index;
 using Anjril.PokemonWorld.Server.Model.Utils;
 using System;
 using System.Collections.Generic;
@@ -23,15 +24,24 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
         public float MoveInputDelay { get; private set; }
         public IRemoteConnection RemoteConnection { get; private set; }
 
+        public override bool CanSwim { get { return false; } }
+        public override bool CanWalk { get { return true; } }
+        public override bool CanFly { get { return false; } }
+        public override bool CanBeRidden { get { return false; } }
+
+        public Pokedex Pokedex { get; private set; }
+
         #endregion
 
         #region constructor
 
         public Player(string name, IRemoteConnection remote)
-            : base(EntityType.Player, false, true, false)
+            : base(EntityType.Player)
         {
             Name = name;
             Team = new Team();
+
+            Pokedex = new Pokedex();
 
             MapToUpdate = true;
             TeamToUpdate = true;

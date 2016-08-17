@@ -51,6 +51,7 @@
     <Compile Include="ArenaTile.cs" />
     <Compile Include="BattleArena.cs" />
     <Compile Include="BattleEntity.cs" />
+    <Compile Include="Characteristics.cs" />
     <Compile Include="Message\BaseMessage.cs" />
     <Compile Include="Message\BattleActionMessage.cs" />
     <Compile Include="Message\BattleStartMessage.cs" />
@@ -74,6 +75,10 @@
     <Compile Include="Effect\StatusEffect.cs" />
     <Compile Include="State\EntityState.cs" />
     <Compile Include="State\EntityType.cs" />
+    <Compile Include="State\NatureType.cs" />
+    <Compile Include="State\PokemonType.cs" />
+    <Compile Include="Utils\NatureUtils.cs" />
+    <Compile Include="Utils\PokemonTypeUtils.cs" />
     <Compile Include="Utils\StateUtils.cs" />
     <Compile Include="Utils\EntityTypeUtils.cs" />
     <Compile Include="Utils\PositionUtils.cs" />

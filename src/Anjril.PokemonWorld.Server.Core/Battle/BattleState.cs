@@ -46,7 +46,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 var entity = World.Instance.VisibleEntities[entityId];
                 if (entity.Type == EntityType.Pokemon)
                 {
-                    BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Pokemon).PokedexId, -1, entityId);
+                    BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Pokemon).PokedexSheet.NationalId, -1, entityId);
                     battleEntity.CurrentPos = GetRandomStartPosition(Direction.Left);//TODO
                     turns.Add(battleEntity);
                 }
@@ -55,7 +55,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     //TODO bord
                     var player = entity as Player;
                     players.Add(player.Id);
-                    foreach(BattleEntity pokemon in player.Team)
+                    foreach (BattleEntity pokemon in player.Team)
                     {
                         pokemon.CurrentPos = null;
                     }
@@ -108,7 +108,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     {
                         NextTurn();
                     }
-                    
+
                     foreach (int id in players)
                     {
                         var message = ToActionMessage(id, target, action, dir);
@@ -294,13 +294,13 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                         foreach (BattleEntity turn in turns)
                         {
                             turn.Ready = true;
-                            
+
                             if (turn.ComingBack)
                             {
                                 turnsToRemove.Add(turn);
                             }
                         }
-                        foreach(BattleEntity turn in turnsToRemove)
+                        foreach (BattleEntity turn in turnsToRemove)
                         {
                             turns.Remove(turn);
                             turn.CurrentPos = null;
@@ -387,7 +387,8 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     if (targets.Count != 0)
                     {
                         targetPos = targets[random.Next(0, targets.Count)];
-                    } else
+                    }
+                    else
                     {
                         invalidAction = true;
                     }
@@ -405,7 +406,8 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     if (targets.Count != 0)
                     {
                         targetPos = targets[random.Next(0, targets.Count)];
-                    } else
+                    }
+                    else
                     {
                         invalidAction = true;
                     }
@@ -532,7 +534,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 message += entity.PokedexId + ",";
                 message += entity.PlayerId + ",";
                 message += entity.CurrentPos + ",";
-                message += (entity.ComingBack?"1":"0") + ",";
+                message += (entity.ComingBack ? "1" : "0") + ",";
                 message += entity.HP + ",";
                 message += entity.MaxHP + ",";
                 message += entity.AP + ",";

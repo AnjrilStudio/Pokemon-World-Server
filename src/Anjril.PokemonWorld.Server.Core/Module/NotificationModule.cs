@@ -65,7 +65,7 @@ namespace Anjril.PokemonWorld.Server.Core.Module
                         }
                         else if (entity.Type == EntityType.Pokemon)
                         {
-                            var pokedexId = (entity as Pokemon).PokedexId;
+                            var pokedexId = (entity as Pokemon).PokedexSheet.NationalId;
                             visibleEntites.Add(new PositionEntity(entity.Id, entity.Position, entity.Type, entity.Direction, pokedexId, entity.State));
                         }
                     }

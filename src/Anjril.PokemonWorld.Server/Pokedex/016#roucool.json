@@ -1,0 +1,44 @@
+{
+  "_evolutions": [
+    17
+  ],
+  "NationalId": 16,
+  "CatchRate": 0,
+  "MaleDistribution": 0.5,
+  "Name": "Roucool",
+  "Type1": 1,
+  "Type2": 10,
+  "AverageSize": 0,
+  "AverageWeight": 0,
+  "Description": null,
+  "CanSwim": false,
+  "CanWalk": true,
+  "CanFly": true,
+  "CanBeRidden": false,
+  "BaseCharacteristic": {
+    "LifePoint": 0,
+    "Attack": 0,
+    "Defense": 0,
+    "SpeAttack": 0,
+    "SpeDefense": 0,
+    "Velocity": 0
+  },
+  "AvailableTalents": [
+    {
+	  "$type": "Anjril.PokemonWorld.Server.Model.Index.Talent.FakeTalent",
+      "Name": "Talent"
+    }
+  ],
+  "LevelingAttacks": {
+    "12": {
+	  "$type": "Anjril.PokemonWorld.Server.Model.Index.Attack.FakeAttack",
+      "Name": "Attack"
+    }
+  },
+  "LearnableAttack": [
+    {
+	  "$type": "Anjril.PokemonWorld.Server.Model.Index.Attack.FakeAttack",
+      "Name": "Attack"
+    }
+  ]
+}

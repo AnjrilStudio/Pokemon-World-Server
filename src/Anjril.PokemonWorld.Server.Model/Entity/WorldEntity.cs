@@ -20,9 +20,10 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
         public Position Position { get; set; }
         public Direction Direction { get; set; }
 
-        public bool CanSwim { get; private set; }
-        public bool CanWalk { get; private set; }
-        public bool CanFly { get; private set; }
+        public abstract bool CanSwim { get; }
+        public abstract bool CanWalk { get; }
+        public abstract bool CanFly { get; }
+        public abstract bool CanBeRidden { get; }
 
         public EntityState State { get; set; }
 
@@ -32,14 +33,10 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
 
         #region constructor
 
-        protected WorldEntity(EntityType type, bool canSwim, bool canWalk, bool canFly)
+        protected WorldEntity(EntityType type)
         {
             Id = sequenceId++;
             Type = type;
-
-            CanSwim = canSwim;
-            CanWalk = canWalk;
-            CanFly = canFly;
 
             Direction = Direction.Down;
             MoveDuration = 0.6f;
