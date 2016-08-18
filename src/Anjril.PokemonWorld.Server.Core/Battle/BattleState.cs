@@ -157,32 +157,37 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     battleEntity.Ready = false;
                     turns.Add(battleEntity);
 
-                    bool ok = true;
+                    bool battleok = true;
                     foreach (int id in players)
                     {
                         if (!spectators.Contains(id))
                         {
                             if (GetPlayerNbPokemons(id) == 0)
                             {
-                                ok = false;
+                                battleok = false;
                             }
                         }
                     }
 
-                    if (ok)
+                    if (battleok)
                     {
                         actionId++;
-                        WaitingPokemonGo = false;
-
-                        NextTurn();
+                        if (!WaitingPokemonGo)
+                        {
+                            NextTurn();
+                        } else
+                        {
+                            CheckTurn();
+                        }
 
                         foreach (int id in players)
                         {
                             var message = ToNoActionMessage(id);//TODO
                             GlobalServer.Instance.SendMessage(id, message);
                         }
-
+                        
                         playIATurns();
+                        WaitingPokemonGo = false;
                     }
 
                     return true;
@@ -287,30 +292,58 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 do
                 {
                     currentTurn++;
-                    if (currentTurn >= turns.Count)
-                    {
-                        currentTurn = 0;
-                        var turnsToRemove = new List<BattleEntity>();
-                        foreach (BattleEntity turn in turns)
-                        {
-                            turn.Ready = true;
+                    updateTurn();
 
-                            if (turn.ComingBack)
-                            {
-                                turnsToRemove.Add(turn);
-                            }
-                        }
-                        foreach (BattleEntity turn in turnsToRemove)
-                        {
-                            turns.Remove(turn);
-                            turn.CurrentPos = null;
-                            turn.ComingBack = false;
-                        }
-                    }
-                } while (turns.Count > 1 && !turns[currentTurn].Ready && turns[currentTurn].ComingBack);
+                } while (turns.Count > 1 && (!turns[currentTurn].Ready || turns[currentTurn].ComingBack));
 
                 turns[currentTurn].AP = turns[currentTurn].MaxAP;
                 turns[currentTurn].MP = turns[currentTurn].MaxMP;
+            }
+        }
+
+        public void CheckTurn()
+        {
+            bool next = false;
+            while (turns.Count > 1 && (!turns[currentTurn].Ready || turns[currentTurn].ComingBack))
+            {
+                currentTurn++;
+                updateTurn();
+                next = true;
+            }
+
+            if (next)
+            {
+                turns[currentTurn].AP = turns[currentTurn].MaxAP;
+                turns[currentTurn].MP = turns[currentTurn].MaxMP;
+            }
+        }
+
+        private void updateTurn()
+        {
+            if (currentTurn >= turns.Count)
+            {
+                currentTurn = 0;
+                var turnsToRemove = new List<BattleEntity>();
+                foreach (BattleEntity turn in turns)
+                {
+                    turn.Ready = true;
+
+                    if (turn.ComingBack)
+                    {
+                        turnsToRemove.Add(turn);
+                    }
+                }
+                foreach (BattleEntity turn in turnsToRemove)
+                {
+                    turns.Remove(turn);
+                    turn.CurrentPos = null;
+                    turn.ComingBack = false;
+                }
+
+                /*turns.Sort(delegate (BattleEntity b1, BattleEntity b2)
+                {
+                    return b1.PokedexId.CompareTo(b2.PokedexId); //todo vitesse
+                });*/
             }
         }
 
@@ -342,7 +375,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         {
             players.Add(playerId);
             spectators.Add(playerId);
-            actionId++; //todo
+            actionId++; //todo message ici
             GlobalServer.Instance.AddBattlePlayer(playerId, this);
         }
 
