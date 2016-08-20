@@ -128,28 +128,46 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         {
             if (action.Id == (int)TrainerAction.End_Battle && GetPlayerNbPokemons(player.Id) == 0)
             {
-                actionId++;
-
-                EndPlayerBattle(player.Id);
-
-                if (action.NextTurn)
+                if (spectators.Contains(player.Id))
                 {
-                    NextTurn();
-                }
-
-                foreach (int id in players)
+                    spectators.Remove(player.Id);
+                    EndPlayerBattle(player.Id, true);
+                } else
                 {
-                    var message = ToNoActionMessage(id);//TODO
-                    GlobalServer.Instance.SendMessage(id, message);
-                }
+                    actionId++;
 
-                playIATurns();
+                    EndPlayerBattle(player.Id, false);
+
+                    if (action.NextTurn)
+                    {
+                        NextTurn();
+                    }
+
+                    foreach (int id in players)
+                    {
+                        var message = ToNoActionMessage(id);//TODO
+                        GlobalServer.Instance.SendMessage(id, message);
+                    }
+
+                    playIATurns();
+                }
 
                 return true;
             }
             else if (action.Id == (int)TrainerAction.Pokemon_Go)
             {
-                if (!player.Team[index].InBattle)
+                if (spectators.Contains(player.Id))
+                {
+                    BattleEntity battleEntity = player.Team[index];
+                    battleEntity.BattleId = entityIdSequence++;
+                    battleEntity.CurrentPos = target;
+                    battleEntity.Ready = false;
+                    turns.Add(battleEntity);
+
+                    WaitingPokemonGo = true;
+                    spectators.Remove(player.Id);
+                }
+                else if (!player.Team[index].InBattle)
                 {
                     BattleEntity battleEntity = player.Team[index];
                     battleEntity.BattleId = entityIdSequence++;
@@ -216,7 +234,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     return true;
                 }
             }
-            else if (action.Id == (int)TrainerAction.Pokeball)
+            else if (action.Id == (int)TrainerAction.Pokeball && !spectators.Contains(player.Id))
             {
                 var entity = GetEntity(target);
                 if (entity != null && entity.PlayerId < 0)
@@ -384,7 +402,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             return spectators.Contains(playerId);
         }
 
-        public void EndPlayerBattle(int playerId)
+        public void EndPlayerBattle(int playerId, bool spectator)
         {
             players.Remove(playerId);
             if (players.Count == 0)
@@ -396,7 +414,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 GlobalServer.Instance.RemoveBattleEntity(playerId);
             }
 
-            GlobalServer.Instance.SendMessage(playerId, ToEndMessage(playerId));
+            GlobalServer.Instance.SendMessage(playerId, ToEndMessage(playerId, spectator));
             var player = World.Instance.VisibleEntities[playerId] as Player;
             player.MapToUpdate = true;
         }
@@ -619,10 +637,10 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             return message;
         }
 
-        public string ToEndMessage(int player)
+        public string ToEndMessage(int player, bool spectator)
         {
             string message = "battleaction:";
-            message += actionId;
+            message += spectator?actionId+1:actionId;
             message += "=";
             message += CurrentAvailableActionsMessage(player);
             message += "=";
