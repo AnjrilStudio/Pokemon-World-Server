@@ -422,7 +422,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         private bool PlayIA()
         {
             var turn = turns[currentTurn];
-            Action actionAI = turn.Actions[random.Next(0, turn.Actions.Count)];
+            Action actionAI = turn.Moves[random.Next(0, turn.Moves.Count)];
             Position targetPos = null;
             var dir = Direction.None;
             while (targetPos == null)
@@ -465,7 +465,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 }
                 if (invalidAction)
                 {
-                    actionAI = turn.Actions[random.Next(0, turn.Actions.Count)];
+                    actionAI = turn.Moves[random.Next(0, turn.Moves.Count)];
                 }
             }
             return PlayAction(targetPos, actionAI, dir);

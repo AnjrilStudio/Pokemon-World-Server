@@ -9,7 +9,7 @@ namespace Anjril.PokemonWorld.Common
     public class BattleEntity
     {
         public int BattleId { get; set; }
-        public List<Action> Actions { get; private set; }
+        public List<Action> Moves { get; private set; }
         public int PlayerId { get; private set; }
         public int WorldId { get; private set; }
         public int PokedexId { get; private set; }
@@ -43,7 +43,7 @@ namespace Anjril.PokemonWorld.Common
             Ready = false;
             ComingBack = false;
 
-            Actions = new List<Action>();
+            Moves = new List<Action>();
             CurrentPos = null;
 
             HP = 20;
@@ -60,12 +60,12 @@ namespace Anjril.PokemonWorld.Common
             MaxMP = 3;
             MP = MaxMP;
 
-            Actions.Add(Moves.Get(Move.Move));
-            Actions.Add(Moves.Get(Move.Tackle));
-            Actions.Add(Moves.Get(Move.Gust));
-            Actions.Add(Moves.Get(Move.Bubble));
-            Actions.Add(Moves.Get(Move.Water_Gun));
-            Actions.Add(Moves.Get(Move.Thunder_Shock));
+            Moves.Add(Common.Moves.Get(Move.Move));
+            Moves.Add(Common.Moves.Get(Move.Tackle));
+            Moves.Add(Common.Moves.Get(Move.Gust));
+            Moves.Add(Common.Moves.Get(Move.Bubble));
+            Moves.Add(Common.Moves.Get(Move.Water_Gun));
+            Moves.Add(Common.Moves.Get(Move.Thunder_Shock));
         }
 
         public BattleEntity(int id, int pokedexId, int playerId) : this (id, pokedexId)

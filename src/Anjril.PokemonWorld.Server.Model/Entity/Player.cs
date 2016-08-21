@@ -46,7 +46,7 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
             MapToUpdate = true;
             TeamToUpdate = true;
             LastMove = DateTime.Now;
-            MoveInputDelay = 0.30f;
+            MoveInputDelay = 0.20f;
             RemoteConnection = remote;
 
             // DEBUG
