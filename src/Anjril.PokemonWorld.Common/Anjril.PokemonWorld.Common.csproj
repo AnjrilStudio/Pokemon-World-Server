@@ -46,6 +46,8 @@
     <Compile Include="ActionCost\MPAPDistanceActionCost.cs" />
     <Compile Include="AreaOfEffect\AbstractAreaOfEffect.cs" />
     <Compile Include="AreaOfEffect\DistanceAreaOfEffect.cs" />
+    <Compile Include="AreaOfEffect\LeftAreaOfEffect.cs" />
+    <Compile Include="AreaOfEffect\RightAreaOfEffect.cs" />
     <Compile Include="AreaOfEffect\LineAreaOfEffect.cs" />
     <Compile Include="ArenaObject.cs" />
     <Compile Include="ArenaTile.cs" />
@@ -73,6 +75,9 @@
     <Compile Include="Effect\MoveEffect.cs" />
     <Compile Include="Effect\PushEffect.cs" />
     <Compile Include="Effect\StatusEffect.cs" />
+    <Compile Include="Range\SelfRange.cs" />
+    <Compile Include="Range\WildRange.cs" />
+    <Compile Include="Range\OwnerRange.cs" />
     <Compile Include="State\EntityState.cs" />
     <Compile Include="State\EntityType.cs" />
     <Compile Include="State\NatureType.cs" />

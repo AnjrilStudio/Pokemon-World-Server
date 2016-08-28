@@ -8,6 +8,8 @@ namespace Anjril.PokemonWorld.Common.ActionCost
 {
     public class APActionCost : AbstractActionCost
     {
+        public int Value { get; protected set; }
+
         public APActionCost(int value)
         {
             Value = value;
@@ -16,6 +18,11 @@ namespace Anjril.PokemonWorld.Common.ActionCost
         public override void ApplyCost(BattleEntity self, Position target)
         {
             self.AP -= Value;
+        }
+
+        public override bool CheckCost(BattleEntity self, Position target)
+        {
+            return self.AP >= Value;
         }
     }
 }

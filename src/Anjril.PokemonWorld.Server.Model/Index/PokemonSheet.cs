@@ -44,6 +44,8 @@ namespace Anjril.PokemonWorld.Server.Model.Index
         public bool CanFly { get; set; }
         public bool CanBeRidden { get; set; }
 
+        public int BaseAP { get; set; }
+        public int BaseMP { get; set; }
         public Characteristics BaseCharacteristic { get; set; }
         public IList<ITalent> AvailableTalents { get; set; }
         public IDictionary<int, IAttack> LevelingAttacks { get; set; }

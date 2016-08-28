@@ -9,17 +9,20 @@ namespace Anjril.PokemonWorld.Common.Range
     public class DistanceMPAPRange : AbstractRange
     {
         public int Factor { get; private set; }
+        public int APValue { get; private set; }
 
-        public DistanceMPAPRange(int factor)
+        public DistanceMPAPRange(int factor, int apValue)
         {
             Factor = factor;
+            APValue = apValue;
         }
 
         public override bool InRange(BattleArena arena, BattleEntity self, Position target, Direction dir)
         {
             var origin = self.CurrentPos;
             var dist = Math.Abs(origin.X - target.X) + Math.Abs(origin.Y - target.Y);
-            if (dist <= (self.MP + self.AP) * Factor && dist != 0)
+            var apValue = Math.Min(APValue, self.AP);
+            if (dist <= (self.MP + apValue) * Factor && dist != 0)
             {
                 return true;
             }

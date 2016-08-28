@@ -55,7 +55,7 @@ namespace Anjril.PokemonWorld.Common
             DefSpe = 15;
             Vit = 15;
 
-            MaxAP = 4;
+            MaxAP = 6;
             AP = MaxAP;
             MaxMP = 3;
             MP = MaxMP;
@@ -66,6 +66,7 @@ namespace Anjril.PokemonWorld.Common
             Moves.Add(Common.Moves.Get(Move.Bubble));
             Moves.Add(Common.Moves.Get(Move.Water_Gun));
             Moves.Add(Common.Moves.Get(Move.Thunder_Shock));
+            Moves.Add(Common.Moves.Get(Move.Tail_Whip));
         }
 
         public BattleEntity(int id, int pokedexId, int playerId) : this (id, pokedexId)

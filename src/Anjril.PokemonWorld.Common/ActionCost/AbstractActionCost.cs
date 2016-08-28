@@ -8,8 +8,7 @@ namespace Anjril.PokemonWorld.Common.ActionCost
 {
     public abstract class AbstractActionCost
     {
-        public int Value { get; protected set; }
-
         public abstract void ApplyCost(BattleEntity self, Position target);
+        public abstract bool CheckCost(BattleEntity self, Position target);
     }
 }

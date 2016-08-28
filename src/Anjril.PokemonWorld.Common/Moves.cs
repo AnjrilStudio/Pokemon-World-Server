@@ -6,12 +6,13 @@ using Anjril.PokemonWorld.Common.Range;
 using Anjril.PokemonWorld.Common.AreaOfEffect;
 using Anjril.PokemonWorld.Common.Effect;
 using Anjril.PokemonWorld.Common.ActionCost;
+using Anjril.PokemonWorld.Common.State;
 
 namespace Anjril.PokemonWorld.Common
 {
     public class Moves
     {
-        private static Action[] moves = new Action[10];
+        private static Action[] moves = new Action[20];
 
         public static Action Get(Move move)
         {
@@ -31,43 +32,105 @@ namespace Anjril.PokemonWorld.Common
                 case Move.Move:
                     action.TargetType = TargetType.Position;
                     action.Range = new DistanceMPRange(1);
-                    action.Range2 = new DistanceMPAPRange(1);
+                    action.Range2 = new DistanceMPAPRange(1, 1);
                     action.GroundEffects.Add(new MoveEffect());
                     action.ActionCost = new MPAPDistanceActionCost(1);
                     action.NextTurn = false;
                     break;
-
-                case Move.Tackle:
+                case Move.Ember:
+                    action.MoveType = PokemonType.Fire;
                     action.TargetType = TargetType.Position;
                     action.Range = new DistanceRange(3);
                     action.AreaOfEffect = new DistanceAreaOfEffect(1);
                     action.HitEffects.Add(new DamageEffect(40));
+                    action.ActionCost = new APActionCost(4);
                     break;
-
                 case Move.Gust:
+                    action.MoveType = PokemonType.Flying;
                     action.TargetType = TargetType.Directional;
                     action.Range = new LineRange(2);
                     action.AreaOfEffect = new LineAreaOfEffect(4);
                     action.HitEffects.Add(new PushEffect(1));
                     action.HitEffects.Add(new DamageEffect(50));
+                    action.ActionCost = new APActionCost(4);
+                    //TODO le vrai
                     break;
                 case Move.Bubble:
+                    action.MoveType = PokemonType.Water;
                     action.TargetType = TargetType.Directional;
                     action.Range = new LineRange(2);
                     action.AreaOfEffect = new LineAreaOfEffect(4);
-                    action.HitEffects.Add(new PushEffect(1));
+                    // todo baisser la vit
                     action.HitEffects.Add(new DamageEffect(50));
+                    action.ActionCost = new APActionCost(4);
                     break;
                 case Move.Water_Gun:
+                    action.MoveType = PokemonType.Water;
                     action.TargetType = TargetType.Directional;
                     action.Range = new LineRange(1);
                     action.AreaOfEffect = new LineAreaOfEffect(5);
                     action.HitEffects.Add(new DamageEffect(50));
+                    action.ActionCost = new APActionCost(4);
                     break;
                 case Move.Thunder_Shock:
+                    action.MoveType = PokemonType.Electric;
                     action.TargetType = TargetType.Position;
                     action.Range = new DistanceRange(5);
                     action.HitEffects.Add(new DamageEffect(40));
+                    action.ActionCost = new APActionCost(4);
+                    break;
+                case Move.Tail_Whip:
+                    action.MoveType = PokemonType.Normal;
+                    action.Range = new SelfRange();
+                    action.TargetType = TargetType.Position;
+                    action.AreaOfEffect = new DistanceAreaOfEffect(3);
+                    action.ActionCost = new APActionCost(3);
+                    break;
+                case Move.Scratch:
+                    action.MoveType = PokemonType.Normal;
+                    action.Range = new LineRange(1);
+                    action.TargetType = TargetType.Directional;
+                    action.AreaOfEffect = new RightAreaOfEffect(1);
+                    action.ActionCost = new APActionCost(4);
+                    break;
+                case Move.Pound:
+                    action.MoveType = PokemonType.Normal;
+                    action.Range = new LineRange(1);
+                    action.TargetType = TargetType.Position;
+                    action.HitEffects.Add(new DamageEffect(40));
+                    action.ActionCost = new APActionCost(4);
+                    // todo -1 PA
+                    break;
+                case Move.Peck:
+                    action.MoveType = PokemonType.Flying;
+                    action.Range = new LineRange(1);
+                    action.TargetType = TargetType.Position;
+                    action.HitEffects.Add(new DamageEffect(35));
+                    action.ActionCost = new APActionCost(3);
+                    //todo peut attaquer après ? mais pas bouger
+                    break;
+                case Move.Growl:
+                    action.MoveType = PokemonType.Normal;
+                    action.Range = new SelfRange();
+                    action.TargetType = TargetType.Position;
+                    action.AreaOfEffect = new DistanceAreaOfEffect(3);
+                    action.ActionCost = new APActionCost(3);
+                    //todo baisser la atk
+                    break;
+                case Move.Leer:
+                    action.MoveType = PokemonType.Normal;
+                    action.Range = new DistanceRange(6);
+                    action.TargetType = TargetType.Position;
+                    action.ActionCost = new APActionCost(3);
+                    //todo baisser la def
+                    break;
+                case Move.Tackle:
+                    action.MoveType = PokemonType.Normal;
+                    action.TargetType = TargetType.Directional;
+                    action.Range = new LineRange(1);
+                    action.HitEffects.Add(new DamageEffect(50));
+                    action.HitEffects.Add(new PushEffect(1));
+                    action.ActionCost = new APActionCost(4);
                     break;
                 default:
                     break;

@@ -8,20 +8,52 @@ namespace Anjril.PokemonWorld.Common.ActionCost
 {
     public class MPAPDistanceActionCost : AbstractActionCost
     {
-        public MPAPDistanceActionCost(int value)
+        public int Factor { get; protected set; }
+
+        public MPAPDistanceActionCost(int factor)
         {
-            Value = value;
+            Factor = factor;
+        }
+
+        private int ComputeTotalCost(BattleEntity self, Position target)
+        {
+            return Position.Distance(self.CurrentPos, target) * Factor;
+        }
+
+        private int ComputeMPCost(BattleEntity self, Position target)
+        {
+            int mpCost = ComputeTotalCost(self, target);
+            if (self.MP < mpCost)
+            {
+                mpCost = self.MP;
+            }
+            return mpCost;
+        }
+
+        private int ComputeAPCost(BattleEntity self, Position target)
+        {
+            int totalCost = ComputeTotalCost(self, target);
+            int mpCost = totalCost;
+            if (self.MP < totalCost)
+            {
+                mpCost = self.MP;
+            }
+            int apCost = totalCost - mpCost;
+
+            return apCost;
         }
 
         public override void ApplyCost(BattleEntity self, Position target)
         {
-            int cost = Position.Distance(self.CurrentPos, target) * Value;
-            self.MP -= cost;
-            if (self.MP < 0)
-            {
-                self.AP += self.MP;
-                self.MP = 0;
-            }
+            int mpCost = ComputeMPCost(self, target);
+            int apCost = ComputeAPCost(self, target);
+            self.MP -= mpCost;
+            self.AP -= apCost;
+        }
+
+        public override bool CheckCost(BattleEntity self, Position target)
+        {
+            return self.MP >= ComputeMPCost(self, target) && self.AP >= ComputeAPCost(self, target);
         }
     }
 }

@@ -33,12 +33,12 @@ namespace Anjril.PokemonWorld.Common
                     break;
                 case TrainerAction.Pokeball:
                     action.TargetType = TargetType.Position;
-                    action.Range = new ArenaRange();
+                    action.Range = new WildRange();
                     action.NextTurn = true;
                     break;
                 case TrainerAction.Pokemon_Come_Back:
                     action.TargetType = TargetType.Position;
-                    action.Range = new ArenaRange();
+                    action.Range = new OwnerRange();
                     action.NextTurn = false;
                     break;
                 case TrainerAction.Pokemon_Go:

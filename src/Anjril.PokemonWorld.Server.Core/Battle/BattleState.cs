@@ -47,7 +47,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 if (entity.Type == EntityType.Pokemon)
                 {
                     BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Pokemon).PokedexSheet.NationalId, -1, entityId);
-                    battleEntity.CurrentPos = GetRandomStartPosition(Direction.Left);//TODO
+                    arena.MoveBattleEntity(battleEntity, GetRandomStartPosition(Direction.Left));
                     turns.Add(battleEntity);
                 }
                 else if (entity.Type == EntityType.Player)
@@ -57,17 +57,26 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     players.Add(player.Id);
                     foreach (BattleEntity pokemon in player.Team)
                     {
-                        pokemon.CurrentPos = null;
+                        arena.RemoveBattleEntity(pokemon);
                     }
                 }
             }
+        }
+
+        private bool CanPlayAction(BattleEntity entity, Action action, Position target, Direction dir)
+        {
+            if (entity.HP == 0) return false;
+            if (entity.ComingBack) return false;
+            if (!action.ActionCost.CheckCost(entity, target)) return false;
+
+            return true;
         }
 
 
         public bool PlayAction(Position target, Action action, Direction dir)
         {
             var entity = turns[currentTurn];
-            if (entity.HP > 0 && !entity.ComingBack)
+            if (CanPlayAction(entity, action, target, dir))
             {
                 bool inRange = action.Range.InRange(arena, entity, target);
                 if (action.Range2 != null && action.Range2.InRange(arena, entity, target))
@@ -160,7 +169,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 {
                     BattleEntity battleEntity = player.Team[index];
                     battleEntity.BattleId = entityIdSequence++;
-                    battleEntity.CurrentPos = target;
+                    arena.MoveBattleEntity(battleEntity, target);
                     battleEntity.Ready = false;
                     turns.Add(battleEntity);
 
@@ -171,7 +180,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 {
                     BattleEntity battleEntity = player.Team[index];
                     battleEntity.BattleId = entityIdSequence++;
-                    battleEntity.CurrentPos = target;
+                    arena.MoveBattleEntity(battleEntity, target);
                     battleEntity.Ready = false;
                     turns.Add(battleEntity);
 
@@ -354,7 +363,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 foreach (BattleEntity turn in turnsToRemove)
                 {
                     turns.Remove(turn);
-                    turn.CurrentPos = null;
+                    arena.RemoveBattleEntity(turn);
                     turn.ComingBack = false;
                 }
 
@@ -508,15 +517,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
         private bool IsTileFree(int x, int y)
         {
-            var result = true;
-            foreach (BattleEntity entity in turns)
-            {
-                if (entity.CurrentPos.X == x && entity.CurrentPos.Y == y)
-                {
-                    result = false;
-                }
-            }
-            return result;
+            return arena.Pokemons[x, y] == null;
         }
 
         public List<int> Players

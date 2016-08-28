@@ -8,11 +8,18 @@ namespace Anjril.PokemonWorld.Common
     public enum Move
     {
         Move,
-        Tackle,
+        Ember,
         Sand_Attack,
         Gust,
         Bubble,
         Water_Gun,
-        Thunder_Shock
+        Thunder_Shock,
+        Tail_Whip,
+        Scratch,
+        Pound,
+        Peck,
+        Growl,
+        Leer,
+        Tackle
     }
 }

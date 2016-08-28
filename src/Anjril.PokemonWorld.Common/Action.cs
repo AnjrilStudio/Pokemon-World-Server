@@ -23,6 +23,7 @@ namespace Anjril.PokemonWorld.Common
         public bool NextTurn { get; set; }
         public int Id { get; private set; }
         public bool IsTrainer { get; private set; }
+        public PokemonType MoveType { get; set; }
 
         public Action(Move move)
         {
@@ -48,6 +49,10 @@ namespace Anjril.PokemonWorld.Common
 
         public List<Position> InRangeTiles(BattleEntity self, Direction dir, BattleArena arena)
         {
+            if (Range == null)
+            {
+                return new List<Position>();
+            }
             return Range.InRangeTiles(self, dir, arena);
         }
 
