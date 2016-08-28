@@ -312,6 +312,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             return turns[currentTurn].PlayerId;
         }
 
+        //tour terminé
         public void NextTurn()
         {
             if (turns.Count > 1)
@@ -322,12 +323,12 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     updateTurn();
 
                 } while (turns.Count > 1 && (!turns[currentTurn].Ready || turns[currentTurn].ComingBack));
-
-                turns[currentTurn].AP = turns[currentTurn].MaxAP;
-                turns[currentTurn].MP = turns[currentTurn].MaxMP;
+                
+                UpdateStats(turns[currentTurn]);
             }
         }
 
+        //on check si le tour est à jouer
         public void CheckTurn()
         {
             bool next = false;
@@ -340,11 +341,11 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
             if (next)
             {
-                turns[currentTurn].AP = turns[currentTurn].MaxAP;
-                turns[currentTurn].MP = turns[currentTurn].MaxMP;
+                UpdateStats(turns[currentTurn]);
             }
         }
 
+        //debut d'un cycle
         private void updateTurn()
         {
             if (currentTurn >= turns.Count)
@@ -372,6 +373,15 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     return b1.PokedexId.CompareTo(b2.PokedexId); //todo vitesse
                 });*/
             }
+        }
+
+        private void UpdateStats(BattleEntity entity)
+        {
+            entity.MaxAP = entity.BaseMaxAP;
+            entity.MaxMP = entity.BaseMaxMP;
+            entity.applyOverTimeEffect(arena);
+            entity.AP = entity.MaxAP;
+            entity.MP = entity.MaxMP;
         }
 
         private void playIATurns()

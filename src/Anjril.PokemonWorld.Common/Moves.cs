@@ -12,7 +12,7 @@ namespace Anjril.PokemonWorld.Common
 {
     public class Moves
     {
-        private static Action[] moves = new Action[20];
+        private static Action[] moves = new Action[50];
 
         public static Action Get(Move move)
         {
@@ -99,7 +99,7 @@ namespace Anjril.PokemonWorld.Common
                     action.TargetType = TargetType.Position;
                     action.HitEffects.Add(new DamageEffect(40));
                     action.ActionCost = new APActionCost(4);
-                    // todo -1 PA
+                    action.HitEffects.Add(new MaxAPEffect(-1, 2));
                     break;
                 case Move.Peck:
                     action.MoveType = PokemonType.Flying;
@@ -131,6 +131,20 @@ namespace Anjril.PokemonWorld.Common
                     action.HitEffects.Add(new DamageEffect(50));
                     action.HitEffects.Add(new PushEffect(1));
                     action.ActionCost = new APActionCost(4);
+                    break;
+                case Move.Poison_Sting:
+                    action.MoveType = PokemonType.Poison;
+                    action.TargetType = TargetType.Position;
+                    action.Range = new LineRange(2);
+                    action.ActionCost = new APActionCost(4);
+                    //TODO chance de poison
+                    break;
+                case Move.String_Shot:
+                    action.MoveType = PokemonType.Bug;
+                    action.TargetType = TargetType.Position;
+                    action.Range = new DistanceRange(3);
+                    action.ActionCost = new APActionCost(4);
+                    //TODO - 2 MP & - vit
                     break;
                 default:
                     break;

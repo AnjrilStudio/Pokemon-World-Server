@@ -20,6 +20,8 @@ namespace Anjril.PokemonWorld.Common
         Peck,
         Growl,
         Leer,
-        Tackle
+        Tackle,
+        Poison_Sting,
+        String_Shot
     }
 }

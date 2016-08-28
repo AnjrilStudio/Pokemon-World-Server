@@ -54,6 +54,8 @@
     <Compile Include="BattleArena.cs" />
     <Compile Include="BattleEntity.cs" />
     <Compile Include="Characteristics.cs" />
+    <Compile Include="Effect\HitEffectOverTime.cs" />
+    <Compile Include="Effect\MaxAPEffect.cs" />
     <Compile Include="Message\BaseMessage.cs" />
     <Compile Include="Message\BattleActionMessage.cs" />
     <Compile Include="Message\BattleStartMessage.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Message\MapMessage.cs" />
     <Compile Include="Message\PositionEntity.cs" />
     <Compile Include="Message\PositionMessage.cs" />
+    <Compile Include="OverTimeEffect.cs" />
     <Compile Include="Parameter\BaseParam.cs" />
     <Compile Include="Parameter\BattleStartParam.cs" />
     <Compile Include="CommandType.cs" />
