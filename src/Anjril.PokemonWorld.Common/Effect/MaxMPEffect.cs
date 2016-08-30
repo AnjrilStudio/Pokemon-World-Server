@@ -7,11 +7,11 @@ using Anjril.PokemonWorld.Common.Utils;
 
 namespace Anjril.PokemonWorld.Common.Effect
 {
-    public class MaxAPEffect : HitEffectOverTime
+    public class MaxMPEffect : HitEffectOverTime
     {
         public int Value { get; private set; }
 
-        public MaxAPEffect(int value, int duration)
+        public MaxMPEffect(int value, int duration)
         {
             Value = value;
             Duration = duration;
@@ -19,7 +19,7 @@ namespace Anjril.PokemonWorld.Common.Effect
 
         public override void applyOverTime(BattleEntity self, BattleEntity target, BattleArena arena)
         {
-            target.MaxAP += Value;
+            target.MaxMP = target.MaxMP + Value;
         }
     }
 }

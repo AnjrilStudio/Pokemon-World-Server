@@ -5,13 +5,13 @@ using System.Text;
 
 namespace Anjril.PokemonWorld.Common
 {
-    public enum Status
+    public enum Stat
     {
-        None,
-        Poison,
-        Burn,
-        Paralysis,
-        Freeze,
-        Sleep
+        HP,
+        Attack,
+        Defense,
+        Spe_Attack,
+        Spe_Defense,
+        Speed
     }
 }

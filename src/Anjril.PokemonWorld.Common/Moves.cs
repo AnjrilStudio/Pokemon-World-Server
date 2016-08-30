@@ -35,7 +35,10 @@ namespace Anjril.PokemonWorld.Common
                     action.Range2 = new DistanceMPAPRange(1, 1);
                     action.GroundEffects.Add(new MoveEffect());
                     action.ActionCost = new MPAPDistanceActionCost(1);
-                    action.NextTurn = false;
+                    action.CanAttackBefore = true;
+                    action.CanMoveBefore = true;
+                    action.CanAttackAfter = true;
+                    action.CanMoveAfter = true;
                     break;
                 case Move.Ember:
                     action.MoveType = PokemonType.Fire;
@@ -60,9 +63,9 @@ namespace Anjril.PokemonWorld.Common
                     action.TargetType = TargetType.Directional;
                     action.Range = new LineRange(2);
                     action.AreaOfEffect = new LineAreaOfEffect(4);
-                    // todo baisser la vit
                     action.HitEffects.Add(new DamageEffect(50));
                     action.ActionCost = new APActionCost(4);
+                    action.HitEffects.Add(new StatEffect(Stat.Speed, -1, 1));
                     break;
                 case Move.Water_Gun:
                     action.MoveType = PokemonType.Water;
@@ -107,7 +110,7 @@ namespace Anjril.PokemonWorld.Common
                     action.TargetType = TargetType.Position;
                     action.HitEffects.Add(new DamageEffect(35));
                     action.ActionCost = new APActionCost(3);
-                    //todo peut attaquer après ? mais pas bouger
+                    action.CanAttackAfter = true;
                     break;
                 case Move.Growl:
                     action.MoveType = PokemonType.Normal;
@@ -115,14 +118,14 @@ namespace Anjril.PokemonWorld.Common
                     action.TargetType = TargetType.Position;
                     action.AreaOfEffect = new DistanceAreaOfEffect(3);
                     action.ActionCost = new APActionCost(3);
-                    //todo baisser la atk
+                    action.HitEffects.Add(new StatEffect(Stat.Attack, -1, 3));
                     break;
                 case Move.Leer:
                     action.MoveType = PokemonType.Normal;
                     action.Range = new DistanceRange(6);
                     action.TargetType = TargetType.Position;
                     action.ActionCost = new APActionCost(3);
-                    //todo baisser la def
+                    action.HitEffects.Add(new StatEffect(Stat.Attack, -1, 5));
                     break;
                 case Move.Tackle:
                     action.MoveType = PokemonType.Normal;
@@ -137,14 +140,15 @@ namespace Anjril.PokemonWorld.Common
                     action.TargetType = TargetType.Position;
                     action.Range = new LineRange(2);
                     action.ActionCost = new APActionCost(4);
-                    //TODO chance de poison
+                    action.HitEffects.Add(new StatusEffect(0.5, Status.Poison, 10));
                     break;
                 case Move.String_Shot:
                     action.MoveType = PokemonType.Bug;
                     action.TargetType = TargetType.Position;
                     action.Range = new DistanceRange(3);
                     action.ActionCost = new APActionCost(4);
-                    //TODO - 2 MP & - vit
+                    action.HitEffects.Add(new StatEffect(Stat.Speed, -1, 3));
+                    action.HitEffects.Add(new MaxMPEffect(-2, 3));
                     break;
                 default:
                     break;

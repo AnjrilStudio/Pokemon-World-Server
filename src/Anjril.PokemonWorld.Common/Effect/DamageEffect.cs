@@ -14,6 +14,7 @@ namespace Anjril.PokemonWorld.Common.Effect
         public DamageEffect(int value)
         {
             Value = value;
+            Chance = 1.00;
         }
 
         public override void apply(BattleEntity self, BattleEntity target, Direction dir, BattleArena arena)

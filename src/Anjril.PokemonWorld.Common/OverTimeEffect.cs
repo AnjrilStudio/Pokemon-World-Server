@@ -11,12 +11,22 @@ namespace Anjril.PokemonWorld.Common
         public BattleEntity Origin { get; private set; }
         public int Duration { get; set; }
         public HitEffectOverTime Effect { get; private set; }
+        public Status Status { get; private set; }
 
         public OverTimeEffect(BattleEntity origin, HitEffectOverTime effect, int duration)
         {
             Origin = origin;
             Effect = effect;
             Duration = duration;
+            Status = Status.None;
+        }
+
+        public OverTimeEffect(BattleEntity origin, HitEffectOverTime effect, int duration, Status status)
+        {
+            Origin = origin;
+            Effect = effect;
+            Duration = duration;
+            Status = status;
         }
     }
 }

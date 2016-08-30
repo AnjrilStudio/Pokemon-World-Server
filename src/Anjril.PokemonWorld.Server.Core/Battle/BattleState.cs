@@ -28,6 +28,11 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         private int actionId;
         private int entityIdSequence;
         public bool WaitingPokemonGo { get; private set; }
+        public bool HasAttacked { get; private set; }
+        public bool HasMoved { get; private set; }
+        public bool CanAttack { get; private set; }
+        public bool CanMove { get; private set; }
+        public bool CannotAttack { get; private set; } //priorité sur le can
 
         public BattleState(List<int> entitiesList)
         {
@@ -40,6 +45,11 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             arena = new BattleArena(defaultsize);
             currentTurn = 0;
             WaitingPokemonGo = true;
+            HasAttacked = false;
+            HasMoved = false;
+            CanAttack = true;
+            CanMove = true;
+            CannotAttack = false;
 
             foreach (int entityId in entitiesList)
             {
@@ -68,6 +78,13 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             if (entity.HP == 0) return false;
             if (entity.ComingBack) return false;
             if (!action.ActionCost.CheckCost(entity, target)) return false;
+            if (action.Id == (int)Move.Move && !CanMove) return false;
+            if (!action.CanMoveBefore && HasMoved) return false;
+            if (!action.CanAttackBefore && HasAttacked && action.Id != (int)Move.Move && !CanAttack) return false;
+            
+            //priorite
+            if (action.Id != (int)Move.Move && CannotAttack) return false;
+            if (action.CannotAttackBefore && HasAttacked) return false;
 
             return true;
         }
@@ -112,8 +129,19 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     }
 
                     actionId++;
+                    if (action.Id == (int)Move.Move)
+                    {
+                        HasMoved = true;
+                    } else
+                    {
+                        HasAttacked = true;
+                    }
+                    
+                    CanMove = action.CanMoveAfter;
+                    CanAttack = action.CanAttackAfter || HasComboAttack();
+                    CannotAttack = action.CannotAttackAfter;
 
-                    if (action.NextTurn)
+                    if (!CanMove && (!CanAttack || CannotAttack))
                     {
                         NextTurn();
                     }
@@ -146,11 +174,8 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     actionId++;
 
                     EndPlayerBattle(player.Id, false);
-
-                    if (action.NextTurn)
-                    {
-                        NextTurn();
-                    }
+                    
+                    NextTurn();
 
                     foreach (int id in players)
                     {
@@ -312,6 +337,17 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             return turns[currentTurn].PlayerId;
         }
 
+        private bool HasComboAttack()
+        {
+            //cherche si une attaque CanAttackBefore est dispo
+            foreach (Action move in turns[currentTurn].Moves)
+            {
+                if (move.Id != (int) Move.Move && move.CanAttackBefore) return true;
+            }
+
+            return false;
+        }
+
         //tour terminé
         public void NextTurn()
         {
@@ -320,7 +356,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 do
                 {
                     currentTurn++;
-                    updateTurn();
+                    updateTurns();
 
                 } while (turns.Count > 1 && (!turns[currentTurn].Ready || turns[currentTurn].ComingBack));
                 
@@ -335,7 +371,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             while (turns.Count > 1 && (!turns[currentTurn].Ready || turns[currentTurn].ComingBack))
             {
                 currentTurn++;
-                updateTurn();
+                updateTurns();
                 next = true;
             }
 
@@ -346,7 +382,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         }
 
         //debut d'un cycle
-        private void updateTurn()
+        private void updateTurns()
         {
             if (currentTurn >= turns.Count)
             {
@@ -380,8 +416,15 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             entity.MaxAP = entity.BaseMaxAP;
             entity.MaxMP = entity.BaseMaxMP;
             entity.applyOverTimeEffect(arena);
+            if (entity.MaxAP < 0) entity.MaxAP = 0;
+            if (entity.MaxMP < 0) entity.MaxMP = 0;
             entity.AP = entity.MaxAP;
             entity.MP = entity.MaxMP;
+            
+            HasAttacked = false;
+            HasMoved = false;
+            CanAttack = true;
+            CanMove = true;
         }
 
         private void playIATurns()

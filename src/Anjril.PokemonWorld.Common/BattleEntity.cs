@@ -25,11 +25,25 @@ namespace Anjril.PokemonWorld.Common
         public int MaxHP { get; set; }
         public int Level { get; set; }
 
-        public int Atk { get; set; }
-        public int Def { get; set; }
-        public int AtkSpe { get; set; }
-        public int DefSpe { get; set; }
-        public int Vit { get; set; }
+        public int BaseAtk { get; private set; }
+        public int AtkStage { get; set; }
+        public int Atk { get { return ComputeStat(BaseAtk, AtkStage); } }
+
+        public int BaseDef { get; private set; }
+        public int DefStage { get; set; }
+        public int Def { get { return ComputeStat(BaseDef, DefStage); } }
+
+        public int BaseAtkSpe { get; private set; }
+        public int AtkSpeStage { get; set; }
+        public int AtkSpe { get { return ComputeStat(BaseAtkSpe, AtkSpeStage); } }
+
+        public int BaseDefSpe { get; private set; }
+        public int DefSpeStage { get; set; }
+        public int DefSpe { get { return ComputeStat(BaseDefSpe, DefSpeStage); } }
+
+        public int BaseSpeed { get; private set; }
+        public int SpeedStage { get; set; }
+        public int Speed { get { return ComputeStat(BaseSpeed, SpeedStage); } }
 
         public int BaseMaxAP { get; private set; }
         public int MaxAP { get; set; }
@@ -52,14 +66,20 @@ namespace Anjril.PokemonWorld.Common
             CurrentPos = null;
             overTimeEffects = new List<OverTimeEffect>();
 
-            HP = 20;
-            MaxHP = HP;
+            MaxHP = 20;
+            HP = MaxHP;
             Level = 5;
-            Atk = 15;
-            Def = 15;
-            AtkSpe = 15;
-            DefSpe = 15;
-            Vit = 15;
+
+            BaseAtk = 15;
+            AtkStage = 0;
+            BaseDef = 15;
+            DefStage = 0;
+            BaseAtkSpe = 15;
+            AtkSpeStage = 0;
+            BaseDefSpe = 15;
+            DefSpeStage = 0;
+            BaseSpeed = 15;
+            SpeedStage = 0;
 
             BaseMaxAP = 6;
             MaxAP = BaseMaxAP;
@@ -69,6 +89,7 @@ namespace Anjril.PokemonWorld.Common
             MP = MaxMP;
 
             Moves.Add(Common.Moves.Get(Move.Move));
+
             Moves.Add(Common.Moves.Get(Move.Tackle));
             Moves.Add(Common.Moves.Get(Move.Gust));
             Moves.Add(Common.Moves.Get(Move.Bubble));
@@ -76,6 +97,22 @@ namespace Anjril.PokemonWorld.Common
             Moves.Add(Common.Moves.Get(Move.Thunder_Shock));
             Moves.Add(Common.Moves.Get(Move.Tail_Whip));
             Moves.Add(Common.Moves.Get(Move.Pound));
+            Moves.Add(Common.Moves.Get(Move.Peck));
+        }
+
+        private int ComputeStat(int baseStat, int stage)
+        {
+            int x = 2;
+            int y = 2;
+            if (stage > 0)
+            {
+                x += stage;
+            } else
+            {
+                y += stage;
+            }
+
+            return baseStat * x/y;
         }
 
         public BattleEntity(int id, int pokedexId, int playerId) : this (id, pokedexId)
@@ -91,6 +128,11 @@ namespace Anjril.PokemonWorld.Common
         public void addOverTimeEffect(BattleEntity origin, HitEffectOverTime effect, int duration)
         {
             overTimeEffects.Add(new OverTimeEffect(origin, effect, duration));
+        }
+
+        public void addOverTimeEffect(BattleEntity origin, HitEffectOverTime effect, int duration, Status status)
+        {
+            overTimeEffects.Add(new OverTimeEffect(origin, effect, duration, status));
         }
 
         public void applyOverTimeEffect(BattleArena arena)

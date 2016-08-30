@@ -13,6 +13,7 @@ namespace Anjril.PokemonWorld.Common
     public class Action
     {
         public string Name { get; private set; }
+        public int Id { get; private set; }
         public TargetType TargetType;
         public AbstractRange Range { get; set; }
         public AbstractRange Range2 { get; set; }
@@ -20,10 +21,17 @@ namespace Anjril.PokemonWorld.Common
         public List<HitEffect> HitEffects { get; private set; }
         public List<GroundEffect> GroundEffects { get; private set; }
         public AbstractActionCost ActionCost { get; set; }
-        public bool NextTurn { get; set; }
-        public int Id { get; private set; }
+        
         public bool IsTrainer { get; private set; }
         public PokemonType MoveType { get; set; }
+
+        public bool CanMoveBefore { get; set; }
+        public bool CanMoveAfter { get; set; }
+
+        public bool CanAttackBefore { get; set; } //priorité sur le false
+        public bool CanAttackAfter { get; set; } //priorité sur le false
+        public bool CannotAttackBefore { get; set; } //priorité sur le can
+        public bool CannotAttackAfter { get; set; } //priorité sur le can
 
         public Action(Move move)
         {
@@ -32,8 +40,15 @@ namespace Anjril.PokemonWorld.Common
             TargetType = TargetType.None;
             HitEffects = new List<HitEffect>();
             GroundEffects = new List<GroundEffect>();
-            NextTurn = true;
             IsTrainer = false;
+
+            CanMoveBefore = true;
+            CanMoveAfter = false;
+
+            CanAttackBefore = false;
+            CanAttackAfter = false;
+            CannotAttackBefore = false;
+            CannotAttackAfter = false;
         }
 
         public Action(TrainerAction action)
@@ -43,7 +58,6 @@ namespace Anjril.PokemonWorld.Common
             TargetType = TargetType.None;
             HitEffects = new List<HitEffect>();
             GroundEffects = new List<GroundEffect>();
-            NextTurn = true;
             IsTrainer = true;
         }
 

@@ -55,6 +55,8 @@
     <Compile Include="BattleEntity.cs" />
     <Compile Include="Characteristics.cs" />
     <Compile Include="Effect\HitEffectOverTime.cs" />
+    <Compile Include="Effect\MaxMPEffect.cs" />
+    <Compile Include="Effect\StatEffect.cs" />
     <Compile Include="Effect\MaxAPEffect.cs" />
     <Compile Include="Message\BaseMessage.cs" />
     <Compile Include="Message\BattleActionMessage.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="State\EntityType.cs" />
     <Compile Include="State\NatureType.cs" />
     <Compile Include="State\PokemonType.cs" />
+    <Compile Include="Stat.cs" />
     <Compile Include="Utils\NatureUtils.cs" />
     <Compile Include="Utils\PokemonTypeUtils.cs" />
     <Compile Include="Utils\StateUtils.cs" />

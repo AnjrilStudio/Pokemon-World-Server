@@ -9,6 +9,13 @@ namespace Anjril.PokemonWorld.Common.Effect
     //effets s'appliquant sur les cibles touchées
     public abstract class HitEffect
     {
+        public double Chance { get; protected set; }
+
+        protected HitEffect()
+        {
+            Chance = 1.00;
+        }
+
         public abstract void apply(BattleEntity self, BattleEntity target, Direction dir, BattleArena arena);
 
         public void apply(BattleEntity self, BattleEntity target, BattleArena arena)
