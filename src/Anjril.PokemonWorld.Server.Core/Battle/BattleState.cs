@@ -103,16 +103,6 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
                 if (inRange)
                 {
-                    if (action.ActionCost != null)
-                    {
-                        action.ActionCost.ApplyCost(entity, target);
-                    }
-
-                    foreach (GroundEffect effect in action.GroundEffects)
-                    {
-                        effect.apply(entity, target, dir, arena);
-                    }
-
                     foreach (Position aoe in action.AoeTiles(entity, target, dir, arena))
                     {
                         foreach (BattleEntity pokemon in turns)
@@ -126,6 +116,21 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                                 }
                             }
                         }
+                    }
+
+                    foreach (HitEffect effect in action.SelfEffects)
+                    {
+                        effect.apply(entity, entity, dir, arena);
+                    }
+
+                    foreach (GroundEffect effect in action.GroundEffects)
+                    {
+                        effect.apply(entity, target, dir, arena);
+                    }
+
+                    if (action.ActionCost != null)
+                    {
+                        action.ActionCost.ApplyCost(entity, target);
                     }
 
                     actionId++;

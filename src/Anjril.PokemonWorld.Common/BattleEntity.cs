@@ -96,8 +96,9 @@ namespace Anjril.PokemonWorld.Common
             Moves.Add(Common.Moves.Get(Move.Water_Gun));
             Moves.Add(Common.Moves.Get(Move.Thunder_Shock));
             Moves.Add(Common.Moves.Get(Move.Tail_Whip));
-            Moves.Add(Common.Moves.Get(Move.Pound));
-            Moves.Add(Common.Moves.Get(Move.Peck));
+            //Moves.Add(Common.Moves.Get(Move.Pound));
+            //Moves.Add(Common.Moves.Get(Move.Peck));
+            Moves.Add(Common.Moves.Get(Move.Quick_Attack));
         }
 
         private int ComputeStat(int baseStat, int stage)

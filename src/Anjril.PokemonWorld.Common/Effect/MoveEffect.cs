@@ -9,8 +9,6 @@ namespace Anjril.PokemonWorld.Common.Effect
 {
     public class MoveEffect : GroundEffect
     {
-        public int Dist { get; private set; }
-
         public MoveEffect()
         {
         }

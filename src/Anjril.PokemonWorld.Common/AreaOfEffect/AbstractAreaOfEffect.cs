@@ -8,13 +8,11 @@ namespace Anjril.PokemonWorld.Common.AreaOfEffect
 {
     public abstract class AbstractAreaOfEffect
     {
-        public int MaxArea { get; protected set; }
+        public abstract bool InArea(Position origin, Position target, Position actionOrigin, Direction dir);
 
-        public abstract bool InArea(Position origin, Position target, Direction dir);
-
-        public bool InArea(Position origin, Position target)
+        public bool InArea(Position origin, Position target, Position actionOrigin)
         {
-            return InArea(origin, target, Direction.None);
+            return InArea(origin, target, actionOrigin, Direction.None);
         }
     }
 }

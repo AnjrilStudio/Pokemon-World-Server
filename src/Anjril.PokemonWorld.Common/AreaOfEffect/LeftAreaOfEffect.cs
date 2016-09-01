@@ -13,10 +13,9 @@ namespace Anjril.PokemonWorld.Common.AreaOfEffect
         public LeftAreaOfEffect(int dist)
         {
             Dist = dist;
-            MaxArea = dist;
         }
 
-        public override bool InArea(Position origin, Position target, Direction dir)
+        public override bool InArea(Position origin, Position target, Position actionOrigin, Direction dir)
         {
             if (origin.Equals(target))
             {

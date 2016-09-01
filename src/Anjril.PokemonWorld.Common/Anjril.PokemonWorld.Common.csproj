@@ -47,6 +47,7 @@
     <Compile Include="AreaOfEffect\AbstractAreaOfEffect.cs" />
     <Compile Include="AreaOfEffect\DistanceAreaOfEffect.cs" />
     <Compile Include="AreaOfEffect\LeftAreaOfEffect.cs" />
+    <Compile Include="AreaOfEffect\OriginLineAreaOfEffect.cs" />
     <Compile Include="AreaOfEffect\RightAreaOfEffect.cs" />
     <Compile Include="AreaOfEffect\LineAreaOfEffect.cs" />
     <Compile Include="ArenaObject.cs" />

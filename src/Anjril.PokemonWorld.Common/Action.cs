@@ -19,6 +19,7 @@ namespace Anjril.PokemonWorld.Common
         public AbstractRange Range2 { get; set; }
         public AbstractAreaOfEffect AreaOfEffect;
         public List<HitEffect> HitEffects { get; private set; }
+        public List<HitEffect> SelfEffects { get; private set; }
         public List<GroundEffect> GroundEffects { get; private set; }
         public AbstractActionCost ActionCost { get; set; }
         
@@ -39,6 +40,7 @@ namespace Anjril.PokemonWorld.Common
             Name = move.ToString();
             TargetType = TargetType.None;
             HitEffects = new List<HitEffect>();
+            SelfEffects = new List<HitEffect>();
             GroundEffects = new List<GroundEffect>();
             IsTrainer = false;
 
@@ -98,14 +100,9 @@ namespace Anjril.PokemonWorld.Common
                 return result;
             }
 
-            int startX = Position.NormalizedPos(target.X - AreaOfEffect.MaxArea, arena.ArenaSize);
-            int endX = Position.NormalizedPos(target.X + AreaOfEffect.MaxArea, arena.ArenaSize);
-            int startY = Position.NormalizedPos(target.Y - AreaOfEffect.MaxArea, arena.ArenaSize);
-            int endY = Position.NormalizedPos(target.Y + AreaOfEffect.MaxArea, arena.ArenaSize);
-
-            for (int x = startX; x <= endX; x++)
+            for (int x = 0; x < arena.ArenaSize; x++)
             {
-                for (int y = startY; y <= endY; y++)
+                for (int y = 0; y < arena.ArenaSize; y++)
                 {
                     Position origin = target;
                     Position aoe = new Position(x, y);
@@ -114,7 +111,7 @@ namespace Anjril.PokemonWorld.Common
                     if (TargetType == TargetType.Position)
                     {
 
-                        if (AreaOfEffect.InArea(origin, aoe))
+                        if (AreaOfEffect.InArea(origin, aoe, self.CurrentPos))
                         {
                             inArea = true;
                         }
@@ -122,7 +119,7 @@ namespace Anjril.PokemonWorld.Common
 
                     if (TargetType == TargetType.Directional)
                     {
-                        if (AreaOfEffect.InArea(origin, aoe, dir))
+                        if (AreaOfEffect.InArea(origin, aoe, self.CurrentPos, dir))
                         {
                             inArea = true;
                         }

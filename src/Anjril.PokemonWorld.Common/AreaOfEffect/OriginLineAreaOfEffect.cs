@@ -6,13 +6,10 @@ using Anjril.PokemonWorld.Common.State;
 
 namespace Anjril.PokemonWorld.Common.AreaOfEffect
 {
-    public class LineAreaOfEffect : AbstractAreaOfEffect
+    public class OriginLineAreaOfEffect : AbstractAreaOfEffect
     {
-        public int Dist { get; private set; }
-
-        public LineAreaOfEffect(int dist)
+        public OriginLineAreaOfEffect()
         {
-            Dist = dist;
         }
 
         public override bool InArea(Position origin, Position target, Position actionOrigin, Direction dir)
@@ -20,13 +17,13 @@ namespace Anjril.PokemonWorld.Common.AreaOfEffect
             switch (dir)
             {
                 case Direction.Up:
-                    return target.X == origin.X && target.Y >= origin.Y && target.Y - Dist < origin.Y;
+                    return target.X == origin.X && target.Y > actionOrigin.Y && target.Y <= origin.Y;
                 case Direction.Right:
-                    return target.Y == origin.Y && target.X >= origin.X && target.X - Dist < origin.X;
+                    return target.Y == origin.Y && target.X > actionOrigin.X && target.X <= origin.X;
                 case Direction.Down:
-                    return target.X == origin.X && target.Y <= origin.Y && target.Y + Dist > origin.Y;
+                    return target.X == origin.X && target.Y < actionOrigin.Y && target.Y >= origin.Y;
                 case Direction.Left:
-                    return target.Y == origin.Y && target.X <= origin.X && target.X + Dist > origin.X;
+                    return target.Y == origin.Y && target.X < actionOrigin.X && target.X >= origin.X;
                 default:
                     return false;
             }

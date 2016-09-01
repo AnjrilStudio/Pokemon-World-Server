@@ -51,9 +51,10 @@ namespace Anjril.PokemonWorld.Common
                 case Move.Gust:
                     action.MoveType = PokemonType.Flying;
                     action.TargetType = TargetType.Directional;
-                    action.Range = new LineRange(2);
-                    action.AreaOfEffect = new LineAreaOfEffect(4);
-                    action.HitEffects.Add(new PushEffect(1));
+                    action.Range = new LineRange(4);
+                    action.AreaOfEffect = new OriginLineAreaOfEffect();
+                    //action.HitEffects.Add(new PushEffect(1));
+                    action.GroundEffects.Add(new MoveEffect());
                     action.HitEffects.Add(new DamageEffect(50));
                     action.ActionCost = new APActionCost(4);
                     //TODO le vrai
@@ -149,6 +150,19 @@ namespace Anjril.PokemonWorld.Common
                     action.ActionCost = new APActionCost(4);
                     action.HitEffects.Add(new StatEffect(Stat.Speed, -1, 3));
                     action.HitEffects.Add(new MaxMPEffect(-2, 3));
+                    break;
+                case Move.Quick_Attack:
+                    action.TargetType = TargetType.Directional;
+                    action.Range = new LineRange(4);
+                    action.AreaOfEffect = new OriginLineAreaOfEffect();
+                    action.GroundEffects.Add(new MoveEffect());
+                    action.HitEffects.Add(new DamageEffect(40));
+                    action.SelfEffects.Add(new MaxMPEffect(-1, 1));
+                    action.ActionCost = new APActionCost(4);
+                    action.ActionCost = new MPActionCost(1);
+                    action.CanMoveBefore = false;
+                    action.CannotAttackBefore = true;
+                    action.CanMoveAfter = true;
                     break;
                 default:
                     break;

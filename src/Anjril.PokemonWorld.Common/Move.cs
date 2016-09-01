@@ -22,6 +22,7 @@ namespace Anjril.PokemonWorld.Common
         Leer,
         Tackle,
         Poison_Sting,
-        String_Shot
+        String_Shot,
+        Quick_Attack
     }
 }
