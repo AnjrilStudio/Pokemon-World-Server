@@ -77,7 +77,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         {
             if (entity.HP == 0) return false;
             if (entity.ComingBack) return false;
-            if (!action.ActionCost.CheckCost(entity, target)) return false;
+            if (!action.ActionCost.CheckCost(arena, entity, target)) return false;
             if (action.Id == (int)Move.Move && !CanMove) return false;
             if (!action.CanMoveBefore && HasMoved) return false;
             if (!action.CanAttackBefore && HasAttacked && action.Id != (int)Move.Move && !CanAttack) return false;
@@ -93,8 +93,12 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         public bool PlayAction(Position target, Action action, Direction dir)
         {
             var entity = turns[currentTurn];
+            var oldPos = entity.CurrentPos;
             if (CanPlayAction(entity, action, target, dir))
             {
+                action.Range.Reset();
+                if (action.Range2 != null) action.Range2.Reset();
+
                 bool inRange = action.Range.InRange(arena, entity, target);
                 if (action.Range2 != null && action.Range2.InRange(arena, entity, target))
                 {
@@ -103,8 +107,15 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
                 if (inRange)
                 {
-                    foreach (Position aoe in action.AoeTiles(entity, target, dir, arena))
+                    if (action.ActionCost != null)
                     {
+                        action.ActionCost.ApplyCost(arena, entity, target);
+                    }
+
+                    var aoeTiles = action.AoeTiles(entity, target, dir, arena);
+                    foreach (Position aoe in aoeTiles)
+                    {
+                        System.Console.WriteLine(aoe);
                         foreach (BattleEntity pokemon in turns)
                         {
                             //todo ne pas toucher soi-même
@@ -128,11 +139,6 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                         effect.apply(entity, target, dir, arena);
                     }
 
-                    if (action.ActionCost != null)
-                    {
-                        action.ActionCost.ApplyCost(entity, target);
-                    }
-
                     actionId++;
                     if (action.Id == (int)Move.Move)
                     {
@@ -153,8 +159,36 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
                     foreach (int id in players)
                     {
-                        var message = ToActionMessage(id, target, action, dir);
-                        GlobalServer.Instance.SendMessage(id, message);
+                        if (action.Id == (int) Move.Move) //voir d'autres moves avec ce comportement
+                        {
+                            var currentPos = oldPos;
+                            while (aoeTiles.Count > 0)
+                            {
+                                foreach (Position pos in aoeTiles)
+                                {
+                                    if (Position.Distance(pos, oldPos) == 1)
+                                    {
+                                        currentPos = pos;
+                                        break;
+                                    }
+                                }
+                                var moveDir = DirectionUtils.FromPosition(oldPos, currentPos);
+                                if (moveDir == Direction.None) break;
+
+                                arena.MoveBattleEntity(entity, currentPos);
+                                var message = ToActionMessage(id, target, action, moveDir);
+                                GlobalServer.Instance.SendMessage(id, message);
+
+                                aoeTiles.Remove(currentPos);
+                                oldPos = currentPos;
+                                if (aoeTiles.Count > 0) actionId++;
+                            }
+                        } else
+                        {
+                            var message = ToActionMessage(id, target, action, dir);
+                            GlobalServer.Instance.SendMessage(id, message);
+                        }
+                        
                     }
 
                     playIATurns();
@@ -168,6 +202,8 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
         public bool PlayTrainerAction(Player player, Position target, Action action, int index)
         {
+            //TODO check range
+
             if (action.Id == (int)TrainerAction.End_Battle && GetPlayerNbPokemons(player.Id) == 0)
             {
                 if (spectators.Contains(player.Id))

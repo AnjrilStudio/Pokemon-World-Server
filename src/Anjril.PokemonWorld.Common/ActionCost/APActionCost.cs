@@ -15,12 +15,12 @@ namespace Anjril.PokemonWorld.Common.ActionCost
             Value = value;
         }
 
-        public override void ApplyCost(BattleEntity self, Position target)
+        public override void ApplyCost(BattleArena arena, BattleEntity self, Position target)
         {
             self.AP -= Value;
         }
 
-        public override bool CheckCost(BattleEntity self, Position target)
+        public override bool CheckCost(BattleArena arena, BattleEntity self, Position target)
         {
             return self.AP >= Value;
         }

@@ -8,7 +8,7 @@ namespace Anjril.PokemonWorld.Common.ActionCost
 {
     public abstract class AbstractActionCost
     {
-        public abstract void ApplyCost(BattleEntity self, Position target);
-        public abstract bool CheckCost(BattleEntity self, Position target);
+        public abstract void ApplyCost(BattleArena arena, BattleEntity self, Position target);
+        public abstract bool CheckCost(BattleArena arena, BattleEntity self, Position target);
     }
 }

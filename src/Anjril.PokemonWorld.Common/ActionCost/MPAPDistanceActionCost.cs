@@ -15,14 +15,14 @@ namespace Anjril.PokemonWorld.Common.ActionCost
             Factor = factor;
         }
 
-        private int ComputeTotalCost(BattleEntity self, Position target)
+        protected virtual int ComputeTotalCost(BattleArena arena, BattleEntity self, Position target)
         {
             return Position.Distance(self.CurrentPos, target) * Factor;
         }
 
-        private int ComputeMPCost(BattleEntity self, Position target)
+        private int ComputeMPCost(BattleArena arena, BattleEntity self, Position target)
         {
-            int mpCost = ComputeTotalCost(self, target);
+            int mpCost = ComputeTotalCost(arena, self, target);
             if (self.MP < mpCost)
             {
                 mpCost = self.MP;
@@ -30,9 +30,9 @@ namespace Anjril.PokemonWorld.Common.ActionCost
             return mpCost;
         }
 
-        private int ComputeAPCost(BattleEntity self, Position target)
+        private int ComputeAPCost(BattleArena arena, BattleEntity self, Position target)
         {
-            int totalCost = ComputeTotalCost(self, target);
+            int totalCost = ComputeTotalCost(arena, self, target);
             int mpCost = totalCost;
             if (self.MP < totalCost)
             {
@@ -43,17 +43,17 @@ namespace Anjril.PokemonWorld.Common.ActionCost
             return apCost;
         }
 
-        public override void ApplyCost(BattleEntity self, Position target)
+        public override void ApplyCost(BattleArena arena, BattleEntity self, Position target)
         {
-            int mpCost = ComputeMPCost(self, target);
-            int apCost = ComputeAPCost(self, target);
+            int mpCost = ComputeMPCost(arena, self, target);
+            int apCost = ComputeAPCost(arena, self, target);
             self.MP -= mpCost;
             self.AP -= apCost;
         }
 
-        public override bool CheckCost(BattleEntity self, Position target)
+        public override bool CheckCost(BattleArena arena, BattleEntity self, Position target)
         {
-            return self.MP >= ComputeMPCost(self, target) && self.AP >= ComputeAPCost(self, target);
+            return self.MP >= ComputeMPCost(arena, self, target) && self.AP >= ComputeAPCost(arena, self, target);
         }
     }
 }

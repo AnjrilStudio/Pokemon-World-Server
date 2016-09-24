@@ -1,4 +1,4 @@
-﻿using Anjril.PokemonWorld.Server.Model.Properties;
+﻿using Anjril.PokemonWorld.Common.Properties;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -7,9 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Anjril.PokemonWorld.Server.Model.Index
+namespace Anjril.PokemonWorld.Common.Index
 {
     public class Pokedex : IEnumerable<PokemonSheet>
     {
@@ -39,12 +38,6 @@ namespace Anjril.PokemonWorld.Server.Model.Index
 
         private class TypeNameSerializationBinder : SerializationBinder
         {
-            public override void BindToName(Type serializedType, out string assemblyName, out string typeName)
-            {
-                assemblyName = null;
-                typeName = serializedType.FullName;
-            }
-
             public override Type BindToType(string assemblyName, string typeName)
             {
                 return Type.GetType(typeName, true);

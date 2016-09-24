@@ -19,7 +19,7 @@ namespace Anjril.PokemonWorld.Server.Core.Command
         public override void RunWithCast(Player player, BattleStartParam param)
         {
             var dirPos = PositionUtils.GetDirPosition(player.Direction);
-            var otherPos = new Position(player.Position.X + dirPos.X, player.Position.Y - dirPos.Y);
+            var otherPos = new Position(player.Position.X + dirPos.X, player.Position.Y + dirPos.Y);
             if (World.Instance.VisibleEntities[otherPos] != null)
             {
                 List<int> entitiesList = new List<int>();

@@ -31,10 +31,10 @@ namespace Anjril.PokemonWorld.Common
             {
                 case Move.Move:
                     action.TargetType = TargetType.Position;
-                    action.Range = new DistanceMPRange(1);
-                    action.Range2 = new DistanceMPAPRange(1, 1);
-                    action.GroundEffects.Add(new MoveEffect());
-                    action.ActionCost = new MPAPDistanceActionCost(1);
+                    action.Range = new ShortestPathMPAPRange(1, 0);
+                    action.Range2 = new ShortestPathMPAPRange(1, 1);
+                    action.AreaOfEffect = new ShortestPathAreaOfEffect();
+                    action.ActionCost = new MPAPShortestPathActionCost(1);
                     action.CanAttackBefore = true;
                     action.CanMoveBefore = true;
                     action.CanAttackAfter = true;
@@ -157,9 +157,7 @@ namespace Anjril.PokemonWorld.Common
                     action.AreaOfEffect = new OriginLineAreaOfEffect();
                     action.GroundEffects.Add(new MoveEffect());
                     action.HitEffects.Add(new DamageEffect(40));
-                    action.SelfEffects.Add(new MaxMPEffect(-1, 1));
-                    action.ActionCost = new APActionCost(4);
-                    action.ActionCost = new MPActionCost(1);
+                    action.ActionCost = new APMPActionCost(4, 1);
                     action.CanMoveBefore = false;
                     action.CannotAttackBefore = true;
                     action.CanMoveAfter = true;

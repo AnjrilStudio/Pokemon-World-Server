@@ -93,45 +93,16 @@ namespace Anjril.PokemonWorld.Common
 
         public List<Position> AoeTiles(BattleEntity self, Position target, Direction dir, BattleArena arena)
         {
+            //TODO bouger dans abstractAOE
             var result = new List<Position>();
             if (AreaOfEffect == null)
             {
                 result.Add(target);
                 return result;
-            }
-
-            for (int x = 0; x < arena.ArenaSize; x++)
+            } else
             {
-                for (int y = 0; y < arena.ArenaSize; y++)
-                {
-                    Position origin = target;
-                    Position aoe = new Position(x, y);
-                    bool inArea = false;
-
-                    if (TargetType == TargetType.Position)
-                    {
-
-                        if (AreaOfEffect.InArea(origin, aoe, self.CurrentPos))
-                        {
-                            inArea = true;
-                        }
-                    }
-
-                    if (TargetType == TargetType.Directional)
-                    {
-                        if (AreaOfEffect.InArea(origin, aoe, self.CurrentPos, dir))
-                        {
-                            inArea = true;
-                        }
-                    }
-
-                    if (inArea)
-                    {
-                        result.Add(aoe);
-                    }
-                }
+                return AreaOfEffect.AoeTiles(arena, target, self.CurrentPos, dir, TargetType);
             }
-            return result;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Anjril.PokemonWorld.Common.AreaOfEffect
             Dist = dist;
         }
 
-        public override bool InArea(Position origin, Position target, Position actionOrigin, Direction dir)
+        public override bool InArea(BattleArena arena, Position origin, Position target, Position actionOrigin, Direction dir)
         {
             if (origin.Equals(target))
             {

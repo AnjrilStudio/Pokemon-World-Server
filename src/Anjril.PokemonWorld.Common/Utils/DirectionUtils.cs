@@ -72,5 +72,32 @@ namespace Anjril.PokemonWorld.Common.Utils
         }
 
         #endregion
+
+        public static Direction FromPosition(Position p1, Position p2)
+        {
+            if (Position.Distance(p1, p2) != 1)
+            {
+                return Direction.None;
+            }
+
+            if (p1.X > p2.X)
+            {
+                return Direction.Left;
+            }
+            if (p1.X < p2.X)
+            {
+                return Direction.Right;
+            }
+            if (p1.Y > p2.Y)
+            {
+                return Direction.Up;
+            }
+            if (p1.Y < p2.Y)
+            {
+                return Direction.Down;
+            }
+
+            return Direction.None;
+        }
     }
 }

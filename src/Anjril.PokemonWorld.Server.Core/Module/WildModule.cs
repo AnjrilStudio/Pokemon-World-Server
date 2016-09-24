@@ -38,7 +38,9 @@ namespace Anjril.PokemonWorld.Server.Core.Module
                 }
                 else if (pokemon.IsVisible && GlobalServer.Instance.GetBattle(pokemon.Id) == null && RandomUtils.RandomDouble() < MOVE_RATE)
                 {
-                    var dest = new Position(pokemon.Position, DirectionUtils.RandomDirection());
+                    var dir = DirectionUtils.RandomDirection();
+                    var dest = new Position(pokemon.Position, dir);
+                    pokemon.Direction = dir;
 
                     EntityState newState;
                     if (World.Instance.Map.CanGo(pokemon, dest, out newState))

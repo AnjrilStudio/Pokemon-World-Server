@@ -27,19 +27,19 @@
   },
   "AvailableTalents": [
     {
-	  "$type": "Anjril.PokemonWorld.Server.Model.Index.Talent.FakeTalent",
+	  "$type": "Anjril.PokemonWorld.Common.Index.Talent.FakeTalent",
       "Name": "Talent"
     }
   ],
   "LevelingAttacks": {
     "12": {
-	  "$type": "Anjril.PokemonWorld.Server.Model.Index.Attack.FakeAttack",
+	  "$type": "Anjril.PokemonWorld.Common.Index.Attack.FakeAttack",
       "Name": "Attack"
     }
   },
   "LearnableAttack": [
     {
-	  "$type": "Anjril.PokemonWorld.Server.Model.Index.Attack.FakeAttack",
+	  "$type": "Anjril.PokemonWorld.Common.Index.Attack.FakeAttack",
       "Name": "Attack"
     }
   ]

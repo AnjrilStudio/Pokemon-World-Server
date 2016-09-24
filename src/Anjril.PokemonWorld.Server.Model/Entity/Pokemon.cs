@@ -1,7 +1,7 @@
 ﻿using Anjril.PokemonWorld.Common;
 using Anjril.PokemonWorld.Common.State;
 using Anjril.PokemonWorld.Common.Utils;
-using Anjril.PokemonWorld.Server.Model.Index;
+using Anjril.PokemonWorld.Common.Index;
 using System;
 using System.Collections.Generic;
 using System.Linq;

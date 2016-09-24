@@ -1,16 +1,15 @@
 ﻿using Anjril.PokemonWorld.Common;
 using Anjril.PokemonWorld.Common.State;
-using Anjril.PokemonWorld.Server.Model.Index.Attack;
-using Anjril.PokemonWorld.Server.Model.Index.Evolution;
-using Anjril.PokemonWorld.Server.Model.Index.Talent;
+using Anjril.PokemonWorld.Common.Index.Attack;
+using Anjril.PokemonWorld.Common.Index.Evolution;
+using Anjril.PokemonWorld.Common.Index.Talent;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Anjril.PokemonWorld.Server.Model.Index
+namespace Anjril.PokemonWorld.Common.Index
 {
     public class PokemonSheet
     {

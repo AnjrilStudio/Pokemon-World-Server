@@ -15,15 +15,15 @@ namespace Anjril.PokemonWorld.Common.AreaOfEffect
             Dist = dist;
         }
 
-        public override bool InArea(Position origin, Position target, Position actionOrigin, Direction dir)
+        public override bool InArea(BattleArena arena, Position origin, Position target, Position actionOrigin, Direction dir)
         {
             switch (dir)
             {
-                case Direction.Up:
+                case Direction.Down:
                     return target.X == origin.X && target.Y >= origin.Y && target.Y - Dist < origin.Y;
                 case Direction.Right:
                     return target.Y == origin.Y && target.X >= origin.X && target.X - Dist < origin.X;
-                case Direction.Down:
+                case Direction.Up:
                     return target.X == origin.X && target.Y <= origin.Y && target.Y + Dist > origin.Y;
                 case Direction.Left:
                     return target.Y == origin.Y && target.X <= origin.X && target.X + Dist > origin.X;

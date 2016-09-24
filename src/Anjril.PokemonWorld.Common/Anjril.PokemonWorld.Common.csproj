@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net35\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,12 +45,15 @@
   <ItemGroup>
     <Compile Include="Action.cs" />
     <Compile Include="ActionCost\AbstractActionCost.cs" />
+    <Compile Include="ActionCost\APMPActionCost.cs" />
     <Compile Include="ActionCost\APActionCost.cs" />
     <Compile Include="ActionCost\MPActionCost.cs" />
+    <Compile Include="ActionCost\MPAPShortestPathActionCost.cs" />
     <Compile Include="ActionCost\MPAPDistanceActionCost.cs" />
     <Compile Include="AreaOfEffect\AbstractAreaOfEffect.cs" />
     <Compile Include="AreaOfEffect\DistanceAreaOfEffect.cs" />
     <Compile Include="AreaOfEffect\LeftAreaOfEffect.cs" />
+    <Compile Include="AreaOfEffect\ShortestPathAreaOfEffect.cs" />
     <Compile Include="AreaOfEffect\OriginLineAreaOfEffect.cs" />
     <Compile Include="AreaOfEffect\RightAreaOfEffect.cs" />
     <Compile Include="AreaOfEffect\LineAreaOfEffect.cs" />
@@ -59,6 +66,14 @@
     <Compile Include="Effect\MaxMPEffect.cs" />
     <Compile Include="Effect\StatEffect.cs" />
     <Compile Include="Effect\MaxAPEffect.cs" />
+    <Compile Include="Index\Attack\FakeAttack.cs" />
+    <Compile Include="Index\Attack\IAttack.cs" />
+    <Compile Include="Index\Evolution\FakeCondition.cs" />
+    <Compile Include="Index\Evolution\IEvolutionCondition.cs" />
+    <Compile Include="Index\Pokedex.cs" />
+    <Compile Include="Index\PokemonSheet.cs" />
+    <Compile Include="Index\Talent\FakeTalent.cs" />
+    <Compile Include="Index\Talent\ITalent.cs" />
     <Compile Include="Message\BaseMessage.cs" />
     <Compile Include="Message\BattleActionMessage.cs" />
     <Compile Include="Message\BattleStartMessage.cs" />
@@ -81,9 +96,20 @@
     <Compile Include="Effect\MoveEffect.cs" />
     <Compile Include="Effect\PushEffect.cs" />
     <Compile Include="Effect\StatusEffect.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <DependentUpon>Settings.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Range\ShortestPathMPAPRange.cs" />
     <Compile Include="Range\SelfRange.cs" />
     <Compile Include="Range\WildRange.cs" />
     <Compile Include="Range\OwnerRange.cs" />
+    <Compile Include="Settings.Designer.cs">
+      <DependentUpon>Settings.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
     <Compile Include="State\EntityState.cs" />
     <Compile Include="State\EntityType.cs" />
     <Compile Include="State\NatureType.cs" />
@@ -113,6 +139,18 @@
     <Compile Include="State\Position.cs" />
     <Compile Include="Status.cs" />
     <Compile Include="TargetType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

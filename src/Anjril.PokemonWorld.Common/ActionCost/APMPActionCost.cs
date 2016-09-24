@@ -6,23 +6,26 @@ using Anjril.PokemonWorld.Common.State;
 
 namespace Anjril.PokemonWorld.Common.ActionCost
 {
-    public class MPActionCost : AbstractActionCost
+    public class APMPActionCost : AbstractActionCost
     {
-        public int Value { get; protected set; }
+        public int APValue { get; protected set; }
+        public int MPValue { get; protected set; }
 
-        public MPActionCost(int value)
+        public APMPActionCost(int APvalue, int MPvalue)
         {
-            Value = value;
+            APValue = APvalue;
+            MPValue = MPvalue;
         }
 
         public override void ApplyCost(BattleArena arena, BattleEntity self, Position target)
         {
-            self.MP -= Value;
+            self.AP -= APValue;
+            self.MP -= MPValue;
         }
 
         public override bool CheckCost(BattleArena arena, BattleEntity self, Position target)
         {
-            return self.MP >= Value;
+            return self.AP >= APValue && self.MP >= MPValue;
         }
     }
 }
