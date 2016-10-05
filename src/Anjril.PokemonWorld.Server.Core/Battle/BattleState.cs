@@ -115,7 +115,6 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     var aoeTiles = action.AoeTiles(entity, target, dir, arena);
                     foreach (Position aoe in aoeTiles)
                     {
-                        System.Console.WriteLine(aoe);
                         foreach (BattleEntity pokemon in turns)
                         {
                             //todo ne pas toucher soi-même
@@ -456,6 +455,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         {
             entity.MaxAP = entity.BaseMaxAP;
             entity.MaxMP = entity.BaseMaxMP;
+            entity.resetStatStages();
             entity.applyOverTimeEffect(arena);
             if (entity.MaxAP < 0) entity.MaxAP = 0;
             if (entity.MaxMP < 0) entity.MaxMP = 0;

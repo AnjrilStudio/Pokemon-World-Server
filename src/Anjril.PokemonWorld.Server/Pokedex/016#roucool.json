@@ -31,16 +31,6 @@
       "Name": "Talent"
     }
   ],
-  "LevelingAttacks": {
-    "12": {
-	  "$type": "Anjril.PokemonWorld.Common.Index.Attack.FakeAttack",
-      "Name": "Attack"
-    }
-  },
-  "LearnableAttack": [
-    {
-	  "$type": "Anjril.PokemonWorld.Common.Index.Attack.FakeAttack",
-      "Name": "Attack"
-    }
-  ]
+  "LevelingMoves": "0,Growl;0,Tackle",
+  "LearnableMoves": ""
 }

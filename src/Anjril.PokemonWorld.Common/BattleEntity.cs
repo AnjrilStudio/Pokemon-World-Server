@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Anjril.PokemonWorld.Common.State;
 using Anjril.PokemonWorld.Common.Effect;
+using Anjril.PokemonWorld.Common.Index;
 
 namespace Anjril.PokemonWorld.Common
 {
@@ -53,11 +54,11 @@ namespace Anjril.PokemonWorld.Common
         public int MaxMP { get; set; }
 
 
-        public BattleEntity(int id, int pokedexId)
+        public BattleEntity(int id, int pokedexId, int playerId)
         {
             BattleId = id;
             PokedexId = pokedexId;
-            PlayerId = -1;
+            PlayerId = playerId;
             WorldId = -1;
             Ready = false;
             ComingBack = false;
@@ -88,9 +89,19 @@ namespace Anjril.PokemonWorld.Common
             MaxMP = BaseMaxMP;
             MP = MaxMP;
 
+            initMoves();
+        }
+
+        public BattleEntity(int id, int pokedexId, int playerId, int worldId) : this(id, pokedexId, playerId)
+        {
+            WorldId = worldId;
+        }
+
+        private void initMoves()
+        {
             Moves.Add(Common.Moves.Get(Move.Move));
 
-            Moves.Add(Common.Moves.Get(Move.Tackle));
+            /*Moves.Add(Common.Moves.Get(Move.Tackle));
             //Moves.Add(Common.Moves.Get(Move.Gust));
             Moves.Add(Common.Moves.Get(Move.Bubble));
             Moves.Add(Common.Moves.Get(Move.Water_Gun));
@@ -98,7 +109,17 @@ namespace Anjril.PokemonWorld.Common
             Moves.Add(Common.Moves.Get(Move.Tail_Whip));
             //Moves.Add(Common.Moves.Get(Move.Pound));
             Moves.Add(Common.Moves.Get(Move.Peck));
-            Moves.Add(Common.Moves.Get(Move.Quick_Attack));
+            Moves.Add(Common.Moves.Get(Move.Quick_Attack));*/
+
+            PokemonSheet sheet = Pokedex.GetPokemonSheetByNationalId(PokedexId);
+            var moves = sheet.LevelingMoves.Split(';');
+            foreach(string move in moves)
+            {
+                var level = move.Split(',')[0];
+                var name = move.Split(',')[1];
+                Moves.Add(Common.Moves.Get((Move)Enum.Parse(typeof(Move), name)));
+            }
+
         }
 
         private int ComputeStat(int baseStat, int stage)
@@ -110,20 +131,19 @@ namespace Anjril.PokemonWorld.Common
                 x += stage;
             } else
             {
-                y += stage;
+                y -= stage;
             }
 
             return baseStat * x/y;
         }
 
-        public BattleEntity(int id, int pokedexId, int playerId) : this (id, pokedexId)
+        public void resetStatStages()
         {
-            PlayerId = playerId;
-        }
-
-        public BattleEntity(int id, int pokedexId, int playerId, int worldId) : this(id, pokedexId, playerId)
-        {
-            WorldId = worldId;
+            AtkStage = 0;
+            DefStage = 0;
+            AtkSpeStage = 0;
+            DefSpeStage = 0;
+            SpeedStage = 0;
         }
 
         public void addOverTimeEffect(BattleEntity origin, HitEffectOverTime effect, int duration)
@@ -141,11 +161,13 @@ namespace Anjril.PokemonWorld.Common
             List<OverTimeEffect> toRemove = new List<OverTimeEffect>();
             foreach(OverTimeEffect effect in overTimeEffects)
             {
-                effect.Duration -= 1;
-                effect.Effect.applyOverTime(effect.Origin, this, arena);
-                if (effect.Duration == 0)
+                if (effect.Duration <= 0)
                 {
                     toRemove.Add(effect);
+                } else
+                {
+                    effect.Duration -= 1;
+                    effect.Effect.applyOverTime(effect.Origin, this, arena);
                 }
             }
 

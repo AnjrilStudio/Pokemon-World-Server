@@ -64,7 +64,7 @@ namespace Anjril.PokemonWorld.Common
                     action.TargetType = TargetType.Directional;
                     action.Range = new LineRange(2);
                     action.AreaOfEffect = new LineAreaOfEffect(4);
-                    action.HitEffects.Add(new DamageEffect(50));
+                    action.HitEffects.Add(new DamageEffect(40));
                     action.ActionCost = new APActionCost(4);
                     action.HitEffects.Add(new StatEffect(Stat.Speed, -1, 1));
                     break;
@@ -73,7 +73,7 @@ namespace Anjril.PokemonWorld.Common
                     action.TargetType = TargetType.Directional;
                     action.Range = new LineRange(1);
                     action.AreaOfEffect = new LineAreaOfEffect(5);
-                    action.HitEffects.Add(new DamageEffect(50));
+                    action.HitEffects.Add(new DamageEffect(40));
                     action.ActionCost = new APActionCost(4);
                     break;
                 case Move.Thunder_Shock:
@@ -117,7 +117,7 @@ namespace Anjril.PokemonWorld.Common
                     action.MoveType = PokemonType.Normal;
                     action.Range = new SelfRange();
                     action.TargetType = TargetType.Position;
-                    action.AreaOfEffect = new DistanceAreaOfEffect(3);
+                    action.AreaOfEffect = new DistanceAreaOfEffect(1,3);
                     action.ActionCost = new APActionCost(3);
                     action.HitEffects.Add(new StatEffect(Stat.Attack, -1, 3));
                     break;

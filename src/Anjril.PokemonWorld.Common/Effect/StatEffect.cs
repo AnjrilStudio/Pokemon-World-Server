@@ -19,6 +19,12 @@ namespace Anjril.PokemonWorld.Common.Effect
             Stat = stat;
         }
 
+        public override void apply(BattleEntity self, BattleEntity target, Direction dir, BattleArena arena)
+        {
+            target.addOverTimeEffect(self, this, Duration);
+            applyOverTime(self, target, arena);
+        }
+
         public override void applyOverTime(BattleEntity self, BattleEntity target, BattleArena arena)
         {
             switch (Stat)

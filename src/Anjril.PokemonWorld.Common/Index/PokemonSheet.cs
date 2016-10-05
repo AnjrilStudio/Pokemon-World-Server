@@ -47,8 +47,8 @@ namespace Anjril.PokemonWorld.Common.Index
         public int BaseMP { get; set; }
         public Characteristics BaseCharacteristic { get; set; }
         public IList<ITalent> AvailableTalents { get; set; }
-        public IDictionary<int, IAttack> LevelingAttacks { get; set; }
-        public IList<IAttack> LearnableAttack { get; set; }
+        public string LevelingMoves { get; set; }
+        public string LearnableMoves { get; set; }
 
         public IEvolutionCondition EvolutionCondition { get; set; }
         [JsonIgnore]

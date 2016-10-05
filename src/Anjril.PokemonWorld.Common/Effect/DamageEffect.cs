@@ -25,12 +25,12 @@ namespace Anjril.PokemonWorld.Common.Effect
 
             double damage = 2;
             damage *= (2d * lvl + 10d) / 250d;
-            damage *= atk / def;
+            damage *= (double) atk / (double) def;
             damage *= Value;
             damage *= 0.85 + rnd.NextDouble() * 15 / 100; //random
                                                           //gérer stab, crit, type, etc
 
-            int damageInt = (int)Math.Floor(damage);
+            int damageInt = (int)Math.Ceiling(damage);
 
             target.HP -= damageInt;
             if (target.HP < 0)

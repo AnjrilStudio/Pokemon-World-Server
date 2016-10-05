@@ -26,21 +26,7 @@
     "Velocity": 0
   },
   "AvailableTalents": [
-    {
-	  "$type": "Anjril.PokemonWorld.Common.Index.Talent.FakeTalent",
-      "Name": "Talent"
-    }
   ],
-  "LevelingAttacks": {
-    "12": {
-	  "$type": "Anjril.PokemonWorld.Common.Index.Attack.FakeAttack",
-      "Name": "Attack"
-    }
-  },
-  "LearnableAttack": [
-    {
-	  "$type": "Anjril.PokemonWorld.Common.Index.Attack.FakeAttack",
-      "Name": "Attack"
-    }
-  ]
+  "LevelingMoves": "0,Tail_Whip;0,Tackle",
+  "LearnableMoves": ""
 }

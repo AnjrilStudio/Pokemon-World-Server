@@ -8,16 +8,18 @@ namespace Anjril.PokemonWorld.Common.Utils
 {
     public static class PositionUtils
     {
-        public static Position GetDirPosition(Direction dir)
+        public static Position GetDirPosition(Direction dir, bool inverted)
         {
+            var inversion = inverted ? -1 : 1;
+
             switch (dir)
             {
                 case Direction.Up:
-                    return new Position(0, -1);
+                    return new Position(0, inversion * 1);
                 case Direction.Right:
                     return new Position(1, 0);
                 case Direction.Down:
-                    return new Position(0, 1);
+                    return new Position(0, inversion * -1);
                 case Direction.Left:
                     return new Position(-1, 0);
                 default:
