@@ -11,12 +11,12 @@ namespace Anjril.PokemonWorld.Common.AreaOfEffect
     {
         private List<Position> area;
 
-        public override bool InArea(BattleArena arena, Position origin, Position target, Position actionOrigin, Direction dir)
+        public override bool InArea(Arena arena, Position origin, Position target, Position actionOrigin, Direction dir)
         {
             return area.Contains(target);
         }
 
-        public override void Init(BattleArena arena, Position target, Position actionOrigin)
+        public override void Init(Arena arena, Position target, Position actionOrigin)
         {
             PositionUtils.InitShortestPath(arena, actionOrigin, target, out area, true);
         }

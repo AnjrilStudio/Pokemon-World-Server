@@ -20,7 +20,7 @@ namespace Anjril.PokemonWorld.Common.Range
             APLimit = apValue;
         }
 
-        public override bool InRange(BattleArena arena, BattleEntity self, Position target, Direction dir)
+        public override bool InRange(Arena arena, BattleEntity self, Position target, Direction dir)
         {
             var dist = distanceMatrix[target.X, target.Y];
             var apValue = Math.Min(APLimit, self.AP);
@@ -31,7 +31,7 @@ namespace Anjril.PokemonWorld.Common.Range
             return false;
         }
 
-        public override void Init(BattleArena arena, BattleEntity self)
+        public override void Init(Arena arena, BattleEntity self)
         {
             distanceMatrix = PositionUtils.InitShortestPath(arena, self.CurrentPos, true);
             base.Init(arena, self);

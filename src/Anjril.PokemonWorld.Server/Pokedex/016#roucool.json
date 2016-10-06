@@ -31,6 +31,6 @@
       "Name": "Talent"
     }
   ],
-  "LevelingMoves": "0,Growl;0,Tackle",
+  "LevelingMoves": "0,Growl;0,Tackle;0,Gust",
   "LearnableMoves": ""
 }

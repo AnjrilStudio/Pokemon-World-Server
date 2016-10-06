@@ -39,7 +39,7 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
                     Defense = (int)(((PokedexSheet.BaseCharacteristic.Defense * 2 + IndividualValues.Defense + (EffortValues.Defense / 4)) * Level / 100 + 5) * Nature.GetDefenseModifier()),
                     SpeAttack = (int)(((PokedexSheet.BaseCharacteristic.SpeAttack * 2 + IndividualValues.SpeAttack + (EffortValues.SpeAttack / 4)) * Level / 100 + 5) * Nature.GetSpeAttackModifier()),
                     SpeDefense = (int)(((PokedexSheet.BaseCharacteristic.SpeDefense * 2 + IndividualValues.SpeDefense + (EffortValues.SpeDefense / 4)) * Level / 100 + 5) * Nature.GetSpeDefenseModifier()),
-                    Velocity = (int)(((PokedexSheet.BaseCharacteristic.Velocity * 2 + IndividualValues.Velocity + (EffortValues.Velocity / 4)) * Level / 100 + 5) * Nature.GetVelocityModifier())
+                    Speed = (int)(((PokedexSheet.BaseCharacteristic.Speed * 2 + IndividualValues.Speed + (EffortValues.Speed / 4)) * Level / 100 + 5) * Nature.GetVelocityModifier())
                 };
             }
         }
@@ -77,7 +77,7 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
             IndividualValues.Defense = RandomUtils.RandomInt(32);
             IndividualValues.SpeAttack = RandomUtils.RandomInt(32);
             IndividualValues.SpeDefense = RandomUtils.RandomInt(32);
-            IndividualValues.Velocity = RandomUtils.RandomInt(32);
+            IndividualValues.Speed = RandomUtils.RandomInt(32);
         }
 
         #endregion

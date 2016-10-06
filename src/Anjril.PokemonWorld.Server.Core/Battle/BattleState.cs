@@ -135,7 +135,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
                     foreach (GroundEffect effect in action.GroundEffects)
                     {
-                        effect.apply(entity, target, dir, arena);
+                        effect.apply(entity, target, dir, arena, currentTurn);
                     }
 
                     actionId++;
@@ -395,9 +395,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             {
                 do
                 {
-                    currentTurn++;
                     updateTurns();
-
                 } while (turns.Count > 1 && (!turns[currentTurn].Ready || turns[currentTurn].ComingBack));
                 
                 UpdateStats(turns[currentTurn]);
@@ -410,7 +408,6 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             bool next = false;
             while (turns.Count > 1 && (!turns[currentTurn].Ready || turns[currentTurn].ComingBack))
             {
-                currentTurn++;
                 updateTurns();
                 next = true;
             }
@@ -424,9 +421,21 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         //debut d'un cycle
         private void updateTurns()
         {
+            currentTurn++;
+
             if (currentTurn >= turns.Count)
             {
+                //application des effets de terrain qui aurait un index plus élevé (cas où il y avait plus de pokemons dans l'arène avant)
+                var maxTurnIndex = arena.GetGroundEffectMaxTurnIndex();
+                for(int t = currentTurn; t <= maxTurnIndex; t++)
+                {
+                    arena.applyOverTimeGroundEffects(t);
+                }
+
+                //retour à 0
                 currentTurn = 0;
+
+                //suppression des pokemons rappelés
                 var turnsToRemove = new List<BattleEntity>();
                 foreach (BattleEntity turn in turns)
                 {
@@ -444,11 +453,14 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     turn.ComingBack = false;
                 }
 
-                /*turns.Sort(delegate (BattleEntity b1, BattleEntity b2)
+                //tri par vitesse
+                turns.Sort(delegate (BattleEntity b1, BattleEntity b2)
                 {
-                    return b1.PokedexId.CompareTo(b2.PokedexId); //todo vitesse
-                });*/
+                    return b1.PokedexId.CompareTo(b2.Speed);
+                });
             }
+
+            arena.applyOverTimeGroundEffects(currentTurn);
         }
 
         private void UpdateStats(BattleEntity entity)
@@ -456,7 +468,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             entity.MaxAP = entity.BaseMaxAP;
             entity.MaxMP = entity.BaseMaxMP;
             entity.resetStatStages();
-            entity.applyOverTimeEffect(arena);
+            entity.applyOverTimeEffects(arena);
             if (entity.MaxAP < 0) entity.MaxAP = 0;
             if (entity.MaxMP < 0) entity.MaxMP = 0;
             entity.AP = entity.MaxAP;

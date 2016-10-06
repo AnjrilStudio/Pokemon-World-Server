@@ -10,9 +10,9 @@ namespace Anjril.PokemonWorld.Common.Range
     {
         private bool initialized = false;
 
-        public abstract bool InRange(BattleArena arena, BattleEntity self, Position target, Direction dir);
+        public abstract bool InRange(Arena arena, BattleEntity self, Position target, Direction dir);
 
-        public virtual bool InRange(BattleArena arena, BattleEntity self, Position target)
+        public virtual bool InRange(Arena arena, BattleEntity self, Position target)
         {
             if (!initialized)
             {
@@ -21,7 +21,7 @@ namespace Anjril.PokemonWorld.Common.Range
             return InRange(arena, self, target, Direction.None);
         }
 
-        public List<Position> InRangeTiles(BattleEntity self, Direction dir, BattleArena arena)
+        public List<Position> InRangeTiles(BattleEntity self, Direction dir, Arena arena)
         {
             var result = new List<Position>();
             Init(arena, self);
@@ -51,7 +51,7 @@ namespace Anjril.PokemonWorld.Common.Range
             return result;
         }
 
-        public virtual void Init(BattleArena arena, BattleEntity self)
+        public virtual void Init(Arena arena, BattleEntity self)
         {
             initialized = true;
         }

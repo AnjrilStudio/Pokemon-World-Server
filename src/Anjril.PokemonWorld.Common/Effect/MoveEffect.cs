@@ -13,7 +13,7 @@ namespace Anjril.PokemonWorld.Common.Effect
         {
         }
 
-        public override void apply(BattleEntity self, Position target, Direction dir, BattleArena arena)
+        public override void apply(BattleEntity self, Position target, Direction dir, BattleArena arena, int turnIndex)
         {
             arena.MoveBattleEntity(self, target);
         }

@@ -12,7 +12,7 @@ namespace Anjril.PokemonWorld.Common.AreaOfEffect
         {
         }
 
-        public override bool InArea(BattleArena arena, Position origin, Position target, Position actionOrigin, Direction dir)
+        public override bool InArea(Arena arena, Position origin, Position target, Position actionOrigin, Direction dir)
         {
             switch (dir)
             {

@@ -23,7 +23,7 @@ namespace Anjril.PokemonWorld.Common.AreaOfEffect
             MinDist = mindist;
         }
 
-        public override bool InArea(BattleArena arena, Position origin, Position target, Position actionOrigin, Direction dir)
+        public override bool InArea(Arena arena, Position origin, Position target, Position actionOrigin, Direction dir)
         {
             var dist = Math.Abs(origin.X - target.X) + Math.Abs(origin.Y - target.Y);
             if (dist <= Dist && dist >= MinDist)

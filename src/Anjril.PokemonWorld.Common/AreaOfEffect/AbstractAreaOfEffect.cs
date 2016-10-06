@@ -9,19 +9,19 @@ namespace Anjril.PokemonWorld.Common.AreaOfEffect
     public abstract class AbstractAreaOfEffect
     {
 
-        public abstract bool InArea(BattleArena arena, Position origin, Position target, Position actionOrigin, Direction dir);
+        public abstract bool InArea(Arena arena, Position origin, Position target, Position actionOrigin, Direction dir);
 
-        public bool InArea(BattleArena arena, Position origin, Position target, Position actionOrigin)
+        public bool InArea(Arena arena, Position origin, Position target, Position actionOrigin)
         {
             return InArea(arena, origin, target, actionOrigin, Direction.None);
         }
 
-        public virtual void Init(BattleArena arena, Position origin, Position actionOrigin)
+        public virtual void Init(Arena arena, Position origin, Position actionOrigin)
         {
             //Do nothing
         }
 
-        public List<Position> AoeTiles(BattleArena arena, Position target, Position actionOrigin, Direction dir, TargetType targetType)
+        public List<Position> AoeTiles(Arena arena, Position target, Position actionOrigin, Direction dir, TargetType targetType)
         {
             var result = new List<Position>();
 

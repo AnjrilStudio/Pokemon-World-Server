@@ -156,7 +156,7 @@ namespace Anjril.PokemonWorld.Common
             overTimeEffects.Add(new OverTimeEffect(origin, effect, duration, status));
         }
 
-        public void applyOverTimeEffect(BattleArena arena)
+        public void applyOverTimeEffects(BattleArena arena)
         {
             List<OverTimeEffect> toRemove = new List<OverTimeEffect>();
             foreach(OverTimeEffect effect in overTimeEffects)

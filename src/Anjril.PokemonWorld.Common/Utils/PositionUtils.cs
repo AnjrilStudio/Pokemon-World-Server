@@ -27,7 +27,7 @@ namespace Anjril.PokemonWorld.Common.Utils
             }
         }
 
-        public static int[,] InitShortestPath(BattleArena arena, Position origin, Position target, out List<Position> pathToTarget, bool pokemonObstacle)
+        public static int[,] InitShortestPath(Arena arena, Position origin, Position target, out List<Position> pathToTarget, bool pokemonObstacle)
         {
             int[,] distanceMatrix = new int[arena.ArenaSize, arena.ArenaSize];
 
@@ -45,13 +45,13 @@ namespace Anjril.PokemonWorld.Common.Utils
 
         }
 
-        public static int[,] InitShortestPath(BattleArena arena, Position origin, bool pokemonObstacle)
+        public static int[,] InitShortestPath(Arena arena, Position origin, bool pokemonObstacle)
         {
             List<Position> path;
             return InitShortestPath(arena, origin, null, out path, pokemonObstacle);
         }
 
-        private static List<Position> updateDist(BattleArena arena, int[,] matrix, int x, int y, List<Position> path, Position target, bool pokemonObstacle)
+        private static List<Position> updateDist(Arena arena, int[,] matrix, int x, int y, List<Position> path, Position target, bool pokemonObstacle)
         {
             List<Position> result = null;
             if (target != null && target.X == x && target.Y == y)
@@ -109,7 +109,7 @@ namespace Anjril.PokemonWorld.Common.Utils
             return result;
         }
 
-        private static bool IsShortestPathValidTile(BattleArena arena, int x, int y, bool pokemonObstacle)
+        private static bool IsShortestPathValidTile(Arena arena, int x, int y, bool pokemonObstacle)
         {
             return Position.isInMap(x, y, arena.ArenaSize) && !(pokemonObstacle && arena.Pokemons[x, y] != null);
         }

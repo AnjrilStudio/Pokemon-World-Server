@@ -27,6 +27,6 @@
   },
   "AvailableTalents": [
   ],
-  "LevelingMoves": "0,Tail_Whip;0,Tackle",
+  "LevelingMoves": "0,Tail_Whip;0,Tackle;0,Quick_Attack",
   "LearnableMoves": ""
 }

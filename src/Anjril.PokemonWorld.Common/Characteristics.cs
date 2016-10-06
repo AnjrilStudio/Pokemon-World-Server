@@ -12,6 +12,6 @@ namespace Anjril.PokemonWorld.Common
         public int Defense { get; set; }
         public int SpeAttack { get; set; }
         public int SpeDefense { get; set; }
-        public int Velocity { get; set; }
+        public int Speed { get; set; }
     }
 }

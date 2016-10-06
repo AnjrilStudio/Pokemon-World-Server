@@ -4,41 +4,78 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Anjril.PokemonWorld.Common.State;
+using Anjril.PokemonWorld.Common.Effect;
 
 namespace Anjril.PokemonWorld.Common
 {
-    public class BattleArena
+    public class BattleArena : Arena
     {
-        public int ArenaSize { get; private set; }
-        public ArenaTile[,] ArenaTiles { get; private set; }
-        public ArenaObject[,] ArenaObjects { get; private set; }
-        public BattleEntity[,] Pokemons { get; private set; }
+        private List<OverTimeGroundEffect> overTimeGroundEffects;
 
-        public BattleArena(int size)
+        public BattleArena(int size) : base(size)
         {
-            ArenaSize = size;
-            ArenaTiles = new ArenaTile[size, size];
-            ArenaObjects = new ArenaObject[size, size];
-            Pokemons = new BattleEntity[size, size];
+            overTimeGroundEffects = new List<OverTimeGroundEffect>();
         }
 
-        public void MoveBattleEntity(BattleEntity entity, Position target)
+        public override void MoveBattleEntity(BattleEntity entity, Position target)
         {
-            if (entity.CurrentPos != null)
+            base.MoveBattleEntity(entity, target);
+
+            //effets au sol
+            foreach(OverTimeGroundEffect effect in overTimeGroundEffects)
             {
-                Pokemons[entity.CurrentPos.X, entity.CurrentPos.Y] = null;
+                if (target.Equals(effect.Position))
+                {
+                    effect.Effect.applyOnCollision(effect, entity, this);
+                }
             }
-            entity.CurrentPos = new Position(target);
-            Pokemons[entity.CurrentPos.X, entity.CurrentPos.Y] = entity;
+        }
+        
+        public OverTimeGroundEffect addOverTimeGroundEffect(BattleEntity origin, GroundEffectOverTime effect, int turnIndex)
+        {
+            var res = new OverTimeGroundEffect(origin, effect, turnIndex);
+            overTimeGroundEffects.Add(res);
+            return res;
         }
 
-        public void RemoveBattleEntity(BattleEntity entity)
+        public OverTimeGroundEffect addOverTimeGroundEffect(BattleEntity origin, GroundEffectOverTime effect, int turnIndex, Direction dir)
         {
-            if (entity.CurrentPos != null)
+            var res = new OverTimeGroundEffect(origin, effect, turnIndex, dir);
+            overTimeGroundEffects.Add(res);
+            return res;
+        }
+
+        public void applyOverTimeGroundEffects(int turnIndex)
+        {
+            List<OverTimeGroundEffect> toRemove = new List<OverTimeGroundEffect>();
+            foreach (OverTimeGroundEffect effect in overTimeGroundEffects)
             {
-                Pokemons[entity.CurrentPos.X, entity.CurrentPos.Y] = null;
-                entity.CurrentPos = null;
+                if (effect.Duration <= 0)
+                {
+                    toRemove.Add(effect);
+                }
+                else if (effect.TurnIndex == turnIndex)
+                {
+                    effect.Duration -= 1;
+                    effect.Effect.applyOverTime(effect, this);
+                }
             }
+
+            foreach (OverTimeGroundEffect effect in toRemove)
+            {
+                overTimeGroundEffects.Remove(effect);
+            }
+        }
+
+        public int GetGroundEffectMaxTurnIndex()
+        {
+            var max = 0;
+            foreach(OverTimeGroundEffect effect in overTimeGroundEffects)
+            {
+                if (effect.TurnIndex > max) max = effect.TurnIndex;
+            }
+
+            return max;
         }
     }
     

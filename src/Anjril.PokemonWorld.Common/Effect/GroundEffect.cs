@@ -9,11 +9,11 @@ namespace Anjril.PokemonWorld.Common.Effect
     //effets s'appliquant sur la case visée
     public abstract class GroundEffect
     {
-        public abstract void apply(BattleEntity self, Position target, Direction dir, BattleArena arena);
+        public abstract void apply(BattleEntity self, Position target, Direction dir, BattleArena arena, int turnIndex);
 
-        public void apply(BattleEntity self, Position target, BattleArena arena)
+        public void apply(BattleEntity self, Position target, BattleArena arena, int turnIndex)
         {
-            apply(self, target, Direction.None, arena);
+            apply(self, target, Direction.None, arena, turnIndex);
         }
     }
 }

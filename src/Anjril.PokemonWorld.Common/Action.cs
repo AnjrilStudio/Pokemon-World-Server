@@ -63,7 +63,7 @@ namespace Anjril.PokemonWorld.Common
             IsTrainer = true;
         }
 
-        public List<Position> InRangeTiles(BattleEntity self, Direction dir, BattleArena arena)
+        public List<Position> InRangeTiles(BattleEntity self, Direction dir, Arena arena)
         {
             if (Range == null)
             {
@@ -72,7 +72,7 @@ namespace Anjril.PokemonWorld.Common
             return Range.InRangeTiles(self, dir, arena);
         }
 
-        public List<Position> InRange2Tiles(BattleEntity self, Direction dir, BattleArena arena)
+        public List<Position> InRange2Tiles(BattleEntity self, Direction dir, Arena arena)
         {
             if (Range2 == null)
             {
@@ -81,25 +81,25 @@ namespace Anjril.PokemonWorld.Common
             return Range2.InRangeTiles(self, dir, arena).Except(Range.InRangeTiles(self, dir, arena)).ToList();
         }
 
-        public List<Position> InRangeTiles(BattleEntity self, BattleArena arena)
+        public List<Position> InRangeTiles(BattleEntity self, Arena arena)
         {
             return InRangeTiles(self, Direction.None, arena);
         }
 
-        public List<Position> InRange2Tiles(BattleEntity self, BattleArena arena)
+        public List<Position> InRange2Tiles(BattleEntity self, Arena arena)
         {
             return InRange2Tiles(self, Direction.None, arena);
         }
 
-        public List<Position> AoeTiles(BattleEntity self, Position target, Direction dir, BattleArena arena)
+        public List<Position> AoeTiles(BattleEntity self, Position target, Direction dir, Arena arena)
         {
-            //TODO bouger dans abstractAOE
             var result = new List<Position>();
             if (AreaOfEffect == null)
             {
                 result.Add(target);
                 return result;
-            } else
+            }
+            else
             {
                 return AreaOfEffect.AoeTiles(arena, target, self.CurrentPos, dir, TargetType);
             }

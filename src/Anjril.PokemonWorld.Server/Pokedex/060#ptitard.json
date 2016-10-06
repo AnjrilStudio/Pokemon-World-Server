@@ -31,6 +31,6 @@
       "Name": "Talent"
     }
   ],
-  "LevelingMoves": "0,Water_Gun",
+  "LevelingMoves": "0,Water_Gun,0,Bubble",
   "LearnableMoves": "",
 }

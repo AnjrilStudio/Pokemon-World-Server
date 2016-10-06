@@ -59,11 +59,15 @@
     <Compile Include="AreaOfEffect\LineAreaOfEffect.cs" />
     <Compile Include="ArenaObject.cs" />
     <Compile Include="ArenaTile.cs" />
+    <Compile Include="Arena.cs" />
     <Compile Include="BattleArena.cs" />
     <Compile Include="BattleEntity.cs" />
     <Compile Include="Characteristics.cs" />
+    <Compile Include="Effect\GroundEffectOverTimeHitEffect.cs" />
+    <Compile Include="Effect\GroundEffectOverTime.cs" />
     <Compile Include="Effect\HitEffectOverTime.cs" />
     <Compile Include="Effect\MaxMPEffect.cs" />
+    <Compile Include="Effect\RandomPushEffect.cs" />
     <Compile Include="Effect\StatEffect.cs" />
     <Compile Include="Effect\MaxAPEffect.cs" />
     <Compile Include="Index\Attack\FakeAttack.cs" />
@@ -82,6 +86,7 @@
     <Compile Include="Message\MapMessage.cs" />
     <Compile Include="Message\PositionEntity.cs" />
     <Compile Include="Message\PositionMessage.cs" />
+    <Compile Include="OverTimeGroundEffect.cs" />
     <Compile Include="OverTimeEffect.cs" />
     <Compile Include="Parameter\BaseParam.cs" />
     <Compile Include="Parameter\BattleStartParam.cs" />

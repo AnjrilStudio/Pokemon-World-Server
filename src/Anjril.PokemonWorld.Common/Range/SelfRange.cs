@@ -12,7 +12,7 @@ namespace Anjril.PokemonWorld.Common.Range
         {
         }
 
-        public override bool InRange(BattleArena arena, BattleEntity self, Position target, Direction dir)
+        public override bool InRange(Arena arena, BattleEntity self, Position target, Direction dir)
         {
             return self != null && target.Equals(self.CurrentPos);
         }

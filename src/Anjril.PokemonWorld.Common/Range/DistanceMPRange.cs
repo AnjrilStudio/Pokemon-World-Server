@@ -15,7 +15,7 @@ namespace Anjril.PokemonWorld.Common.Range
             Factor = factor;
         }
 
-        public override bool InRange(BattleArena arena, BattleEntity self, Position target, Direction dir)
+        public override bool InRange(Arena arena, BattleEntity self, Position target, Direction dir)
         {
             var origin = self.CurrentPos;
             var dist = Math.Abs(origin.X - target.X) + Math.Abs(origin.Y - target.Y);

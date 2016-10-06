@@ -51,13 +51,14 @@ namespace Anjril.PokemonWorld.Common
                 case Move.Gust:
                     action.MoveType = PokemonType.Flying;
                     action.TargetType = TargetType.Directional;
-                    action.Range = new LineRange(4);
-                    action.AreaOfEffect = new OriginLineAreaOfEffect();
-                    //action.HitEffects.Add(new PushEffect(1));
-                    action.GroundEffects.Add(new MoveEffect());
+                    action.Range = new DistanceRange(4);
+                    action.HitEffects.Add(new RandomPushEffect(1));
                     action.HitEffects.Add(new DamageEffect(50));
+                    var ge = new GroundEffectOverTimeHitEffect(3, 15);
+                    ge.AddHitEffect(new RandomPushEffect(1));
+                    ge.AddHitEffect(new DamageEffect(50));
+                    action.GroundEffects.Add(ge);
                     action.ActionCost = new APActionCost(4);
-                    //TODO le vrai
                     break;
                 case Move.Bubble:
                     action.MoveType = PokemonType.Water;
