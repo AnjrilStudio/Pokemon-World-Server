@@ -10,6 +10,7 @@ namespace Anjril.PokemonWorld.Common.Message
     {
         public int Id { get; private set; }
         public int PokemonId { get; private set; }
+        public int Level { get; private set; }
         public int PlayerId { get; private set; }
         public Position CurrentPos { get; private set; }
         public bool ComingBack { get; private set; }
@@ -22,17 +23,19 @@ namespace Anjril.PokemonWorld.Common.Message
 
         public BattleStateEntity(string entityStr)
         {
-            Id = Int32.Parse(entityStr.Split(',')[0]);
-            PokemonId = Int32.Parse(entityStr.Split(',')[1]);
-            PlayerId = Int32.Parse(entityStr.Split(',')[2]);
-            CurrentPos = new Position(entityStr.Split(',')[3]);
-            ComingBack = "1" == entityStr.Split(',')[4];
-            HP = Int32.Parse(entityStr.Split(',')[5]);
-            MaxHP = Int32.Parse(entityStr.Split(',')[6]);
-            AP = Int32.Parse(entityStr.Split(',')[7]);
-            MaxAP = Int32.Parse(entityStr.Split(',')[8]);
-            MP = Int32.Parse(entityStr.Split(',')[9]);
-            MaxMP = Int32.Parse(entityStr.Split(',')[10]);
+            var i = 0;
+            Id = Int32.Parse(entityStr.Split(',')[i++]);
+            PokemonId = Int32.Parse(entityStr.Split(',')[i++]);
+            Level = Int32.Parse(entityStr.Split(',')[i++]);
+            PlayerId = Int32.Parse(entityStr.Split(',')[i++]);
+            CurrentPos = new Position(entityStr.Split(',')[i++]);
+            ComingBack = "1" == entityStr.Split(',')[i++];
+            HP = Int32.Parse(entityStr.Split(',')[i++]);
+            MaxHP = Int32.Parse(entityStr.Split(',')[i++]);
+            AP = Int32.Parse(entityStr.Split(',')[i++]);
+            MaxAP = Int32.Parse(entityStr.Split(',')[i++]);
+            MP = Int32.Parse(entityStr.Split(',')[i++]);
+            MaxMP = Int32.Parse(entityStr.Split(',')[i++]);
         }
     }
 }

@@ -50,8 +50,8 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
             RemoteConnection = remote;
 
             // DEBUG
-            Team.AddPokemon(new BattleEntity(-1, 16, Id));
-            Team.AddPokemon(new BattleEntity(-1, 19, Id));
+            Team.AddPokemon(new BattleEntity(-1, 16, Id, 5));
+            Team.AddPokemon(new BattleEntity(-1, 19, Id, 5));
         }
 
         #endregion

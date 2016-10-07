@@ -56,7 +56,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 var entity = World.Instance.VisibleEntities[entityId];
                 if (entity.Type == EntityType.Pokemon)
                 {
-                    BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Pokemon).PokedexSheet.NationalId, -1, entityId);
+                    BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Pokemon).PokedexSheet.NationalId, -1, (entity as Pokemon).Level, entityId);
                     arena.MoveBattleEntity(battleEntity, GetRandomStartPosition(Direction.Left));
                     turns.Add(battleEntity);
                 }
@@ -324,7 +324,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                         }
                     }
 
-                    player.Team.AddPokemon(new BattleEntity(-1, entity.PokedexId, player.Id)); //TODO boîte
+                    player.Team.AddPokemon(new BattleEntity(-1, entity.PokedexId, player.Id, entity.Level)); //TODO boîte
                     player.TeamToUpdate = true;
 
                     World.Instance.Population.Remove(entity.WorldId);
@@ -690,6 +690,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             {
                 message += entity.BattleId + ",";
                 message += entity.PokedexId + ",";
+                message += entity.Level + ",";
                 message += entity.PlayerId + ",";
                 message += entity.CurrentPos + ",";
                 message += (entity.ComingBack ? "1" : "0") + ",";

@@ -26,21 +26,13 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
         public NatureType Nature { get; private set; }
 
         public int Level { get; set; }
-        public Characteristics EffortValues { get; set; }
-        public Characteristics IndividualValues { get; set; }
-        public Characteristics Characteristics
+        public BaseStats EffortValues { get; set; }
+        public BaseStats IndividualValues { get; set; }
+        public BaseStats Characteristics
         {
             get
             {
-                return new Characteristics
-                {
-                    LifePoint = (PokedexSheet.BaseCharacteristic.LifePoint * 2 + IndividualValues.LifePoint + (EffortValues.LifePoint / 4)) * Level / 100 + 10 + Level,
-                    Attack = (int)(((PokedexSheet.BaseCharacteristic.Attack * 2 + IndividualValues.Attack + (EffortValues.Attack / 4)) * Level / 100 + 5) * Nature.GetAttackModifier()),
-                    Defense = (int)(((PokedexSheet.BaseCharacteristic.Defense * 2 + IndividualValues.Defense + (EffortValues.Defense / 4)) * Level / 100 + 5) * Nature.GetDefenseModifier()),
-                    SpeAttack = (int)(((PokedexSheet.BaseCharacteristic.SpeAttack * 2 + IndividualValues.SpeAttack + (EffortValues.SpeAttack / 4)) * Level / 100 + 5) * Nature.GetSpeAttackModifier()),
-                    SpeDefense = (int)(((PokedexSheet.BaseCharacteristic.SpeDefense * 2 + IndividualValues.SpeDefense + (EffortValues.SpeDefense / 4)) * Level / 100 + 5) * Nature.GetSpeDefenseModifier()),
-                    Speed = (int)(((PokedexSheet.BaseCharacteristic.Speed * 2 + IndividualValues.Speed + (EffortValues.Speed / 4)) * Level / 100 + 5) * Nature.GetVelocityModifier())
-                };
+                return new BaseStats(PokedexSheet.NationalId, Level, IndividualValues, EffortValues, Nature);
             }
         }
 
@@ -68,11 +60,11 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
 
             HiddenPosition = hiddenPosition;
 
-            EffortValues = new Characteristics();
+            EffortValues = new BaseStats();
 
-            IndividualValues = new Characteristics();
+            IndividualValues = new BaseStats();
 
-            IndividualValues.LifePoint = RandomUtils.RandomInt(32);
+            IndividualValues.HP = RandomUtils.RandomInt(32);
             IndividualValues.Attack = RandomUtils.RandomInt(32);
             IndividualValues.Defense = RandomUtils.RandomInt(32);
             IndividualValues.SpeAttack = RandomUtils.RandomInt(32);

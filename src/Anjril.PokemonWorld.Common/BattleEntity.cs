@@ -53,8 +53,13 @@ namespace Anjril.PokemonWorld.Common
         public int MP { get; set; }
         public int MaxMP { get; set; }
 
+        public Gender Gender { get; private set; }
+        public NatureType Nature { get; private set; }
+        
+        public BaseStats EffortValues { get; set; }
+        public BaseStats IndividualValues { get; set; }
 
-        public BattleEntity(int id, int pokedexId, int playerId)
+        public BattleEntity(int id, int pokedexId, int playerId, int level)
         {
             BattleId = id;
             PokedexId = pokedexId;
@@ -66,22 +71,20 @@ namespace Anjril.PokemonWorld.Common
             Moves = new List<Action>();
             CurrentPos = null;
             overTimeEffects = new List<OverTimeEffect>();
+            
+            Level = level;
+            EffortValues = new BaseStats();
+            IndividualValues = new BaseStats();
 
-            MaxHP = 20;
-            HP = MaxHP;
-            Level = 5;
+            initBaseStats(IndividualValues, EffortValues);
 
-            BaseAtk = 15;
             AtkStage = 0;
-            BaseDef = 15;
             DefStage = 0;
-            BaseAtkSpe = 15;
             AtkSpeStage = 0;
-            BaseDefSpe = 15;
             DefSpeStage = 0;
-            BaseSpeed = 15;
             SpeedStage = 0;
 
+            HP = MaxHP;
             BaseMaxAP = 6;
             MaxAP = BaseMaxAP;
             AP = MaxAP;
@@ -92,9 +95,21 @@ namespace Anjril.PokemonWorld.Common
             initMoves();
         }
 
-        public BattleEntity(int id, int pokedexId, int playerId, int worldId) : this(id, pokedexId, playerId)
+        public BattleEntity(int id, int pokedexId, int playerId, int level, int worldId) : this(id, pokedexId, playerId, level)
         {
             WorldId = worldId;
+        }
+
+        public void initBaseStats(BaseStats iv, BaseStats ev)
+        {
+            BaseStats basestats = new BaseStats(PokedexId, Level, IndividualValues, EffortValues, Nature);
+
+            MaxHP = basestats.HP;
+            BaseAtk = basestats.Attack;
+            BaseDef = basestats.Defense;
+            BaseAtkSpe = basestats.SpeAttack;
+            BaseDefSpe = basestats.SpeDefense;
+            BaseSpeed = basestats.Speed;
         }
 
         private void initMoves()

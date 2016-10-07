@@ -62,7 +62,7 @@
     <Compile Include="Arena.cs" />
     <Compile Include="BattleArena.cs" />
     <Compile Include="BattleEntity.cs" />
-    <Compile Include="Characteristics.cs" />
+    <Compile Include="BaseStats.cs" />
     <Compile Include="Effect\GroundEffectOverTimeHitEffect.cs" />
     <Compile Include="Effect\GroundEffectOverTime.cs" />
     <Compile Include="Effect\HitEffectOverTime.cs" />

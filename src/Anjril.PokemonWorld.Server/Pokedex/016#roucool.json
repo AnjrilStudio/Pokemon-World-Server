@@ -18,12 +18,12 @@
   "BaseAP": 6,
   "BaseMP": 3,
   "BaseCharacteristic": {
-    "LifePoint": 0,
-    "Attack": 0,
-    "Defense": 0,
-    "SpeAttack": 0,
-    "SpeDefense": 0,
-    "Velocity": 0
+    "HP": 40,
+    "Attack": 45,
+    "Defense": 40,
+    "SpeAttack": 35,
+    "SpeDefense": 35,
+    "Speed": 56
   },
   "AvailableTalents": [
     {
