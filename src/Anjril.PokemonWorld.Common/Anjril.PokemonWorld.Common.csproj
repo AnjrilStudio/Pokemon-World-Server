@@ -81,11 +81,13 @@
     <Compile Include="Message\BaseMessage.cs" />
     <Compile Include="Message\BattleActionMessage.cs" />
     <Compile Include="Message\BattleStartMessage.cs" />
+    <Compile Include="Message\BattleStateGroundEffect.cs" />
     <Compile Include="Message\BattleStateEntity.cs" />
     <Compile Include="Message\BattleStateMessage.cs" />
     <Compile Include="Message\MapMessage.cs" />
     <Compile Include="Message\PositionEntity.cs" />
     <Compile Include="Message\PositionMessage.cs" />
+    <Compile Include="GroundEffectOverTimeId.cs" />
     <Compile Include="OverTimeGroundEffect.cs" />
     <Compile Include="OverTimeEffect.cs" />
     <Compile Include="Parameter\BaseParam.cs" />

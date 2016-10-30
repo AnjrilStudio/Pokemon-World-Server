@@ -9,6 +9,7 @@ namespace Anjril.PokemonWorld.Common
 {
     public class OverTimeGroundEffect
     {
+        public int Id { get; private set; }
         public BattleEntity Origin { get; private set; }
         public int Duration { get; set; }
         public int Count { get; set; }
@@ -17,20 +18,13 @@ namespace Anjril.PokemonWorld.Common
         public Position Position { get; set; }
         public Direction Direction { get; private set; }
 
-        public OverTimeGroundEffect(BattleEntity origin, GroundEffectOverTime effect, int turnIndex, Direction dir)
+        public OverTimeGroundEffect(int id, BattleEntity origin, GroundEffectOverTime effect, int turnIndex, Direction dir)
         {
+            Id = id;
             Origin = origin;
             Effect = effect;
             TurnIndex = turnIndex;
             Direction = dir;
-        }
-
-        public OverTimeGroundEffect(BattleEntity origin, GroundEffectOverTime effect, int turnIndex)
-        {
-            Origin = origin;
-            Effect = effect;
-            TurnIndex = turnIndex;
-            Direction = Direction.None;
         }
     }
 }

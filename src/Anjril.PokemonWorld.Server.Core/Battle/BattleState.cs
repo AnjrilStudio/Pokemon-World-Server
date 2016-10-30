@@ -703,6 +703,14 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 message += ";";
             }
 
+            message += '@';
+            foreach (OverTimeGroundEffect effect in arena.GetGroundEffects())
+            {
+                message += effect.Id + ",";
+                message += (int)effect.Effect.Id + ",";
+                message += effect.Position + ";";
+            }
+
             return message;
         }
 

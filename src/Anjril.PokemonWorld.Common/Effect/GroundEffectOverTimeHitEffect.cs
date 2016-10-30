@@ -11,7 +11,7 @@ namespace Anjril.PokemonWorld.Common.Effect
         public List<HitEffect> HitEffects { get; private set; }
         private int Count;
 
-        public GroundEffectOverTimeHitEffect(int duration, int count)
+        public GroundEffectOverTimeHitEffect(GroundEffectOverTimeId id, int duration, int count):base(id)
         {
             Duration = duration;
             Count = count;

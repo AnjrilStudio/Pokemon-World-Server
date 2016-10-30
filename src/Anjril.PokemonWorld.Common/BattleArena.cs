@@ -10,11 +10,13 @@ namespace Anjril.PokemonWorld.Common
 {
     public class BattleArena : Arena
     {
+        private int groundEffectSequence;
         private List<OverTimeGroundEffect> overTimeGroundEffects;
 
         public BattleArena(int size) : base(size)
         {
             overTimeGroundEffects = new List<OverTimeGroundEffect>();
+            groundEffectSequence = 0;
         }
 
         public override void MoveBattleEntity(BattleEntity entity, Position target)
@@ -30,17 +32,10 @@ namespace Anjril.PokemonWorld.Common
                 }
             }
         }
-        
-        public OverTimeGroundEffect addOverTimeGroundEffect(BattleEntity origin, GroundEffectOverTime effect, int turnIndex)
-        {
-            var res = new OverTimeGroundEffect(origin, effect, turnIndex);
-            overTimeGroundEffects.Add(res);
-            return res;
-        }
 
         public OverTimeGroundEffect addOverTimeGroundEffect(BattleEntity origin, GroundEffectOverTime effect, int turnIndex, Direction dir)
         {
-            var res = new OverTimeGroundEffect(origin, effect, turnIndex, dir);
+            var res = new OverTimeGroundEffect(groundEffectSequence++, origin, effect, turnIndex, dir);
             overTimeGroundEffects.Add(res);
             return res;
         }
@@ -76,6 +71,11 @@ namespace Anjril.PokemonWorld.Common
             }
 
             return max;
+        }
+
+        public List<OverTimeGroundEffect> GetGroundEffects()
+        {
+            return new List<OverTimeGroundEffect>(overTimeGroundEffects);
         }
     }
     
