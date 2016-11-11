@@ -161,7 +161,8 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                         if (action.Id == (int) Move.Move) //voir d'autres moves avec ce comportement
                         {
                             var currentPos = oldPos;
-                            while (aoeTiles.Count > 0)
+                            bool interruption = false;
+                            while (aoeTiles.Count > 0 && !interruption)
                             {
                                 foreach (Position pos in aoeTiles)
                                 {
@@ -174,13 +175,14 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                                 var moveDir = DirectionUtils.FromPosition(oldPos, currentPos);
                                 if (moveDir == Direction.None) break;
 
-                                arena.MoveBattleEntity(entity, currentPos);
+                                bool result = arena.MoveBattleEntity(entity, currentPos);
+                                interruption = !result;
                                 var message = ToActionMessage(id, target, action, moveDir);
                                 GlobalServer.Instance.SendMessage(id, message);
 
                                 aoeTiles.Remove(currentPos);
                                 oldPos = currentPos;
-                                if (aoeTiles.Count > 0) actionId++;
+                                if (aoeTiles.Count > 0 && !interruption) actionId++;
                             }
                         } else
                         {
@@ -473,7 +475,8 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             if (entity.MaxMP < 0) entity.MaxMP = 0;
             entity.AP = entity.MaxAP;
             entity.MP = entity.MaxMP;
-            
+            entity.APMP = 0;
+
             HasAttacked = false;
             HasMoved = false;
             CanAttack = true;
@@ -699,7 +702,8 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 message += entity.AP + ",";
                 message += entity.MaxAP + ",";
                 message += entity.MP + ",";
-                message += entity.MaxMP;
+                message += entity.MaxMP + ",";
+                message += entity.APMP;
                 message += ";";
             }
 

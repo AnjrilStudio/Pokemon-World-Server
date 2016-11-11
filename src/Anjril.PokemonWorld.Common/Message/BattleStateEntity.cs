@@ -20,6 +20,7 @@ namespace Anjril.PokemonWorld.Common.Message
         public int MaxAP { get; private set; }
         public int MP { get; private set; }
         public int MaxMP { get; private set; }
+        public int APMP { get; private set; }
 
         public BattleStateEntity(string entityStr)
         {
@@ -36,6 +37,7 @@ namespace Anjril.PokemonWorld.Common.Message
             MaxAP = Int32.Parse(entityStr.Split(',')[i++]);
             MP = Int32.Parse(entityStr.Split(',')[i++]);
             MaxMP = Int32.Parse(entityStr.Split(',')[i++]);
+            APMP = Int32.Parse(entityStr.Split(',')[i++]);
         }
     }
 }

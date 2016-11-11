@@ -23,7 +23,7 @@ namespace Anjril.PokemonWorld.Common.Range
         public override bool InRange(Arena arena, BattleEntity self, Position target, Direction dir)
         {
             var dist = distanceMatrix[target.X, target.Y];
-            var apValue = Math.Min(APLimit, self.AP);
+            var apValue = Math.Min(APLimit + self.APMP, self.AP);
             if (dist <= (self.MP + apValue) * Factor && dist != 0)
             {
                 return true;

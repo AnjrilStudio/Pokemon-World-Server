@@ -19,8 +19,9 @@ namespace Anjril.PokemonWorld.Common
             groundEffectSequence = 0;
         }
 
-        public override void MoveBattleEntity(BattleEntity entity, Position target)
+        public override bool MoveBattleEntity(BattleEntity entity, Position target)
         {
+            bool result = true;
             base.MoveBattleEntity(entity, target);
 
             //effets au sol
@@ -29,8 +30,11 @@ namespace Anjril.PokemonWorld.Common
                 if (target.Equals(effect.Position))
                 {
                     effect.Effect.applyOnCollision(effect, entity, this);
+                    result = false;
                 }
             }
+
+            return result;
         }
 
         public OverTimeGroundEffect addOverTimeGroundEffect(BattleEntity origin, GroundEffectOverTime effect, int turnIndex, Direction dir)

@@ -23,7 +23,7 @@ namespace Anjril.PokemonWorld.Common
             Pokemons = new BattleEntity[size, size];
         }
 
-        public virtual void MoveBattleEntity(BattleEntity entity, Position target)
+        public virtual bool MoveBattleEntity(BattleEntity entity, Position target)
         {
             if (entity.CurrentPos != null)
             {
@@ -31,6 +31,8 @@ namespace Anjril.PokemonWorld.Common
             }
             entity.CurrentPos = new Position(target);
             Pokemons[entity.CurrentPos.X, entity.CurrentPos.Y] = entity;
+
+            return true;
         }
 
         public void RemoveBattleEntity(BattleEntity entity)

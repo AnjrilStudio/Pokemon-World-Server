@@ -52,6 +52,7 @@ namespace Anjril.PokemonWorld.Common
         public int BaseMaxMP { get; private set; }
         public int MP { get; set; }
         public int MaxMP { get; set; }
+        public int APMP { get; set; }
 
         public Gender Gender { get; private set; }
         public NatureType Nature { get; private set; }
@@ -91,6 +92,7 @@ namespace Anjril.PokemonWorld.Common
             BaseMaxMP = 3;
             MaxMP = BaseMaxMP;
             MP = MaxMP;
+            APMP = 0;
 
             initMoves();
         }

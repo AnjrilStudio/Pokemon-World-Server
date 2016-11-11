@@ -49,6 +49,7 @@ namespace Anjril.PokemonWorld.Common.ActionCost
             int apCost = ComputeAPCost(arena, self, target);
             self.MP -= mpCost;
             self.AP -= apCost;
+            self.APMP -= apCost; //garde le compte d'AP utilisé
         }
 
         public override bool CheckCost(BattleArena arena, BattleEntity self, Position target)
