@@ -34,6 +34,9 @@
       <HintPath>..\packages\Anjril.Common.Network.1.0.0-rc2\lib\net35\Anjril.Common.Network.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Anjril.PokemonWorld.Generator">
+      <HintPath>..\..\..\Pokemon-World-Generator\src\Anjril.PokemonWorld.Generator\bin\Debug\Anjril.PokemonWorld.Generator.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

@@ -19,6 +19,12 @@ namespace Anjril.PokemonWorld.Common
             groundEffectSequence = 0;
         }
 
+        public BattleArena(ArenaTile[,] arena) : base(arena)
+        {
+            overTimeGroundEffects = new List<OverTimeGroundEffect>();
+            groundEffectSequence = 0;
+        }
+
         public override bool MoveBattleEntity(BattleEntity entity, Position target)
         {
             bool result = true;

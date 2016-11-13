@@ -29,11 +29,11 @@ namespace Anjril.PokemonWorld.Common.Utils
 
         public static int[,] InitShortestPath(Arena arena, Position origin, Position target, out List<Position> pathToTarget, bool pokemonObstacle)
         {
-            int[,] distanceMatrix = new int[arena.ArenaSize, arena.ArenaSize];
+            int[,] distanceMatrix = new int[arena.Width, arena.Height];
 
-            for (int i = 0; i < arena.ArenaSize; i++)
+            for (int i = 0; i < arena.Width; i++)
             {
-                for (int j = 0; j < arena.ArenaSize; j++)
+                for (int j = 0; j < arena.Height; j++)
                 {
                     distanceMatrix[i, j] = 99999;
                 }
@@ -111,7 +111,7 @@ namespace Anjril.PokemonWorld.Common.Utils
 
         private static bool IsShortestPathValidTile(Arena arena, int x, int y, bool pokemonObstacle)
         {
-            return Position.isInMap(x, y, arena.ArenaSize) && !(pokemonObstacle && arena.Pokemons[x, y] != null);
+            return Position.isInMap(x, y, arena.Width, arena.Height) && !(pokemonObstacle && arena.Pokemons[x, y] != null);
         }
     }
 }

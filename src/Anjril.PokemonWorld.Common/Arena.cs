@@ -10,17 +10,28 @@ namespace Anjril.PokemonWorld.Common
 {
     public abstract class Arena
     {
-        public int ArenaSize { get; private set; }
-        public ArenaTile[,] ArenaTiles { get; private set; }
-        public ArenaObject[,] ArenaObjects { get; private set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public ArenaTile[,] ArenaTiles { get; set; }
+        public ArenaObject[,] ArenaObjects { get; set; }
         public BattleEntity[,] Pokemons { get; private set; }
 
         public Arena(int size)
         {
-            ArenaSize = size;
+            Width = size;
+            Height = size;
             ArenaTiles = new ArenaTile[size, size];
             ArenaObjects = new ArenaObject[size, size];
             Pokemons = new BattleEntity[size, size];
+        }
+
+        public Arena(ArenaTile[,] arena)
+        {
+            Width = arena.GetLength(0);
+            Height = arena.GetLength(1);
+            ArenaTiles = arena;
+            ArenaObjects = new ArenaObject[Width, Height];
+            Pokemons = new BattleEntity[Width, Height];
         }
 
         public virtual bool MoveBattleEntity(BattleEntity entity, Position target)

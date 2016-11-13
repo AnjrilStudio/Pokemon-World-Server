@@ -21,7 +21,7 @@ namespace Anjril.PokemonWorld.Common.Effect
             var randomdir = DirectionUtils.RandomDirection();
 
             Position newPos = new Position(target.CurrentPos.X + PositionUtils.GetDirPosition(dir, true).X * Dist, target.CurrentPos.Y + PositionUtils.GetDirPosition(randomdir, true).Y * Dist);
-            newPos.NormalizePos(arena.ArenaSize);
+            newPos.NormalizePos(arena.Width, arena.Height);
             arena.MoveBattleEntity(target, newPos);
         }
     }

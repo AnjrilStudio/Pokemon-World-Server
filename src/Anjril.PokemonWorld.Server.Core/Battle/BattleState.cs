@@ -11,12 +11,13 @@ using Anjril.PokemonWorld.Server.Model.Entity;
 using Anjril.PokemonWorld.Server.Model;
 using Anjril.PokemonWorld.Common.Utils;
 using Anjril.PokemonWorld.Server.Core.Module;
+using Anjril.PokemonWorld.Generator.Enums;
+using Anjril.PokemonWorld.Generator;
 
 namespace Anjril.PokemonWorld.Server.Core.Battle
 {
     public class BattleState
     {
-        private static int defaultsize = 10;
         private System.Random random = new System.Random();
 
         private List<int> players;
@@ -34,7 +35,9 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
         public bool CanMove { get; private set; }
         public bool CannotAttack { get; private set; } //priorité sur le can
 
-        public BattleState(List<int> entitiesList)
+        private bool arenaToUpdate;
+
+        public BattleState(List<int> entitiesList, ArenaTile[,] pattern, Direction wildDir)
         {
             entityIdSequence = 0;
             actionId = 0;
@@ -42,7 +45,8 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             players = new List<int>();
             spectators = new List<int>();
             entities = entitiesList;
-            arena = new BattleArena(defaultsize);
+
+            arena = new BattleArena(ArenaPatternToBattleArena(pattern));
             currentTurn = 0;
             WaitingPokemonGo = true;
             HasAttacked = false;
@@ -51,13 +55,15 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             CanMove = true;
             CannotAttack = false;
 
+            arenaToUpdate = true;
+
             foreach (int entityId in entitiesList)
             {
                 var entity = World.Instance.VisibleEntities[entityId];
                 if (entity.Type == EntityType.Pokemon)
                 {
                     BattleEntity battleEntity = new BattleEntity(entityIdSequence++, (entity as Pokemon).PokedexSheet.NationalId, -1, (entity as Pokemon).Level, entityId);
-                    arena.MoveBattleEntity(battleEntity, GetRandomStartPosition(Direction.Left));
+                    arena.MoveBattleEntity(battleEntity, GetRandomStartPosition(wildDir));
                     turns.Add(battleEntity);
                 }
                 else if (entity.Type == EntityType.Player)
@@ -71,6 +77,74 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     }
                 }
             }
+        }
+
+        private ArenaTile[,] ArenaPatternToBattleArena(ArenaTile[,] pattern)
+        {
+            System.Console.WriteLine("pattern width " + pattern.GetLength(0));
+            System.Console.WriteLine("pattern length " + pattern.GetLength(1));
+            var genPattern = new GroundTileType[pattern.GetLength(0), pattern.GetLength(1)];
+            for (int j = 0; j < pattern.GetLength(1); j++)
+            {
+                System.Console.WriteLine("");
+                for (int i = 0; i < pattern.GetLength(0); i++)
+                {
+                    System.Console.Write((int)pattern[i, j]);
+                    switch (pattern[i, j])
+                    {
+                        case ArenaTile.Grass:
+                            genPattern[i, j] = GroundTileType.Grass;
+                            break;
+                        case ArenaTile.Ground:
+                            genPattern[i, j] = GroundTileType.Ground;
+                            break;
+                        case ArenaTile.Water:
+                            genPattern[i, j] = GroundTileType.Sea;
+                            break;
+                        case ArenaTile.Sand:
+                            genPattern[i, j] = GroundTileType.Sand;
+                            break;
+                        default:
+                            genPattern[i, j] = GroundTileType.Ground;
+                            break;
+                    }
+                }
+            }
+            System.Console.WriteLine("");
+
+            var generator = new ArenaGen(genPattern, 3,"Generated", false, false);
+            generator.Generate();
+            var genArena = generator.GetGroundMatrix();
+            var result = new ArenaTile[genArena.GetLength(0), genArena.GetLength(1)];
+            System.Console.WriteLine("width " + result.GetLength(0));
+            System.Console.WriteLine("length " + result.GetLength(1));
+
+            for (int i = 0; i < genArena.GetLength(0); i++)
+            {
+                for (int j = 0; j < genArena.GetLength(1); j++)
+                {
+                    switch (genArena[i, j])
+                    {
+                        case GroundTileType.Grass:
+                            result[i, j] = ArenaTile.Grass;
+                            break;
+                        case GroundTileType.Ground:
+                            result[i, j] = ArenaTile.Ground;
+                            break;
+                        case GroundTileType.Sea:
+                            result[i, j] = ArenaTile.Water;
+                            break;
+                        case GroundTileType.Sand:
+                            result[i, j] = ArenaTile.Sand;
+                            break;
+                        default:
+                            result[i, j] = ArenaTile.Ground;
+                            break;
+                    }
+                }
+            }
+
+            return result;
         }
 
         private bool CanPlayAction(BattleEntity entity, Action action, Position target, Direction dir)
@@ -600,20 +674,20 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                 switch (dir)
                 {
                     case Direction.Down:
-                        x = random.Next(arena.ArenaSize);
-                        y = arena.ArenaSize - 1 - random.Next(arena.ArenaSize) / 2;
+                        x = random.Next(arena.Width);
+                        y = arena.Height - 1 - random.Next(arena.Height) / 2;
                         break;
                     case Direction.Up:
-                        x = random.Next(arena.ArenaSize);
-                        y = random.Next(arena.ArenaSize) / 2;
+                        x = random.Next(arena.Width);
+                        y = random.Next(arena.Height) / 2;
                         break;
                     case Direction.Right:
-                        x = arena.ArenaSize - 1 - random.Next(arena.ArenaSize) / 2;
-                        y = random.Next(arena.ArenaSize);
+                        x = arena.Width - 1 - random.Next(arena.Width) / 2;
+                        y = random.Next(arena.Height);
                         break;
                     case Direction.Left:
-                        x = random.Next(arena.ArenaSize) / 2;
-                        y = random.Next(arena.ArenaSize);
+                        x = random.Next(arena.Width) / 2;
+                        y = random.Next(arena.Height);
                         break;
                     default:
                         break;
@@ -718,6 +792,30 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             return message;
         }
 
+        public string ArenaMessage()
+        {
+            string message = "";
+
+            if (arenaToUpdate)
+            {
+                for (int j = 0; j < arena.Height; j++)
+                {
+                    if (j != 0) message += ";";
+                    for (int i = 0; i < arena.Width; i++)
+                    {
+                        if (i != 0) message += ",";
+                        message += (int)arena.ArenaTiles[i, j];
+                    }
+                }
+                arenaToUpdate = false;
+            } else
+            {
+                message = "0";
+            }
+
+            return message;
+        }
+
         public string ActionMessage(Position target, Action action, Direction dir)
         {
             string message = "";
@@ -739,6 +837,8 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             message += ActionMessage(target, action, dir);
             message += "=";
             message += StateMessage();
+            message += "=";
+            message += ArenaMessage();
 
             return message;
         }
@@ -753,6 +853,8 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             message += "0";
             message += "=";
             message += StateMessage();
+            message += "=";
+            message += ArenaMessage();
 
             return message;
         }
@@ -767,8 +869,12 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             message += "0";
             message += "=";
             message += "0";
+            message += "=";
+            message += "0";
 
             return message;
         }
+
+        
     }
 }

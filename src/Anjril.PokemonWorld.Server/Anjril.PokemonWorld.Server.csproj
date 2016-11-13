@@ -42,8 +42,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Anjril.PokemonWorld.Generator, Version=0.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Anjril.PokemonWorld.Generator.0.0.4.0\lib\net46\Anjril.PokemonWorld.Generator.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Pokemon-World-Generator\src\Anjril.PokemonWorld.Generator\bin\Debug\Anjril.PokemonWorld.Generator.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>

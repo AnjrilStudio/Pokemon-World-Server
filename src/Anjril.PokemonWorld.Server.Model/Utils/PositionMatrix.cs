@@ -95,7 +95,7 @@ namespace Anjril.PokemonWorld.Server.Model.Utils
 
         public bool Move(int id, Position dest)
         {
-            if (_entities.ContainsKey(id) && dest.IsInMap(Size))
+            if (_entities.ContainsKey(id) && dest.IsInMap(Size, Size))
             {
                 var entity = _entities[id];
 

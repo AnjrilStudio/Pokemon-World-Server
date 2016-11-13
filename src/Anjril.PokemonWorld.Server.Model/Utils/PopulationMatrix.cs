@@ -109,7 +109,7 @@ namespace Anjril.PokemonWorld.Server.Model.Utils
 
         public bool Move(int id, Position dest)
         {
-            if (_population.ContainsKey(id) && dest.IsInMap(Size))
+            if (_population.ContainsKey(id) && dest.IsInMap(Size, Size))
             {
                 var pokemon = _population[id];
 

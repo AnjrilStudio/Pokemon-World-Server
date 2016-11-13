@@ -27,9 +27,9 @@ namespace Anjril.PokemonWorld.Common.AreaOfEffect
 
             Init(arena, target, actionOrigin);
 
-            for (int x = 0; x < arena.ArenaSize; x++)
+            for (int x = 0; x < arena.Width; x++)
             {
-                for (int y = 0; y < arena.ArenaSize; y++)
+                for (int y = 0; y < arena.Height; y++)
                 {
                     Position aoe = new Position(x, y);
                     var inArea = false;

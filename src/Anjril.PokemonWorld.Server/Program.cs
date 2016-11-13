@@ -200,7 +200,7 @@ namespace Anjril.PokemonWorld.Server
                 {
                     var chrono = Stopwatch.StartNew();
 
-                    generator.GenerateMap();
+                    generator.Generate();
 
                     chrono.Stop();
 

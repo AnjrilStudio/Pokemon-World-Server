@@ -26,9 +26,9 @@ namespace Anjril.PokemonWorld.Common.Range
             var result = new List<Position>();
             Init(arena, self);
 
-            for (int x = 0; x < arena.ArenaSize; x++)
+            for (int x = 0; x < arena.Width; x++)
             {
-                for (int y = 0; y < arena.ArenaSize; y++)
+                for (int y = 0; y < arena.Height; y++)
                 {
                     Position target = new Position(x, y);
                     if (dir == Direction.None)

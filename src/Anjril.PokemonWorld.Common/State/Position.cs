@@ -74,11 +74,11 @@ namespace Anjril.PokemonWorld.Common.State
             return X * 62482673 + Y;
         }
 
-        public void NormalizePos(int mapsize)
+        public void NormalizePos(int mapwidth, int mapheight)
         {
-            if (X >= mapsize)
+            if (X >= mapwidth)
             {
-                X = mapsize - 1;
+                X = mapwidth - 1;
             }
 
             if (X < 0)
@@ -86,9 +86,9 @@ namespace Anjril.PokemonWorld.Common.State
                 X = 0;
             }
 
-            if (Y >= mapsize)
+            if (Y >= mapheight)
             {
-                Y = mapsize - 1;
+                Y = mapheight - 1;
             }
 
             if (Y < 0)
@@ -112,14 +112,14 @@ namespace Anjril.PokemonWorld.Common.State
             return pos;
         }
 
-        public static bool isInMap(int x, int y, int mapsize)
+        public static bool isInMap(int x, int y, int mapwidth, int mapheight)
         {
-            return x >= 0 && y >= 0 && x < mapsize && y < mapsize;
+            return x >= 0 && y >= 0 && x < mapwidth && y < mapheight;
         }
 
-        public bool IsInMap(int mapsize)
+        public bool IsInMap(int mapwidth, int mapheight)
         {
-            return Position.isInMap(X, Y, mapsize);
+            return Position.isInMap(X, Y, mapwidth, mapheight);
         }
 
         public static int Distance(Position p1, Position p2)

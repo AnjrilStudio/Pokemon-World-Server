@@ -15,6 +15,7 @@ namespace Anjril.PokemonWorld.Common.Message
         public Action Action { get; private set; }
         public Direction Dir { get; private set; }
         public BattleStateMessage State { get; private set; }
+        public ArenaTile[,] Arena { get; private set; }
 
         public BattleActionMessage(string battleStr)
         {
@@ -40,6 +41,22 @@ namespace Anjril.PokemonWorld.Common.Message
             if (stateStr != "0")
             {
                 State = new BattleStateMessage(stateStr);
+            }
+
+            var arenaStr = battleStr.Split('=')[4];
+            if (arenaStr != "0")
+            {
+                var height = arenaStr.Split(';').Count();
+                var width = arenaStr.Split(';')[0].Split(',').Count();
+                Arena = new ArenaTile[width, height];
+                for (int j = 0; j < height; j++)
+                {
+                    var lineStr = arenaStr.Split(';')[j];
+                    for (int i = 0; i < width; i++)
+                    {
+                        Arena[i, j] = (ArenaTile)System.Int32.Parse(lineStr.Split(',')[i]);
+                    }
+                }
             }
         }
     }

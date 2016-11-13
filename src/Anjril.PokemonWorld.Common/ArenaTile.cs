@@ -7,9 +7,10 @@ namespace Anjril.PokemonWorld.Common
 {
     public enum ArenaTile
     {
-        Water,
-        Ground,
+        Undefined,
         Grass,
+        Ground,
+        Water,
         Sand
     }
 }

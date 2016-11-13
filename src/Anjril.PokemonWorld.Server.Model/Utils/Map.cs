@@ -103,7 +103,7 @@ namespace Anjril.PokemonWorld.Server.Model.Utils
 
         public WorldTile GetTile(Position position)
         {
-            if (Position.isInMap(position.X, position.Y, Size))
+            if (Position.isInMap(position.X, position.Y, Size, Size))
             {
                 return _worldTiles[position.X, position.Y];
             }
@@ -115,7 +115,7 @@ namespace Anjril.PokemonWorld.Server.Model.Utils
 
         public WorldObject GetObject(Position position)
         {
-            if (Position.isInMap(position.X, position.Y, Size))
+            if (Position.isInMap(position.X, position.Y, Size, Size))
             {
                 return _worldObjects[position.X, position.Y];
             }

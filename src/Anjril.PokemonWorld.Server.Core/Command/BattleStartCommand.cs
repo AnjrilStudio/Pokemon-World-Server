@@ -10,6 +10,7 @@ using System.ComponentModel;
 using Anjril.PokemonWorld.Common.Parameter;
 using Anjril.PokemonWorld.Common.Utils;
 using Anjril.PokemonWorld.Server.Core.Battle;
+using Anjril.PokemonWorld.Server.Model.WorldMap;
 
 namespace Anjril.PokemonWorld.Server.Core.Command
 {
