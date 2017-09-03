@@ -13,6 +13,8 @@ using Anjril.PokemonWorld.Common.Utils;
 using Anjril.PokemonWorld.Server.Core.Module;
 using Anjril.PokemonWorld.Generator.Enums;
 using Anjril.PokemonWorld.Generator;
+using Anjril.PokemonWorld.Server.Model.Persistence;
+using Anjril.PokemonWorld.Server.Model.Persistence.Dto;
 
 namespace Anjril.PokemonWorld.Server.Core.Battle
 {
@@ -181,6 +183,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
 
                 if (inRange)
                 {
+                    // jouer action
                     if (action.ActionCost != null)
                     {
                         action.ActionCost.ApplyCost(arena, entity, target);
@@ -197,6 +200,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                                 foreach (HitEffect effect in action.HitEffects)
                                 {
                                     effect.apply(entity, pokemon, dir, arena);
+                                    CheckPokemonFainted(pokemon);
                                 }
                             }
                         }
@@ -205,6 +209,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                     foreach (HitEffect effect in action.SelfEffects)
                     {
                         effect.apply(entity, entity, dir, arena);
+                        CheckPokemonFainted(entity);
                     }
 
                     foreach (GroundEffect effect in action.GroundEffects)
@@ -212,6 +217,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                         effect.apply(entity, target, dir, arena, currentTurn);
                     }
 
+                    // post-traitement
                     actionId++;
                     if (action.Id == (int)Move.Move)
                     {
@@ -258,6 +264,7 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
                                 oldPos = currentPos;
                                 if (aoeTiles.Count > 0 && !interruption) actionId++;
                             }
+                            CheckPokemonFainted(entity);
                         } else
                         {
                             var message = ToActionMessage(id, target, action, dir);
@@ -557,6 +564,28 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             CanMove = true;
         }
 
+        private void CheckPokemonFainted(BattleEntity target)
+        {
+            if (target.HP == 0)
+            {
+                int xpGain = XpUtils.getXpGain(target);
+                target.CanGiveXp = false;
+                foreach(BattleEntity pokemon in turns)
+                {
+                    //todo se rappeler des autres pokemons et faire le prorata
+                    if (pokemon.PlayerId != -1 && pokemon.HP != 0)
+                    {
+                        pokemon.TotalXp += xpGain;
+                        while (pokemon.TotalXp > XpUtils.getXpForLevel(pokemon.Level, XpFormula.Medium_Fast))
+                        {
+                            pokemon.Level++;
+                            pokemon.InitBaseStats();
+                        }
+                    }
+                }
+            }
+        }
+
         private void playIATurns()
         {
             if (turns.Count > 1)
@@ -609,6 +638,14 @@ namespace Anjril.PokemonWorld.Server.Core.Battle
             GlobalServer.Instance.SendMessage(playerId, ToEndMessage(playerId, spectator));
             var player = World.Instance.VisibleEntities[playerId] as Player;
             player.MapToUpdate = true;
+
+            PlayerDaoImpl.Instance.SavePlayer(new PlayerDto(player));
+
+            //reset xp gain
+            foreach(BattleEntity pokemon in player.Team)
+            {
+                pokemon.CanGiveXp = true;
+            }
         }
 
         private bool PlayIA()

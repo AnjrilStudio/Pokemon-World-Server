@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Anjril.PokemonWorld.Common.Utils;
 using Anjril.PokemonWorld.Server.Model.Utils;
+using Anjril.PokemonWorld.Server.Model.Persistence;
+using Anjril.PokemonWorld.Server.Model.Persistence.Dto;
 
 namespace Anjril.PokemonWorld.Server.Model
 {
@@ -113,32 +115,45 @@ namespace Anjril.PokemonWorld.Server.Model
 
         public void LoadPopulation()
         {
-            for (int i = 0; i < 15000; i++)
+            var population = PopulationDaoImpl.Instance.LoadPopulation();
+
+            if (population != null)
             {
-                var randX = RandomUtils.RandomInt(Map.Size);
-                var randY = RandomUtils.RandomInt(Map.Size);
-
-                var dest = new Position(randX, randY);
-
-                // DEBUG
-                var id = RandomUtils.RandomInt(3);
-                id = id == 0 ? 19 : id == 1 ? 16 : 60;
-
-                var pokemon = new Pokemon(id, dest);
-                EntityState state;
-
-                while (!Map.CanGo(pokemon, dest, out state))
+                foreach (PopulationPokemonDto pokemonDto in population.WorldPopulation)
                 {
-                    randX = RandomUtils.RandomInt(Map.Size);
-                    randY = RandomUtils.RandomInt(Map.Size);
-
-                    dest = new Position(randX, randY);
+                    Population.Add(new Pokemon(pokemonDto));
                 }
+            } else
+            {
+                //population par défaut
+                for (int i = 0; i < 15000; i++)
+                {
+                    var randX = RandomUtils.RandomInt(Map.Size);
+                    var randY = RandomUtils.RandomInt(Map.Size);
 
-                pokemon.HiddenPosition = dest;
-                pokemon.State = state;
+                    var dest = new Position(randX, randY);
 
-                Population.Add(pokemon);
+                    // DEBUG
+                    var id = RandomUtils.RandomInt(3);
+                    id = id == 0 ? 19 : id == 1 ? 16 : 60;
+
+                    var pokemon = new Pokemon(id, dest);
+                    EntityState state;
+
+                    while (!Map.CanGo(pokemon, dest, out state))
+                    {
+                        randX = RandomUtils.RandomInt(Map.Size);
+                        randY = RandomUtils.RandomInt(Map.Size);
+
+                        dest = new Position(randX, randY);
+                    }
+
+                    pokemon.HiddenPosition = dest;
+                    pokemon.State = state;
+                    pokemon.Age = RandomUtils.RandomInt(80);
+
+                    Population.Add(pokemon);
+                }
             }
         }
 

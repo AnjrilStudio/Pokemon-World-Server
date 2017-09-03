@@ -22,6 +22,10 @@ namespace Anjril.PokemonWorld.Common
 
         private List<OverTimeEffect> overTimeEffects;
 
+        public bool CanGiveXp { get; set; }
+        public int TotalXp { get; set; }
+        public Dictionary<int, int> xpTurns;
+
         public int HP { get; set; }
         public int MaxHP { get; set; }
         public int Level { get; set; }
@@ -68,16 +72,18 @@ namespace Anjril.PokemonWorld.Common
             WorldId = -1;
             Ready = false;
             ComingBack = false;
+            CanGiveXp = true;
 
             Moves = new List<Action>();
             CurrentPos = null;
             overTimeEffects = new List<OverTimeEffect>();
             
             Level = level;
+            TotalXp = XpUtils.getXpForLevel(Level, XpFormula.Medium_Fast);
             EffortValues = new BaseStats();
             IndividualValues = new BaseStats();
 
-            initBaseStats(IndividualValues, EffortValues);
+            InitBaseStats();
 
             AtkStage = 0;
             DefStage = 0;
@@ -102,7 +108,7 @@ namespace Anjril.PokemonWorld.Common
             WorldId = worldId;
         }
 
-        public void initBaseStats(BaseStats iv, BaseStats ev)
+        public void InitBaseStats()
         {
             BaseStats basestats = new BaseStats(PokedexId, Level, IndividualValues, EffortValues, Nature);
 

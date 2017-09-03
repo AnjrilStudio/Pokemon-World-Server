@@ -17,6 +17,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using Anjril.PokemonWorld.Server.Core.Module;
+using Anjril.PokemonWorld.Server.Model.Persistence;
+using Anjril.PokemonWorld.Server.Model.Persistence.Dto;
 
 namespace Anjril.PokemonWorld.Server
 {
@@ -41,7 +43,7 @@ namespace Anjril.PokemonWorld.Server
             {
                 #region start module loop
 
-                var updateLoop = new Thread(new ThreadStart(UpadateModules));
+                var updateLoop = new Thread(new ThreadStart(UpdateModules));
                 updateLoop.Name = "UpdateLoop";
                 updateLoop.Start();
 
@@ -98,10 +100,25 @@ namespace Anjril.PokemonWorld.Server
 
         private static bool ConnectionRequested(IRemoteConnection sender, string request, out string response)
         {
-            Player player = new Player(request, sender);
+            Player player = null;
+
+            PlayerDto playerDto = PlayerDaoImpl.Instance.LoadPlayer(request);
+            if (playerDto == null)
+            {
+                //le jouer n'existe pas
+                player = new Player(request, sender);
+                PlayerDaoImpl.Instance.SavePlayer(new PlayerDto(player));
+            }
+            else
+            {
+                player = new Player(playerDto, sender);
+            }
+
+
+            
             //player.Position = new Position(200, 150);
-            player.Position = new Position(200, 175);
-            //player.Position = new Position(35, 35);
+            //player.Position = new Position(200, 175);
+            player.Position = new Position(35, 35);
 
             PLAYERS.Add(sender, player);
             World.Instance.AddPlayer(player);
@@ -152,12 +169,13 @@ namespace Anjril.PokemonWorld.Server
 
         #region private methods
 
-        private static void UpadateModules()
+        private static void UpdateModules()
         {
             var modules = new List<IModule>();
 
             modules.Add(new NotificationModule());
             modules.Add(new WildModule());
+            modules.Add(new PopulationModule());
 
             while (!STOP)
             {

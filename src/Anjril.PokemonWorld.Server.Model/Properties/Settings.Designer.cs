@@ -34,5 +34,29 @@ namespace Anjril.PokemonWorld.Server.Model.Properties {
                 this["PokedexFolder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("..\\\\..\\\\PlayerData")]
+        public string PlayerDataFolder {
+            get {
+                return ((string)(this["PlayerDataFolder"]));
+            }
+            set {
+                this["PlayerDataFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("..\\\\..\\\\PopulationData")]
+        public string PopulationDataFolder {
+            get {
+                return ((string)(this["PopulationDataFolder"]));
+            }
+            set {
+                this["PopulationDataFolder"] = value;
+            }
+        }
     }
 }

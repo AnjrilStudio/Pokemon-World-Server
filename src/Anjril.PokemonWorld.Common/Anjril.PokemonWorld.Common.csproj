@@ -117,6 +117,9 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="State\EggGroup.cs" />
+    <Compile Include="XpUtils.cs" />
+    <Compile Include="XpFormula.cs" />
     <Compile Include="State\EntityState.cs" />
     <Compile Include="State\EntityType.cs" />
     <Compile Include="State\NatureType.cs" />

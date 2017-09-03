@@ -30,6 +30,8 @@ namespace Anjril.PokemonWorld.Common.Index
         public double MaleDistribution { get; set; }
         [JsonIgnore]
         public double FemaleDistribution { get { return 1 - MaleDistribution; } }
+        public EggGroup EggGroup1 { get; set; }
+        public EggGroup EggGroup2 { get; set; }
 
         public string Name { get; set; }
         public PokemonType Type1 { get; set; }
@@ -37,6 +39,8 @@ namespace Anjril.PokemonWorld.Common.Index
         public double AverageSize { get; set; }
         public double AverageWeight { get; set; }
         public string Description { get; set; }
+
+        public int XpGain { get; set; }
 
         public bool CanSwim { get; set; }
         public bool CanWalk { get; set; }

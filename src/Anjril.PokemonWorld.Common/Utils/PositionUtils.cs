@@ -111,7 +111,7 @@ namespace Anjril.PokemonWorld.Common.Utils
 
         private static bool IsShortestPathValidTile(Arena arena, int x, int y, bool pokemonObstacle)
         {
-            return Position.isInMap(x, y, arena.Width, arena.Height) && !(pokemonObstacle && arena.Pokemons[x, y] != null);
+            return Position.IsInMap(x, y, arena.Width, arena.Height) && !(pokemonObstacle && arena.Pokemons[x, y] != null);
         }
     }
 }

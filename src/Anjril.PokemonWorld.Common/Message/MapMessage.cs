@@ -12,16 +12,18 @@ namespace Anjril.PokemonWorld.Common.Message
 
         public Position Origin { get; private set; }
         public string Segments { get; private set; }
+        public int TotalWidth { get; private set; }
 
         #endregion
 
         #region constructors
 
-        public MapMessage(Position origin, string segments)
+        public MapMessage(Position origin, string segments, int totalWidth)
             : this()
         {
             Origin = origin;
             Segments = segments;
+            TotalWidth = totalWidth;
         }
 
         public MapMessage()
@@ -39,7 +41,8 @@ namespace Anjril.PokemonWorld.Common.Message
                 var splitArgs = args.Split('+');
 
                 Origin = new Position(splitArgs[0]);
-                Segments = splitArgs[1];
+                TotalWidth = int.Parse(splitArgs[1]);
+                Segments = splitArgs[2];
 
                 IsValid = true;
             }
@@ -51,7 +54,7 @@ namespace Anjril.PokemonWorld.Common.Message
 
         public override string ToString()
         {
-            return base.ToString() + String.Format("{0}+{1}", Origin, Segments);
+            return base.ToString() + String.Format("{0}+{1}+{2}", Origin, TotalWidth, Segments);
         }
 
         #endregion

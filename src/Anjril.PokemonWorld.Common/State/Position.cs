@@ -112,14 +112,14 @@ namespace Anjril.PokemonWorld.Common.State
             return pos;
         }
 
-        public static bool isInMap(int x, int y, int mapwidth, int mapheight)
+        public static bool IsInMap(int x, int y, int mapwidth, int mapheight)
         {
             return x >= 0 && y >= 0 && x < mapwidth && y < mapheight;
         }
 
         public bool IsInMap(int mapwidth, int mapheight)
         {
-            return Position.isInMap(X, Y, mapwidth, mapheight);
+            return Position.IsInMap(X, Y, mapwidth, mapheight);
         }
 
         public static int Distance(Position p1, Position p2)

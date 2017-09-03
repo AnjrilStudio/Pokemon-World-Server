@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Anjril.PokemonWorld.Server.Model.Persistence.Dto;
 
 namespace Anjril.PokemonWorld.Server.Model.Entity
 {
@@ -46,12 +47,37 @@ namespace Anjril.PokemonWorld.Server.Model.Entity
             MapToUpdate = true;
             TeamToUpdate = true;
             LastMove = DateTime.Now;
-            MoveInputDelay = 0.20f;
+            MoveInputDelay = 0.30f;
             RemoteConnection = remote;
 
             // DEBUG
             Team.AddPokemon(new BattleEntity(-1, 16, Id, 5));
             Team.AddPokemon(new BattleEntity(-1, 19, Id, 5));
+        }
+
+        public Player(PlayerDto playerDto, IRemoteConnection remote) : base(EntityType.Player)
+        {
+            Name = playerDto.Name;
+            Team = new Team();
+
+            Pokedex = new Pokedex();
+
+            MapToUpdate = true;
+            TeamToUpdate = true;
+            LastMove = DateTime.Now;
+            MoveInputDelay = 0.20f;
+            RemoteConnection = remote;
+
+            foreach (PokemonDto pokemonDto in playerDto.Team)
+            {
+                if (pokemonDto != null)
+                {
+                    var pokemon = new BattleEntity(-1, pokemonDto.PokedexId, Id, pokemonDto.Level);
+                    pokemon.TotalXp = pokemonDto.TotalXp;
+                    Team.AddPokemon(pokemon);
+                }
+            }
+            
         }
 
         #endregion

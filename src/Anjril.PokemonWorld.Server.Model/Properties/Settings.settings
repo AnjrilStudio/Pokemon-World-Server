@@ -5,5 +5,11 @@
     <Setting Name="PokedexFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)">..\\..\\Pokedex</Value>
     </Setting>
+    <Setting Name="PlayerDataFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">..\\..\\PlayerData</Value>
+    </Setting>
+    <Setting Name="PopulationDataFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">..\\..\\PopulationData</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

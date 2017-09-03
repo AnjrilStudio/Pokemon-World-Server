@@ -32,9 +32,9 @@ namespace Anjril.PokemonWorld.Server.Model.Utils
 
         public Pokemon this[int id] { get { return _population[id]; } }
 
-        public IReadOnlyCollection<Pokemon> this[Position pos] { get { return _matrix[pos.X, pos.Y].Values; } }
+        public IReadOnlyCollection<Pokemon> this[Position pos] { get { return (_matrix[pos.X, pos.Y] != null)?_matrix[pos.X, pos.Y].Values : null; } }
 
-        public IReadOnlyCollection<Pokemon> this[int x, int y] { get { return _matrix[x, y].Values; } }
+        public IReadOnlyCollection<Pokemon> this[int x, int y] { get { return (_matrix[x, y] != null)?_matrix[x, y].Values : null; } }
 
         #endregion
 

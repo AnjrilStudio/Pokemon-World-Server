@@ -14,9 +14,10 @@ namespace Anjril.PokemonWorld.Server.Core.Module
     {
         #region private fields
 
-        private const double SPAWN_RATE = 0.002d;
-        private const double HIDE_RATE = 0.01d;
-        private const double MOVE_RATE = 0.1d;
+        private const double SPAWN_RATE = 0.1d;
+        private const double HIDE_RATE = 0.004d;
+        private const double MOVE_RATE = 0.30d;
+        private const int MAXLEVEL_AREASIZE = 25;
 
         #endregion
 
@@ -30,7 +31,10 @@ namespace Anjril.PokemonWorld.Server.Core.Module
             {
                 if (!pokemon.IsVisible && RandomUtils.RandomDouble() < SPAWN_RATE)
                 {
-                    World.Instance.VisibleEntities.Add(pokemon, pokemon.HiddenPosition);
+                    if (pokemon.Level > getMaxLevelInArea(pokemon) * 0.8d)
+                    {
+                        World.Instance.VisibleEntities.Add(pokemon, pokemon.HiddenPosition);
+                    }
                 }
                 else if (pokemon.IsVisible && GlobalServer.Instance.GetBattle(pokemon.Id) == null && RandomUtils.RandomDouble() < HIDE_RATE)
                 {
@@ -52,6 +56,22 @@ namespace Anjril.PokemonWorld.Server.Core.Module
             }
 
             base.Update(elapsed);
+        }
+
+        private int getMaxLevelInArea(Pokemon pokemon)
+        {
+            int maxLevel = pokemon.Level;
+
+            var pokemons = FindPopulationInArea(pokemon.HiddenPosition.X, pokemon.HiddenPosition.Y, MAXLEVEL_AREASIZE);
+            foreach (Pokemon p in pokemons)
+            {
+                if (p.Level > maxLevel)
+                {
+                    maxLevel = p.Level;
+                }
+            }
+
+            return maxLevel;
         }
     }
 }

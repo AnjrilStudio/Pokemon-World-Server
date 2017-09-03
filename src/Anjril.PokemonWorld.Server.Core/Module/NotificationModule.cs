@@ -15,7 +15,7 @@ namespace Anjril.PokemonWorld.Server.Core.Module
     public class NotificationModule : BaseModule
     {
         public NotificationModule()
-            : base(200)
+            : base(50)
         { }
 
         public override void Update(TimeSpan elapsed)
@@ -104,7 +104,7 @@ namespace Anjril.PokemonWorld.Server.Core.Module
 
             message = message.Remove(message.Length - 1, 1);
 
-            return new MapMessage(startPos, message);
+            return new MapMessage(startPos, message, endx - startx);
         }
 
         private string GetTeamUpdate(Player player)
